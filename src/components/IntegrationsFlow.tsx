@@ -51,7 +51,11 @@ const IntegrationsFlow = () => {
         </div>
 
         <div className="integration-box integration-box-notably group">
-          <img src="/Notably logo icon.svg" alt="Notably" className="w-12 h-12 md:w-16 md:h-16" />
+          <img 
+            src="/Notably logo icon.svg" 
+            alt="Notably" 
+            className="w-12 h-12 md:w-16 md:h-16 brightness-0 invert" 
+          />
           <p className="text-sm md:text-base font-semibold text-white mt-2">Notably</p>
         </div>
       </div>
