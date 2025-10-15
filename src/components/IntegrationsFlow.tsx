@@ -4,31 +4,35 @@ const IntegrationsFlow = () => {
       <div className="flex flex-col items-center">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 w-full max-w-4xl mb-8">
           <div className="integration-box group">
-            <div className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-blue-600 rounded-lg">
-              <span className="text-white font-bold text-lg">T</span>
-            </div>
-            <p className="text-xs md:text-sm font-medium text-gray-700 mt-2">Microsoft Teams</p>
+            <img 
+              src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/microsoftteams.svg" 
+              alt="Microsoft Teams" 
+              className="w-20 h-20 md:w-24 md:h-24 object-contain" 
+            />
           </div>
 
           <div className="integration-box group">
-            <div className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-blue-500 rounded-lg">
-              <span className="text-white font-bold text-lg">O</span>
-            </div>
-            <p className="text-xs md:text-sm font-medium text-gray-700 mt-2">Outlook Calendar</p>
+            <img 
+              src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/microsoftoutlook.svg" 
+              alt="Outlook Calendar" 
+              className="w-20 h-20 md:w-24 md:h-24 object-contain" 
+            />
           </div>
 
           <div className="integration-box group">
-            <div className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-green-500 rounded-lg">
-              <span className="text-white font-bold text-lg">G</span>
-            </div>
-            <p className="text-xs md:text-sm font-medium text-gray-700 mt-2">Google Meet</p>
+            <img 
+              src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/googlemeet.svg" 
+              alt="Google Meet" 
+              className="w-20 h-20 md:w-24 md:h-24 object-contain" 
+            />
           </div>
 
           <div className="integration-box group">
-            <div className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-blue-400 rounded-lg">
-              <span className="text-white font-bold text-lg">📅</span>
-            </div>
-            <p className="text-xs md:text-sm font-medium text-gray-700 mt-2">Google Calendar</p>
+            <img 
+              src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/googlecalendar.svg" 
+              alt="Google Calendar" 
+              className="w-20 h-20 md:w-24 md:h-24 object-contain" 
+            />
           </div>
         </div>
 
