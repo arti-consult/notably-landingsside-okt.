@@ -1,11 +1,24 @@
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Sparkles, Building2, ArrowRight, CheckCircle2, Clock, Users, FileText, Shield, TrendingUp, Zap } from 'lucide-react';
+import { useState } from 'react';
+import { Sparkles, Building2, ArrowRight, CheckCircle2, Clock, Users, FileText, Shield, TrendingUp, Zap, Copy } from 'lucide-react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { ShimmerButton } from '../components/ShimmerButton';
 
 export default function ByggReisDegNoSpace() {
+  const [copied, setCopied] = useState(false);
+
+  const copyCode = async () => {
+    try {
+      await navigator.clipboard.writeText('BYGG2025');
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -49,10 +62,44 @@ export default function ByggReisDegNoSpace() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto"
+              className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto"
             >
               Spar tid, reduser risiko og hold teamet synkronisert med AI-drevet møteassistanse
             </motion.p>
+
+            {/* Discount Badge */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+              className="mb-8"
+            >
+              <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-full shadow-lg">
+                <Sparkles className="w-5 h-5" />
+                <span className="font-semibold">Bruk kode</span>
+                <div className="flex items-center gap-2 bg-white/20 px-3 py-1 rounded-lg">
+                  <span className="font-bold text-lg">BYGG2025</span>
+                  <button
+                    onClick={copyCode}
+                    className="p-1 hover:bg-white/20 rounded transition-colors"
+                    title="Kopier kode"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
+                </div>
+                <span className="font-semibold">for 20% rabatt i 2 måneder</span>
+              </div>
+              {copied && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mt-2 text-center"
+                >
+                  <span className="text-sm text-green-600 font-medium">✓ Kode kopiert!</span>
+                </motion.div>
+              )}
+            </motion.div>
 
             {/* CTA Pricing Cards */}
             <motion.div
@@ -187,21 +234,10 @@ export default function ByggReisDegNoSpace() {
               </div>
             </motion.div>
 
-            {/* Discount Badge */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-full shadow-lg"
-            >
-              <Sparkles className="w-5 h-5" />
-              <span className="font-semibold">Bruk kode <span className="font-bold">BYGG2025</span> for 20% rabatt i 2 måneder</span>
-            </motion.div>
-
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
               className="mt-4 text-sm text-gray-600"
             >
               Inkludert 14 dagers gratis prøveperiode
