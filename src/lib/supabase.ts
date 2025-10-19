@@ -8,8 +8,23 @@ let supabase: any;
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase environment variables not set. Using mock client.');
-  
-  // Create a mock Supabase client that doesn't crash the app
+
+  // Chainable no-op query builder to avoid runtime errors in UI
+  const chain = () => {
+    const q = {
+      select: () => q,
+      eq: () => q,
+      lte: () => q,
+      order: () => q,
+      single: () => Promise.resolve({ data: null, error: null }),
+      maybeSingle: () => Promise.resolve({ data: null, error: null }),
+      insert: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+      update: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+      delete: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+    } as any;
+    return q;
+  };
+
   supabase = {
     auth: {
       getSession: () => Promise.resolve({ data: { session: null }, error: null }),
@@ -17,13 +32,14 @@ if (!supabaseUrl || !supabaseAnonKey) {
       signInWithPassword: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
       signOut: () => Promise.resolve({ error: null })
     },
-    from: () => ({
-      select: () => ({
-        eq: () => ({
-          maybeSingle: () => Promise.resolve({ data: null, error: null })
-        })
+    from: () => chain(),
+    storage: {
+      from: () => ({
+        upload: async () => ({ data: null, error: { message: 'Supabase not configured' } }),
+        getPublicUrl: () => ({ data: { publicUrl: '' } }),
+        remove: async () => ({ data: null, error: { message: 'Supabase not configured' } }),
       })
-    })
+    }
   };
 } else {
   supabase = createClient(supabaseUrl, supabaseAnonKey);
