@@ -17,6 +17,7 @@ export default function Navigation() {
 
           <div className="hidden md:flex items-center gap-8">
             <Link to="/blog" className="text-gray-700 hover:text-black transition-colors">Blogg</Link>
+            <a href="https://app.notably.no" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-black transition-colors">Logg inn</a>
             <a href="https://app.notably.no/no/sign-up" target="_blank" rel="noopener noreferrer">
               <ShimmerButton className="px-6 py-2 font-medium">
                 <span className="whitespace-pre-wrap text-center font-medium leading-none tracking-tight text-white">
@@ -46,6 +47,7 @@ export default function Navigation() {
             >
               <div className="flex flex-col gap-4 pt-4 pb-2">
                 <Link to="/blog" className="text-gray-700 hover:text-black transition-colors">Blogg</Link>
+                <a href="https://app.notably.no" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-black transition-colors">Logg inn</a>
                 <a href="https://app.notably.no/no/sign-up" target="_blank" rel="noopener noreferrer">
                   <ShimmerButton className="px-6 py-2 font-medium">
                     <span className="whitespace-pre-wrap text-center font-medium leading-none tracking-tight text-white">
