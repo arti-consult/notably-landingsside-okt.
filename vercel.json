@@ -1,4 +1,10 @@
 {
+  "redirects": [
+    { "source": "/blog", "destination": "/artikler", "permanent": true },
+    { "source": "/blog/:slug*", "destination": "/artikler/:slug*", "permanent": true },
+    { "source": "/blogg", "destination": "/artikler", "permanent": true },
+    { "source": "/blogg/:slug*", "destination": "/artikler/:slug*", "permanent": true }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
