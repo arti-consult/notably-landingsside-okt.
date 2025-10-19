@@ -12,7 +12,6 @@ import ArticleManagement from './pages/ArticleManagement.tsx';
 import BlogListing from './pages/BlogListing.tsx';
 import ArticlePage from './pages/ArticlePage.tsx';
 import PrivacyPolicy from './pages/PrivacyPolicy.tsx';
-import ByggReisDeg from './pages/ByggReisDeg.tsx';
 import ByggReisDegNoSpace from './pages/ByggReisDegNoSpace.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
 

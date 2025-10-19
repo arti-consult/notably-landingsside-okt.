@@ -62,7 +62,14 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const resendApiKey = 're_eedUzaXB_PjDnhsiXzYTY1sXZc9o45ddo';
+    const resendApiKey = Deno.env.get('RESEND_API_KEY');
+    if (!resendApiKey) {
+      console.error('RESEND_API_KEY is not set');
+      return new Response(
+        JSON.stringify({ error: 'Tjenesten er midlertidig utilgjengelig. Prøv igjen senere.' }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     const audienceResponse = await fetch('https://api.resend.com/audiences/7cc7b32f-541e-4609-bc59-cc940bfdb41b/contacts', {
       method: 'POST',

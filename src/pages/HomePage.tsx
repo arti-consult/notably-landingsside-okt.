@@ -1,7 +1,6 @@
 import Navigation from '../components/Navigation';
 import HeroSection from '../components/HeroSection';
 import AppDemoSection from '../components/AppDemoSection';
-import TrustSection from '../components/TrustSection';
 import TypewriterSection from '../components/TypewriterSection';
 import MeetingSummarySection from '../components/MeetingSummarySection';
 import AIAnswersSection from '../components/AIAnswersSection';
