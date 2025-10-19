@@ -434,7 +434,7 @@ export default function ArticleManagement() {
                 placeholder="artikkel-url-slug"
               />
               <p className="text-xs text-gray-500 mt-1">
-                URL: notably.no/blog/{slug || 'artikkel-url-slug'}
+                URL: notably.no/artikler/{slug || 'artikkel-url-slug'}
               </p>
             </div>
 

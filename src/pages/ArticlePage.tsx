@@ -164,8 +164,8 @@ export default function ArticlePage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Artikkel ikke funnet</h1>
-          <Link to="/blog" className="text-blue-600 hover:underline">
-            Tilbake til blogg
+          <Link to="/artikler" className="text-blue-600 hover:underline">
+            Tilbake til artikler
           </Link>
         </div>
       </div>
@@ -181,7 +181,7 @@ export default function ArticlePage() {
     });
   };
 
-  const canonicalUrl = `https://notably.no/blog/${article.slug}`;
+  const canonicalUrl = `https://notably.no/artikler/${article.slug}`;
   const metaTitle = article.article_seo_metadata?.meta_title || article.title;
   const metaDescription = article.article_seo_metadata?.meta_description || article.excerpt || '';
   const ogImage = article.article_seo_metadata?.og_image || article.media_library?.public_url || '';
@@ -222,14 +222,14 @@ export default function ArticlePage() {
                 Hjem
               </Link>
               <ChevronRight className="w-4 h-4" />
-              <Link to="/blog" className="hover:text-gray-900">
-                Blogg
+              <Link to="/artikler" className="hover:text-gray-900">
+                Artikler
               </Link>
               {article.article_categories && (
                 <>
                   <ChevronRight className="w-4 h-4" />
                   <Link
-                    to={`/blog/category/${article.article_categories.slug}`}
+                    to={`/artikler/category/${article.article_categories.slug}`}
                     className="hover:text-gray-900"
                   >
                     {article.article_categories.name}
@@ -246,7 +246,7 @@ export default function ArticlePage() {
               <header className="mb-8">
                 {article.article_categories && (
                   <Link
-                    to={`/blog/category/${article.article_categories.slug}`}
+                    to={`/artikler/category/${article.article_categories.slug}`}
                     className="inline-block mb-4 text-sm font-medium text-blue-600 hover:text-blue-700"
                   >
                     {article.article_categories.name}
@@ -362,7 +362,7 @@ export default function ArticlePage() {
                 {relatedArticles.map((related) => (
                   <Link
                     key={related.id}
-                    to={`/blog/${related.slug}`}
+                    to={`/artikler/${related.slug}`}
                     className="group"
                   >
                     {related.media_library && (

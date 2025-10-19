@@ -196,7 +196,7 @@ export default function ArticleList() {
                             {article.title}
                           </div>
                           <div className="text-xs text-gray-500 mt-1">
-                            /blog/{article.slug}
+                            /artikler/{article.slug}
                           </div>
                         </div>
                       </td>
@@ -228,7 +228,7 @@ export default function ArticleList() {
                           </button>
                           {article.status === 'published' && (
                             <button
-                              onClick={() => window.open(`/blog/${article.slug}`, '_blank')}
+                              onClick={() => window.open(`/artikler/${article.slug}`, '_blank')}
                               className="p-2 text-green-600 hover:bg-green-50 rounded"
                               title="Vis"
                             >

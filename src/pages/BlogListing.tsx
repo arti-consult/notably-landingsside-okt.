@@ -94,9 +94,9 @@ export default function BlogListing() {
   return (
     <>
       <Helmet>
-        <title>Blogg - Notably</title>
+        <title>Artikler - Notably</title>
         <meta name="description" content="Les artikler om møtereferat, AI-transkripsjon, produktivitet og mer fra Notably." />
-        <link rel="canonical" href="https://notably.no/blog" />
+        <link rel="canonical" href="https://notably.no/artikler" />
       </Helmet>
 
       <Navigation />
@@ -116,7 +116,7 @@ export default function BlogListing() {
               {featuredArticle && (
                 <div className="mb-12 grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200">
                   {featuredArticle.media_library && (
-                    <Link to={`/blog/${featuredArticle.slug}`} className="block">
+                    <Link to={`/artikler/${featuredArticle.slug}`} className="block">
                       <img
                         src={featuredArticle.media_library.public_url}
                         alt={featuredArticle.media_library.alt_text}
@@ -131,7 +131,7 @@ export default function BlogListing() {
                       </span>
                     )}
 
-                    <Link to={`/blog/${featuredArticle.slug}`}>
+                    <Link to={`/artikler/${featuredArticle.slug}`}>
                       <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 hover:text-blue-600 transition-colors">
                         {featuredArticle.title}
                       </h2>
@@ -217,7 +217,7 @@ export default function BlogListing() {
                 {otherArticles.map((article) => (
                   <Link
                     key={article.id}
-                    to={`/blog/${article.slug}`}
+                    to={`/artikler/${article.slug}`}
                     className="group block"
                   >
                     {article.media_library && (

@@ -26,8 +26,12 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/personvern" element={<PrivacyPolicy />} />
             <Route path="/bygg-reis-deg" element={<Navigate to="/byggreisdeg" replace />} />
             <Route path="/byggreisdeg" element={<ByggReisDegNoSpace />} />
-            <Route path="/blog" element={<BlogListing />} />
-            <Route path="/blog/:slug" element={<ArticlePage />} />
+            <Route path="/artikler" element={<BlogListing />} />
+            <Route path="/artikler/:slug" element={<ArticlePage />} />
+            <Route path="/blog" element={<Navigate to="/artikler" replace />} />
+            <Route path="/blog/:slug" element={<Navigate to="/artikler/:slug" replace />} />
+            <Route path="/blogg" element={<Navigate to="/artikler" replace />} />
+            <Route path="/blogg/:slug" element={<Navigate to="/artikler/:slug" replace />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route
               path="/admin"
