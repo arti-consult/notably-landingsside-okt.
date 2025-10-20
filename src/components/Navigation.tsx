@@ -12,7 +12,7 @@ export default function Navigation() {
       <div className="page-container py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center">
-            <img src="/Notably logo icon.svg" alt="Notably" className="h-8" />
+            <img src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1760975960292.png" alt="Notably" className="h-8" />
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
