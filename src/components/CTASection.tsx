@@ -22,7 +22,7 @@ export default function CTASection() {
           </h2>
 
           <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto">
-            Kom i gang på få minutter. Ingen kredittkort nødvendig.
+            Kom i gang på få minutter. Få møtereferater med AI, helt automatisk
           </p>
 
           <div className="mt-2">
