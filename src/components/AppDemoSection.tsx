@@ -11,7 +11,7 @@ const AppDemoSection = () => {
           draggable={false}
         />
         <img
-          src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1761569451415.svg"
+          src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1761570600081.svg"
           alt="App Dashboard Demo"
           className="block md:hidden w-full h-full object-cover object-left-top rounded-lg"
           draggable={false}
