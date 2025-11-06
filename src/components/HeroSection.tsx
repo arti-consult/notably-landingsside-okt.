@@ -27,7 +27,7 @@ export default function HeroSection() {
             </ShimmerButton>
           </a>
           <a
-            href="https://calendly.com/vegardhaavik/demo-notably"
+            href="https://calendly.com/d/cxdp-xt7-q9z/notably-motereferat-med-ai"
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-3.5 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-colors font-medium"
