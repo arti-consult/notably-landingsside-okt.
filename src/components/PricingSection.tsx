@@ -96,6 +96,7 @@ const PricingSection = () => {
           {plans.map((plan, index) => {
             const price = calculatePrice(plan.monthlyPrice);
             const savings = calculateAnnualSavings(plan.monthlyPrice);
+            const priceInclVat = price !== null ? Math.round(price * 1.25) : null;
 
             return (
               <div
@@ -122,20 +123,20 @@ const PricingSection = () => {
                         <span className="text-5xl font-bold">{price},-</span>
                         <span className="text-gray-600">kr</span>
                       </div>
-                      <p className="text-gray-600 mt-2">
-                        per bruker per måned
-                      </p>
-                      {plan.name === 'Pro' && (
+                      {plan.name === 'Pro' && priceInclVat !== null && (
                         <div className="mt-2 inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
-                          499,- inkl. MVA (25%)
+                          {priceInclVat},- inkl. MVA (25%)
                         </div>
                       )}
                       {isAnnual && savings && (
-                        <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-700 rounded-full text-sm">
+                        <div className="mt-2 inline-flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-700 rounded-full text-sm">
                           <TrendingDown className="w-4 h-4" />
                           Spar {savings},- kr årlig
                         </div>
                       )}
+                      <p className="text-gray-600 mt-2">
+                        per bruker per måned
+                      </p>
                     </>
                   ) : (
                     <div className="text-3xl font-bold">Kontakt oss</div>
