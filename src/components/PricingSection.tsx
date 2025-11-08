@@ -15,24 +15,12 @@ const PricingSection = () => {
 
   const plans: PricingPlan[] = [
     {
-      name: 'Basic',
-      monthlyPrice: 299,
-      description: 'Perfekt for å komme i gang',
-      features: [
-        'Fysiske og digitale møter',
-        '20 timer per måned',
-        '20 assistentmeldinger per dag',
-        'Ingen trening på dataen din'
-      ],
-      cta: 'Start gratis'
-    },
-    {
       name: 'Pro',
-      monthlyPrice: 599,
+      monthlyPrice: 399,
       description: 'For profesjonelle brukere',
       features: [
         'Uendelig møter',
-        '150 assistentmeldinger per dag',
+        '200 assistentmeldinger hver dag',
         'Ingen trening på dataen din',
         'Prioritert support'
       ],
@@ -56,14 +44,14 @@ const PricingSection = () => {
   const calculatePrice = (monthlyPrice: number | null) => {
     if (monthlyPrice === null) return null;
     if (isAnnual) {
-      return Math.round(monthlyPrice * 0.8);
+      return Math.round(monthlyPrice * 0.85);
     }
     return monthlyPrice;
   };
 
   const calculateAnnualSavings = (monthlyPrice: number | null) => {
     if (monthlyPrice === null) return null;
-    return Math.round((monthlyPrice - (monthlyPrice * 0.8)) * 12);
+    return Math.round((monthlyPrice - (monthlyPrice * 0.85)) * 12);
   };
 
   return (
@@ -98,13 +86,13 @@ const PricingSection = () => {
             >
               Årlig
               <span className="px-1.5 py-0.5 bg-green-500 text-white text-xs rounded-full">
-                Spar 20%
+                Spart 15%
               </span>
             </button>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => {
             const price = calculatePrice(plan.monthlyPrice);
             const savings = calculateAnnualSavings(plan.monthlyPrice);
@@ -137,6 +125,11 @@ const PricingSection = () => {
                       <p className="text-gray-600 mt-2">
                         per bruker per måned
                       </p>
+                      {plan.name === 'Pro' && (
+                        <div className="mt-2 inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
+                          499,- inkl. MVA (25%)
+                        </div>
+                      )}
                       {isAnnual && savings && (
                         <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-700 rounded-full text-sm">
                           <TrendingDown className="w-4 h-4" />
