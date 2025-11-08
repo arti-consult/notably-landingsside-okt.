@@ -5,7 +5,7 @@ const IntegrationsFlow = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 w-full max-w-4xl mb-8">
           <div className="integration-box group">
             <img 
-              src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/microsoftteams.svg" 
+              src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1762605154714.svg" 
               alt="Microsoft Teams" 
               className="w-20 h-20 md:w-24 md:h-24 object-contain" 
             />
@@ -13,7 +13,7 @@ const IntegrationsFlow = () => {
 
           <div className="integration-box group">
             <img 
-              src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/microsoftoutlook.svg" 
+              src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1762605170864.svg" 
               alt="Outlook Calendar" 
               className="w-20 h-20 md:w-24 md:h-24 object-contain" 
             />
@@ -21,7 +21,7 @@ const IntegrationsFlow = () => {
 
           <div className="integration-box group">
             <img 
-              src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/googlemeet.svg" 
+              src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1762605184963.svg" 
               alt="Google Meet" 
               className="w-20 h-20 md:w-24 md:h-24 object-contain" 
             />
@@ -29,7 +29,7 @@ const IntegrationsFlow = () => {
 
           <div className="integration-box group">
             <img 
-              src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/googlecalendar.svg" 
+              src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1762605201664.svg" 
               alt="Google Calendar" 
               className="w-20 h-20 md:w-24 md:h-24 object-contain" 
             />
