@@ -121,8 +121,10 @@ const PricingSection = () => {
                     <>
                       <div className="flex items-baseline gap-2">
                         <span className="text-5xl font-bold">{price},-</span>
-                        <span className="text-gray-600">kr</span>
                       </div>
+                      <p className="text-gray-600 mt-2">
+                        per bruker per måned
+                      </p>
                       {plan.name === 'Pro' && priceInclVat !== null && (
                         <div className="mt-2 inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
                           {priceInclVat},- inkl. MVA (25%)
@@ -134,9 +136,6 @@ const PricingSection = () => {
                           Spar {savings},- kr årlig
                         </div>
                       )}
-                      <p className="text-gray-600 mt-2">
-                        per bruker per måned
-                      </p>
                     </>
                   ) : (
                     <div className="text-3xl font-bold">Kontakt oss</div>
