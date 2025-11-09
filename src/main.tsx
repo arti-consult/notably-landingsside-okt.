@@ -12,6 +12,7 @@ import ArticleManagement from './pages/ArticleManagement.tsx';
 import BlogListing from './pages/BlogListing.tsx';
 import ArticlePage from './pages/ArticlePage.tsx';
 import PrivacyPolicy from './pages/PrivacyPolicy.tsx';
+import TermsOfUse from './pages/TermsOfUse.tsx';
 import ByggReisDegNoSpace from './pages/ByggReisDegNoSpace.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
 
@@ -23,6 +24,7 @@ createRoot(document.getElementById('root')!).render(
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/personvern" element={<PrivacyPolicy />} />
+            <Route path="/vilkar" element={<TermsOfUse />} />
             <Route path="/bygg-reis-deg" element={<Navigate to="/byggreisdeg" replace />} />
             <Route path="/byggreisdeg" element={<ByggReisDegNoSpace />} />
             <Route path="/artikler" element={<BlogListing />} />

@@ -35,6 +35,9 @@ export default function Footer() {
           <Link to="/personvern" className="hover:text-white transition-colors">
             Personvern
           </Link>
+          <Link to="/vilkar" className="hover:text-white transition-colors">
+            Vilkår for bruk
+          </Link>
           <p>&copy; 2025 Notably. All rights reserved.</p>
         </div>
       </div>
