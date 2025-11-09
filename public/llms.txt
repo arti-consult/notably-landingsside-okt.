@@ -1,0 +1,38 @@
+# Notably – norsk AI-møteassistent
+> Automatisk opptak, transkripsjon og møtereferat for Teams/Google Meet. Denne filen peker LLM‑agenter til kanoniske kilder om produktet, bruk, sikkerhet og kontakt.
+Last updated: 2025-11-09
+
+Notes for agents:
+- Dette er et innholds‑kart for LLM‑er (ikke tilgangskontroll). Crawl/trening styres i /robots.txt.
+- Lenker er kanoniske HTML‑sider. Bruk korteste sti og unngå duplikater.
+
+## Kom i gang
+- Forside / produktoversikt: https://notably.no/
+- Opprett konto (14 dagers prøve): https://app.notably.no/no/sign-up
+- Logg inn: https://app.notably.no/no/sign-in?redirectTo=%2Fno%2Fdashboard
+- Tilbakestill passord: https://app.notably.no/no/reset-password
+
+## Produkt & funksjoner
+- Forside / produktoversikt: https://notably.no/
+- Artikler – oversikt: https://notably.no/artikler
+- Norsk AI‑løsning – sammenligning: https://notably.no/artikler/notably-norsk-spesialist-vs-internasjonale-konkurrenter-innen-ai-motereferat
+
+## Sikkerhet & personvern
+- Personvernerklæring: https://notably.no/personvern
+
+## Juridisk
+- Vilkår for bruk: https://notably.no/vilkar
+- Personvernerklæring: https://notably.no/personvern
+
+## Brukerstøtte & kontakt
+- E‑post (personvern/juridisk): mailto:legal@notably.no
+- Forside (kontakt‑CTA): https://notably.no/
+
+## App‑miljø (produktflate)
+- App‑hjem: https://app.notably.no/
+
+## Optional
+- Artikler – oversikt: https://notably.no/artikler
+
+# Ekstra
+Sitemap: https://notably.no/sitemap.xml
