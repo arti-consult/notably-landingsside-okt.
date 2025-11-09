@@ -1,0 +1,32 @@
+Sist oppdatert: 28.10.2025
+Vilkår for bruk
+Disse vilkårene beskriver avtalen mellom deg og Notably AI. Ved å opprette en konto eller bruke tjenesten godtar du reglene nedenfor.
+Tjenestebeskrivelse
+Notably AI fanger virtuelle møter, lagrer mediene sikkert i EU, transkriberer med ElevenLabs Scribe og lager AI-oppsummeringer med OpenAI. Kalendersynk, møteopptak og bot-planlegging koordineres via Recall.ai, som opererer på våre vegne i denne arbeidsflyten. Supabase driver databasen og lagringen i EU, mens Vercel hoster applikasjonen i EU.
+Akseptabel bruk
+Du godtar følgende når du bruker Notably:
+	•	Ta bare opp møter der alle deltakere har gitt nødvendig samtykke.
+	•	Ikke last opp, del eller lagre innhold som krenker opphavsrett eller andre rettigheter.
+	•	Unngå å introdusere skadevare, omgå sikkerhet eller teste infrastrukturen uten avtale.
+	•	Bruk tjenesten i tråd med lovverket, inkludert GDPR og regler for møteregistrering.
+Konto og tilgang
+Du er selv ansvarlig for å holde innloggingen din sikker og for handlinger som skjer via kontoen. Innlogging bygger på Supabase Auth-token lagret i sikre, httpOnly-informasjonskapsler. Samtykkebanneret bekrefter at vi kun bruker nødvendige kapsler slik at du slipper gjentatte varsler.
+Datasenter og etterlevelse
+Vi lagrer kundedata utelukkende på GDPR-kompatible servere i EU. Supabase leverer database, lagring og radnivåsikkerhet fra Frankfurt. Vercel serverer nettappen fra EU med sterke sikkerhetstiltak.
+Våre underleverandører, inkludert Recall.ai, ElevenLabs og OpenAI, er bundet av databehandleravtaler som matcher disse kravene.
+Mer informasjon om personvern finner du i vår Personvernerklæring.
+Bruk av Google API-er
+Når du kobler en Google-konto, gir du oss lese-tilgang til Google Calendar API kun for å levere møteopptak.
+	•	Vi ber om scopene https://www.googleapis.com/auth/calendar.readonly og https://www.googleapis.com/auth/calendar.events.readonly via Recall.ai. Vi ber aldri om skrivetilgang eller Gmail-scopes.
+	•	Du kan koble fra når som helst i Notably-innstillingene eller på Googles sikkerhetsdashbord. Vi ber Recall.ai om å tilbakekalle token med en gang du kobler fra.
+	•	Google-data brukes kun til å synkronisere møter, planlegge opptaksboten og lage transkripsjoner/notater. Data deles ikke med uavhengige tredjeparter eller til annonsering.
+Vår bruk av informasjon mottatt fra Google API-er følger Google API Services User Data Policy, inkludert kravene til begrenset bruk.
+Fakturering
+Betalte planer håndteres gjennom Stripe. Prøver varer i 14 dager med mindre noe annet oppgis. Planendringer kan skje umiddelbart eller ved neste fakturaperiode. Stripe lagrer betalingsdetaljene sikkert; vi mottar aldri kortdata.
+Sletting av konto
+Du kan avslutte abonnementet når som helst i faktureringsinnstillingene. Arbeidsområdeeiere kan også starte full sletting, som fjerner kalendere, opptak, transkripsjoner, embeddings og AI-notater fra Supabase og vår opptaksinfrastruktur. Vi kan stanse tilgangen ved regelbrudd eller manglende betaling.
+Ansvarsbegrensning
+Notably AI leveres "som den er". Sålangt loven tillater er vi ikke ansvarlige for indirekte, tilfeldige eller avledede tap som oppstår ved bruk av tjenesten. Vart samlede ansvar er begrenset til avgiftene betalt de siste tolv månedene.
+Kontakt
+Spørsmål om disse vilkårene kan sendes til legal@notably.no.
+
