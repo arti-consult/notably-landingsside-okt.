@@ -5,72 +5,47 @@ export default function SecuritySection() {
     <section className="py-20 page-container bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Sikkerhet og personvern du kan stole på
-          </h2>
-          <p className="text-gray-700 text-lg max-w-3xl mx-auto">
-            Bygd for norske virksomheter: GDPR-kompatibel, EU/EØS-dataresidens og sterk kryptering
-            i transitt og i ro. Vi trener aldri modellene våre på dine data.
-          </p>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">Sikkerhet og personvern</h2>
+          <p className="text-gray-700 text-lg max-w-2xl mx-auto">GDPR, EU/EØS‑dataresidens og sterk kryptering. Vi trener aldri på dine data.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition-all">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center">
-                <ShieldCheck className="w-6 h-6 text-emerald-600" />
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md transition-all">
+            <div className="flex items-start gap-3">
+              <ShieldCheck className="w-6 h-6 text-emerald-600 mt-1" />
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-1">GDPR-kompatibel</h3>
-                <p className="text-gray-600">
-                  Vi følger GDPR med transparente databehandlingsrutiner. Vi samler kun inn det som er nødvendig
-                  og gir deg full kontroll over egne data.
-                </p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">GDPR‑kompatibel</h3>
+                <p className="text-gray-600">Transparente rutiner og full kontroll på egne data.</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition-all">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center">
-                <Lock className="w-6 h-6 text-blue-600" />
-              </div>
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md transition-all">
+            <div className="flex items-start gap-3">
+              <Lock className="w-6 h-6 text-blue-600 mt-1" />
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-1">Datakryptering</h3>
-                <p className="text-gray-600">
-                  All data er kryptert i ro (AES-256) og under overføring (TLS). Lydopptak behandles sikkert
-                  og slettes etter ferdig prosessering.
-                </p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">Datakryptering</h3>
+                <p className="text-gray-600">AES‑256 i ro, TLS i transitt. Lyd slettes etter prosessering.</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition-all">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center">
-                <Globe className="w-6 h-6 text-orange-600" />
-              </div>
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md transition-all">
+            <div className="flex items-start gap-3">
+              <Globe className="w-6 h-6 text-orange-600 mt-1" />
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-1">EU/EØS dataresidens</h3>
-                <p className="text-gray-600">
-                  All møte- og transkripsjonsdata lagres og behandles utelukkende innenfor EU/EØS. Vi bruker ikke
-                  møtedata til å trene AI-modeller.
-                </p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">EU/EØS‑dataresidens</h3>
+                <p className="text-gray-600">All behandling og lagring i EU/EØS. Ingen modelltrening på kundedata.</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition-all">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center">
-                <Server className="w-6 h-6 text-purple-600" />
-              </div>
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md transition-all">
+            <div className="flex items-start gap-3">
+              <Server className="w-6 h-6 text-purple-600 mt-1" />
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-1">SOC 2-sertifisert hosting</h3>
-                <p className="text-gray-600">
-                  Infrastruktur på SOC 2-sertifiserte plattformer med strenge kontroller for sikkerhet, tilgjengelighet og
-                  konfidensialitet. Regelmessig revidert av uavhengige tredjeparter.
-                </p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">SOC 2‑sertifisert hosting</h3>
+                <p className="text-gray-600">Sertifiserte plattformer med strenge kontroller og jevnlige revisjoner.</p>
               </div>
             </div>
           </div>
@@ -79,4 +54,3 @@ export default function SecuritySection() {
     </section>
   );
 }
-
