@@ -19,7 +19,7 @@ export default function Navigation() {
             <Link to="/artikler" className="text-gray-700 hover:text-black transition-colors">Artikler</Link>
             <a href="https://app.notably.no" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-black transition-colors">Logg inn</a>
             <a href="https://app.notably.no/no/sign-up" target="_blank" rel="noopener noreferrer">
-              <ShimmerButton className="px-6 py-2 font-medium">
+              <ShimmerButton background="#2663eb" className="px-6 py-2 font-medium">
                 <span className="whitespace-pre-wrap text-center font-medium leading-none tracking-tight text-white">
                   Start gratis
                 </span>
@@ -49,7 +49,7 @@ export default function Navigation() {
                 <Link to="/artikler" className="text-gray-700 hover:text-black transition-colors">Artikler</Link>
                 <a href="https://app.notably.no" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-black transition-colors">Logg inn</a>
                 <a href="https://app.notably.no/no/sign-up" target="_blank" rel="noopener noreferrer">
-                  <ShimmerButton className="px-6 py-2 font-medium">
+                  <ShimmerButton background="#2663eb" className="px-6 py-2 font-medium">
                     <span className="whitespace-pre-wrap text-center font-medium leading-none tracking-tight text-white">
                       Start gratis
                     </span>
