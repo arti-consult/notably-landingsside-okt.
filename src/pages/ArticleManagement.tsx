@@ -43,6 +43,7 @@ export default function ArticleManagement() {
   const [showImagePicker, setShowImagePicker] = useState(false);
   const [mediaImages, setMediaImages] = useState<MediaItem[]>([]);
   const [featuredImageUrl, setFeaturedImageUrl] = useState('');
+  const [publishedAt, setPublishedAt] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadAltText, setUploadAltText] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -105,6 +106,7 @@ export default function ArticleManagement() {
       setCategoryId(article.category_id || '');
       setStatus(article.status);
       setFeaturedImageId(article.featured_image_id || '');
+      setPublishedAt(article.published_at || null);
 
       if (article.media_library) {
         setFeaturedImageUrl(article.media_library.public_url);
@@ -217,6 +219,11 @@ export default function ArticleManagement() {
       const toc = generateTableOfContents(content);
       const articleStatus = newStatus || status;
 
+      let nextPublishedAt = publishedAt;
+      if (articleStatus === 'published' && !nextPublishedAt) {
+        nextPublishedAt = new Date().toISOString();
+      }
+
       const articleData = {
         title,
         slug,
@@ -229,7 +236,7 @@ export default function ArticleManagement() {
         author_id: user?.id,
         featured_image_id: featuredImageId || null,
         reading_time_minutes: readingTime,
-        published_at: articleStatus === 'published' && !isEditing ? new Date().toISOString() : undefined,
+        published_at: nextPublishedAt,
       };
 
       let articleId = id;
@@ -249,6 +256,8 @@ export default function ArticleManagement() {
         if (error) throw error;
         articleId = data.id;
       }
+
+      setPublishedAt(nextPublishedAt);
 
       await supabase
         .from('article_seo_metadata')
