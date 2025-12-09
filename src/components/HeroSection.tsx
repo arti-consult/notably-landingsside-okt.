@@ -18,9 +18,9 @@ export default function HeroSection() {
           <p>Alltid, <span className="text-blue-500">automatisk</span>.</p>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+        <div className="flex flex-col items-center justify-center gap-3 mb-6">
           <a href="https://app.notably.no/no/sign-up" target="_blank" rel="noopener noreferrer">
-            <ShimmerButton className="px-8 py-3.5 font-medium">
+            <ShimmerButton background="#2663eb" className="px-8 py-3.5 font-medium">
               <span className="whitespace-pre-wrap text-center font-medium leading-none tracking-tight text-white">
                 Start gratis
               </span>
@@ -30,7 +30,7 @@ export default function HeroSection() {
             href="https://calendly.com/d/cxdp-xt7-q9z/notably-motereferat-med-ai"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-8 py-3.5 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-colors font-medium"
+            className="text-blue-600 font-medium hover:underline"
           >
             Book en demo
           </a>
