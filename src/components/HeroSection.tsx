@@ -22,7 +22,7 @@ export default function HeroSection() {
           <a href="https://app.notably.no/no/sign-up" target="_blank" rel="noopener noreferrer">
             <ShimmerButton background="#2663eb" className="px-8 py-3.5 font-medium">
               <span className="whitespace-pre-wrap text-center font-medium leading-none tracking-tight text-white">
-                Start gratis
+                Start gratis prøveperiode
               </span>
             </ShimmerButton>
           </a>
@@ -30,7 +30,7 @@ export default function HeroSection() {
             href="https://calendly.com/d/cxdp-xt7-q9z/notably-motereferat-med-ai"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 font-medium hover:underline"
+            className="text-gray-700 font-medium hover:text-blue-600 hover:underline"
           >
             Book en demo
           </a>
