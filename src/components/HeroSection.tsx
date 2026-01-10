@@ -2,22 +2,22 @@ import { ShimmerButton } from './ShimmerButton';
 
 export default function HeroSection() {
   return (
-    <section className="pt-32 pb-20 md:pb-20 pb-14 page-container relative">
+    <section className="pt-32 pb-10 md:pb-20 page-container relative">
       <div className="max-w-6xl mx-auto text-center">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-normal leading-tight mb-8">
-          <span className="font-semibold">
+        <h1 className="mx-auto max-w-[45rem] text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-normal leading-tight mb-8">
+          <span className="font-semibold whitespace-nowrap">
             Møtereferater med{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600">
               AI
             </span>
             .
           </span>
-          <span className="block mt-2 text-3xl md:text-4xl lg:text-5xl font-normal">
+          <span className="block mt-2 text-xl sm:text-2xl md:text-4xl lg:text-5xl font-normal">
             5 timer spart hver uke.
           </span>
         </h1>
 
-        <p className="text-xl md:text-2xl text-gray-600 mb-12">
+        <p className="mx-auto max-w-[45rem] text-xl md:text-2xl text-gray-600 mb-12">
           Notably skriver møtereferater for deg, og sikrer alle viktige detaljer helt automatisk.
         </p>
 
