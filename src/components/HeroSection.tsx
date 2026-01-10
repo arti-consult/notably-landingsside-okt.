@@ -5,9 +5,16 @@ export default function HeroSection() {
     <section className="pt-32 pb-20 md:pb-20 pb-14 page-container relative">
       <div className="max-w-6xl mx-auto text-center">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-normal leading-tight mb-8">
-          Møtereferater med AI.
-          <br />
-          <span>5 timer spart hver uke.</span>
+          <span className="font-semibold">
+            Møtereferater med{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600">
+              AI
+            </span>
+            .
+          </span>
+          <span className="block text-3xl md:text-4xl lg:text-5xl font-normal">
+            5 timer spart hver uke.
+          </span>
         </h1>
 
         <div className="text-xl md:text-2xl text-gray-600 space-y-1 mb-12">
