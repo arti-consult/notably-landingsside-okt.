@@ -12,7 +12,7 @@ export default function HeroSection() {
             </span>
             .
           </span>
-          <span className="block text-3xl md:text-4xl lg:text-5xl font-normal">
+          <span className="block mt-2 text-3xl md:text-4xl lg:text-5xl font-normal">
             5 timer spart hver uke.
           </span>
         </h1>
