@@ -17,11 +17,9 @@ export default function HeroSection() {
           </span>
         </h1>
 
-        <div className="text-xl md:text-2xl text-gray-600 space-y-1 mb-12">
-          <p>Hvert <span className="text-blue-500">møte</span>, transkribert.</p>
-          <p>Hver <span className="text-blue-500">oppgave</span>, delegert.</p>
-          <p>Alltid, <span className="text-blue-500">automatisk</span>.</p>
-        </div>
+        <p className="text-xl md:text-2xl text-gray-600 mb-12">
+          Notably skriver møtereferater for deg, og sikrer alle viktige detaljer helt automatisk.
+        </p>
 
         <div className="flex flex-col items-center justify-center gap-3 mb-6">
           <a href="https://app.notably.no/no/sign-up" target="_blank" rel="noopener noreferrer">
