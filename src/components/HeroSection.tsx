@@ -4,16 +4,26 @@ export default function HeroSection() {
   return (
     <section className="pt-32 pb-10 md:pb-20 page-container relative">
       <div className="max-w-6xl mx-auto text-center">
-        <h1 className="mx-auto max-w-[45rem] text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-normal leading-tight mb-8">
-          <span className="font-semibold whitespace-nowrap">
-            Møtereferater med{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600">
-              AI
+        <h1 className="mx-auto max-w-[45rem] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal leading-tight mb-8">
+          <span className="font-semibold">
+            <span className="md:hidden">
+              Møtereferater med{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600">
+                kunstig intelligens
+              </span>
+              .
             </span>
-            .
+            <span className="hidden md:inline whitespace-nowrap">
+              Møtereferater med{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600">
+                AI
+              </span>
+              .
+            </span>
           </span>
-          <span className="block mt-2 text-xl sm:text-2xl md:text-4xl lg:text-5xl font-normal">
-            5 timer spart hver uke.
+          <span className="block mt-2 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal">
+            <span className="md:hidden">5 timer spart hver uke</span>
+            <span className="hidden md:inline">5 timer spart hver uke.</span>
           </span>
         </h1>
 
