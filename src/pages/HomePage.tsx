@@ -3,6 +3,7 @@ import HeroSection from '../components/HeroSection';
 import AppDemoSection from '../components/AppDemoSection';
 import TypewriterSection from '../components/TypewriterSection';
 import MeetingSummarySection from '../components/MeetingSummarySection';
+import TestimonialSection from '../components/TestimonialSection';
 import SecuritySection from '../components/SecuritySection';
 import AIAnswersSection from '../components/AIAnswersSection';
 import IntegrationsSection from '../components/IntegrationsSection';
@@ -34,6 +35,7 @@ export default function HomePage() {
       {/* <TrustSection /> */}
       <TypewriterSection />
       <MeetingSummarySection />
+      <TestimonialSection />
       <SecuritySection />
       <AIAnswersSection />
       <IntegrationsSection />
