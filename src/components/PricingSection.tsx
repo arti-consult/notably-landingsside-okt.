@@ -17,7 +17,6 @@ const PricingSection = () => {
       description: 'For profesjonelle brukere',
       features: [
         'Uendelig møter',
-        '200 assistentmeldinger hver dag',
         'Ingen trening på dataen din',
         'Prioritert support'
       ],
@@ -30,6 +29,9 @@ const PricingSection = () => {
       description: 'For team med 20+ brukere',
       features: [
         'Alt i Pro-planen',
+        'Skreddersydd onboarding',
+        'SLA og tilpassede avtaler',
+        'SSO',
         'Volume-baserte rabatter',
         'Dedikert kundekontakt',
         'Ingen trening på dataen din'

@@ -23,7 +23,7 @@ function DisplayCard({
   return (
     <div
       className={cn(
-        "relative flex h-32 w-72 sm:h-36 sm:w-[22rem] -skew-y-[8deg] select-none flex-col justify-between rounded-xl border-2 bg-white/95 backdrop-blur-md px-3 py-2 sm:px-4 sm:py-3 transition-all duration-700 after:absolute after:-right-1 after:top-[-5%] after:h-[110%] after:w-[16rem] sm:after:w-[20rem] after:bg-gradient-to-l after:from-background after:to-transparent after:content-[''] hover:border-white/20 hover:bg-white [&>*]:flex [&>*]:items-center [&>*]:gap-2",
+        "relative flex h-28 w-64 sm:h-32 sm:w-80 -skew-y-[8deg] select-none flex-col justify-between rounded-xl border-2 bg-white/95 backdrop-blur-md px-3 py-2 sm:px-4 sm:py-3 transition-all duration-700 after:absolute after:-right-1 after:top-[-5%] after:h-[110%] after:w-[14rem] sm:after:w-[18rem] after:bg-gradient-to-l after:from-background after:to-transparent after:content-[''] hover:border-white/20 hover:bg-white [&>*]:flex [&>*]:items-center [&>*]:gap-2",
         className
       )}
     >
@@ -31,9 +31,9 @@ function DisplayCard({
         <span className={cn("relative inline-block rounded-full p-1 transition-colors duration-700", iconClassName, "group-hover:bg-opacity-10")}>
           {icon}
         </span>
-        <p className={cn("text-sm sm:text-lg font-medium transition-colors duration-700", titleClassName)}>{title}</p>
+        <p className={cn("text-sm sm:text-base font-medium transition-colors duration-700", titleClassName)}>{title}</p>
       </div>
-      <p className="whitespace-nowrap text-sm sm:text-lg text-gray-900 font-medium truncate">{description}</p>
+      <p className="whitespace-nowrap text-sm sm:text-base text-gray-900 font-medium truncate">{description}</p>
       <p className="text-muted-foreground text-xs sm:text-sm">{date}</p>
     </div>
   );

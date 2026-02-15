@@ -3,8 +3,8 @@ import DisplayCards from './DisplayCards';
 
 export default function MeetingSummarySection() {
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
+    <section className="py-20 page-container bg-white">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-10 items-center">
         <div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 text-gray-900">Glem stresset med å ta notater.</h2>
           <p className="text-gray-600 text-base sm:text-lg mb-6 lg:mb-8">
@@ -33,7 +33,7 @@ export default function MeetingSummarySection() {
             </span>
           </div>
         </div>
-        <div className="relative flex items-center justify-center min-h-[300px] sm:min-h-[400px] overflow-hidden pb-14 sm:pb-0">
+        <div className="relative flex items-center justify-center min-h-[280px] sm:min-h-[360px] overflow-hidden pb-10 sm:pb-0">
           <DisplayCards cards={[
             {
               icon: <Video className="size-4 text-white" />,
@@ -42,7 +42,7 @@ export default function MeetingSummarySection() {
               date: "I morgen 10:00",
               iconClassName: "bg-blue-600",
               titleClassName: "text-blue-600",
-              className: "[grid-area:stack] hover:-translate-y-10 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0",
+              className: "[grid-area:stack] hover:-translate-y-8 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0",
             },
             {
               icon: <MessageSquare className="size-4 text-white" />,
@@ -51,7 +51,7 @@ export default function MeetingSummarySection() {
               date: "Fredag 14:30",
               iconClassName: "bg-green-600",
               titleClassName: "text-green-600",
-              className: "[grid-area:stack] translate-x-16 translate-y-10 hover:-translate-y-1 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0",
+              className: "[grid-area:stack] translate-x-12 translate-y-8 hover:-translate-y-1 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0",
             },
             {
               icon: <UserCircle className="size-4 text-white" />,
@@ -60,7 +60,7 @@ export default function MeetingSummarySection() {
               date: "Onsdag 15:00",
               iconClassName: "bg-purple-600",
               titleClassName: "text-purple-600",
-              className: "[grid-area:stack] translate-x-32 translate-y-20 hover:translate-y-10",
+              className: "[grid-area:stack] translate-x-24 translate-y-16 hover:translate-y-8",
             },
           ]} />
           <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-white pointer-events-none sm:hidden"></div>

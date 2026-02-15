@@ -50,7 +50,7 @@ export default function HeroSection() {
         </div>
 
         <p className="text-sm text-gray-500">
-          Fungerer med Microsoft Teams og Google Meet
+          Fungerer med Microsoft Teams, Zoom og Google Meet
         </p>
       </div>
     </section>
