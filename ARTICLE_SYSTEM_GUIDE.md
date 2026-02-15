@@ -162,7 +162,7 @@ Systemet bruker følgende tabeller i Supabase:
 ## Feilsøking
 
 ### AI-generering fungerer ikke
-- Sjekk at OpenAI API-nøkkelen er gyldig
+- Sjekk at `OPENAI_API_KEY` er satt som secret i Supabase (Edge Functions)
 - Sørg for at du har skrevet nok innhold først
 - Prøv igjen om noen sekunder
 
@@ -177,7 +177,7 @@ Systemet bruker følgende tabeller i Supabase:
 
 ## API-nøkler
 
-OpenAI API-nøkkelen er hardkodet i `/src/lib/openai.ts`. For produksjon, bør denne flyttes til miljøvariabler.
+OpenAI API-nøkkelen lagres som secret i Supabase Edge Functions (`OPENAI_API_KEY`) og skal ikke ligge i frontend eller i repo.
 
 ## Fremtidige forbedringer
 

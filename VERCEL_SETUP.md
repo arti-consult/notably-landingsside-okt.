@@ -31,10 +31,22 @@ For lokal utvikling er miljøvariablene allerede satt opp i `.env` filen i prosj
 
 Edge functions (som `waitlist-signup`) får automatisk tilgang til `SUPABASE_URL` og `SUPABASE_SERVICE_ROLE_KEY` fra Supabase selv - disse trenger ikke settes opp i Vercel.
 
+## OpenAI (artikkelsystem)
+
+OpenAI-nøkkelen skal **ikke** ligge i frontend/Vite. Sett den som secret for Edge Functions:
+
+1. Supabase Dashboard → Project Settings → Functions → Secrets
+2. Legg til `OPENAI_API_KEY` med verdien din
+
+Alternativt via CLI:
+
+```bash
+supabase secrets set OPENAI_API_KEY=din_nokkel
+```
+
 ---
 
 **Prosjektinformasjon:**
 - Supabase Project: Notably | Nettside
 - Project ID: qelklrrxciwomrwunzjo
 - Database: bolt-native-database-57918369
-

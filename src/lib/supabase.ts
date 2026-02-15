@@ -33,6 +33,9 @@ if (!supabaseUrl || !supabaseAnonKey) {
       signOut: () => Promise.resolve({ error: null })
     },
     from: () => chain(),
+    functions: {
+      invoke: async () => ({ data: null, error: { message: 'Supabase not configured' } }),
+    },
     storage: {
       from: () => ({
         upload: async () => ({ data: null, error: { message: 'Supabase not configured' } }),
