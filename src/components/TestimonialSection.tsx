@@ -8,12 +8,16 @@ export default function TestimonialSection() {
           </p>
           <p className="mt-5 text-base font-medium text-gray-700 sm:text-lg">Bent Andreassen, CEO</p>
           <div className="mt-4 flex items-center justify-center">
-            <img
-              src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1771237686841.svg"
-              alt="Pharma Nordic logo"
-              className="h-6 object-contain sm:h-7"
-              loading="lazy"
-            />
+            <picture>
+              <source media="(max-width: 639px)" srcSet="/Pharma%20Nordic%20logo.png" type="image/png" />
+              <img
+                src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1771237686841.svg"
+                alt="Pharma Nordic logo"
+                className="h-7 w-auto object-contain"
+                loading="eager"
+                decoding="async"
+              />
+            </picture>
           </div>
         </div>
       </div>
