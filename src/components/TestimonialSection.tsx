@@ -9,7 +9,7 @@ export default function TestimonialSection() {
           <p className="mt-5 text-base font-medium text-gray-700 sm:text-lg">Bent Andreassen, CEO</p>
           <div className="mt-4 flex items-center justify-center">
             <img
-              src="/Pharma%20Nordic%20logo.png"
+              src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1771237686841.svg"
               alt="Pharma Nordic logo"
               className="h-6 object-contain sm:h-7"
               loading="lazy"

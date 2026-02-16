@@ -17,6 +17,8 @@ interface Article {
   published_at: string;
   reading_time_minutes: number;
   view_count: number;
+  author_name: string | null;
+  author_profile_picture_url: string | null;
   article_categories: { name: string; slug: string } | null;
   article_tags: Array<{ tag: string }>;
   article_seo_metadata: {
@@ -185,15 +187,19 @@ export default function ArticlePage() {
   const metaTitle = article.article_seo_metadata?.meta_title || article.title;
   const metaDescription = article.article_seo_metadata?.meta_description || article.excerpt || '';
   const ogImage = article.article_seo_metadata?.og_image || article.media_library?.public_url || '';
+  const authorName = article.author_name?.trim() || 'Notably Team';
+  const authorInitial = authorName.charAt(0).toUpperCase();
 
   return (
     <>
       <Helmet>
         <title>{metaTitle}</title>
         <meta name="description" content={metaDescription} />
+        <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
         <link rel="canonical" href={canonicalUrl} />
 
         <meta property="og:type" content="article" />
+        <meta property="og:locale" content="nb_NO" />
         <meta property="og:title" content={article.article_seo_metadata?.og_title || metaTitle} />
         <meta property="og:description" content={article.article_seo_metadata?.og_description || metaDescription} />
         <meta property="og:url" content={canonicalUrl} />
@@ -257,7 +263,24 @@ export default function ArticlePage() {
                   {article.title}
                 </h1>
 
-                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600">
+                  <div className="flex items-center gap-3">
+                    {article.author_profile_picture_url ? (
+                      <img
+                        src={article.author_profile_picture_url}
+                        alt={authorName}
+                        className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-sm font-semibold text-gray-700">
+                        {authorInitial}
+                      </div>
+                    )}
+                    <div className="leading-tight">
+                      <p className="text-xs uppercase tracking-wide text-gray-500">Publisert av</p>
+                      <p className="text-sm font-medium text-gray-900">{authorName}</p>
+                    </div>
+                  </div>
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
                     <time dateTime={article.published_at}>

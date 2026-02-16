@@ -16,6 +16,31 @@ import Footer from '../components/Footer';
 import { Helmet } from 'react-helmet-async';
 
 export default function HomePage() {
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        name: 'Notably',
+        url: 'https://notably.no/',
+        logo: 'https://notably.no/Notably%20logo%20icon.svg',
+      },
+      {
+        '@type': 'SoftwareApplication',
+        name: 'Notably',
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web',
+        inLanguage: 'nb',
+        url: 'https://notably.no/',
+        offers: {
+          '@type': 'Offer',
+          price: '399',
+          priceCurrency: 'NOK',
+        },
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Helmet>
@@ -24,7 +49,25 @@ export default function HomePage() {
           name="description"
           content="Notably er den norske AI-møteassistenten som automatisk tar møtenotater, skriver referater og besvarer spørsmål om møtene dine. Spar timer hver uke med AI-teknologi spesialtrent for norsk."
         />
+        <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
         <link rel="canonical" href="https://notably.no/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="nb_NO" />
+        <meta property="og:url" content="https://notably.no/" />
+        <meta property="og:title" content="Notably - AI Møteassistent for Norske Bedrifter | Automatiske Møtereferater" />
+        <meta
+          property="og:description"
+          content="Notably er den norske AI-møteassistenten som automatisk tar møtenotater, skriver referater og besvarer spørsmål om møtene dine."
+        />
+        <meta property="og:image" content="https://notably.no/Notably%20logo%20icon.svg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Notably - AI Møteassistent for Norske Bedrifter | Automatiske Møtereferater" />
+        <meta
+          name="twitter:description"
+          content="Notably er den norske AI-møteassistenten som automatisk tar møtenotater, skriver referater og besvarer spørsmål om møtene dine."
+        />
+        <meta name="twitter:image" content="https://notably.no/Notably%20logo%20icon.svg" />
+        <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
       <Navigation />
       <div className="relative bg-gradient-to-b from-blue-50/40 via-amber-50/30 to-gray-50">

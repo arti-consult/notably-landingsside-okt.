@@ -9,6 +9,8 @@ export interface Article {
   category_id: string | null;
   status: 'draft' | 'published' | 'scheduled' | 'archived';
   author_id: string | null;
+  author_name: string | null;
+  author_profile_picture_url: string | null;
   published_at: string | null;
   scheduled_for: string | null;
   view_count: number;

@@ -44,6 +44,27 @@ Alternativt via CLI:
 supabase secrets set OPENAI_API_KEY=din_nokkel
 ```
 
+## Automatisk sitemap ved publisering av artikler
+
+For at nye publiserte artikler automatisk skal komme med i sitemap uten manuell push:
+
+1. Opprett en Deploy Hook i Vercel:
+   - Project → Settings → Git → Deploy Hooks
+2. Kopier hook-URLen
+3. Legg hook-URLen inn som Supabase Function secret:
+
+```bash
+supabase secrets set VERCEL_DEPLOY_HOOK_URL=https://api.vercel.com/v1/integrations/deploy/...
+```
+
+4. Deploy Edge Function:
+
+```bash
+supabase functions deploy trigger-site-rebuild
+```
+
+Når en artikkel lagres/publiseres i admin, trigges denne funksjonen og starter en ny deploy. Under deploy kjøres sitemap-generatoren automatisk.
+
 ---
 
 **Prosjektinformasjon:**

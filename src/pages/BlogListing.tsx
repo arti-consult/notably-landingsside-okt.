@@ -14,6 +14,8 @@ interface Article {
   published_at: string;
   reading_time_minutes: number;
   author_id: string;
+  author_name: string | null;
+  author_profile_picture_url: string | null;
   article_categories: { name: string; slug: string } | null;
   media_library: { public_url: string; alt_text: string } | null;
 }
@@ -91,12 +93,23 @@ export default function BlogListing() {
     });
   };
 
+  const getAuthorName = (article: Article) => article.author_name?.trim() || 'Notably Team';
+
   return (
     <>
       <Helmet>
         <title>Artikler - Notably</title>
         <meta name="description" content="Les artikler om møtereferat, AI-transkripsjon, produktivitet og mer fra Notably." />
+        <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
         <link rel="canonical" href="https://notably.no/artikler" />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="nb_NO" />
+        <meta property="og:url" content="https://notably.no/artikler" />
+        <meta property="og:title" content="Artikler - Notably" />
+        <meta
+          property="og:description"
+          content="Les artikler om møtereferat, AI-transkripsjon, produktivitet og mer fra Notably."
+        />
       </Helmet>
 
       <Navigation />
@@ -154,12 +167,20 @@ export default function BlogListing() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                        N
-                      </div>
+                      {featuredArticle.author_profile_picture_url ? (
+                        <img
+                          src={featuredArticle.author_profile_picture_url}
+                          alt={getAuthorName(featuredArticle)}
+                          className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold">
+                          {getAuthorName(featuredArticle).charAt(0).toUpperCase()}
+                        </div>
+                      )}
                       <div>
-                        <div className="text-sm font-medium text-gray-900">Notably Team</div>
-                        <div className="text-sm text-gray-500">Content Editor</div>
+                        <div className="text-sm font-medium text-gray-900">{getAuthorName(featuredArticle)}</div>
+                        <div className="text-sm text-gray-500">Forfatter</div>
                       </div>
                     </div>
                   </div>
@@ -255,6 +276,10 @@ export default function BlogListing() {
                         </time>
                         <span>•</span>
                         <span>{article.reading_time_minutes} min</span>
+                      </div>
+
+                      <div className="text-sm text-gray-600">
+                        Av {getAuthorName(article)}
                       </div>
                     </div>
                   </Link>

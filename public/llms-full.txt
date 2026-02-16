@@ -1,0 +1,53 @@
+# Notably - LLM full snapshot
+Last updated: 2026-02-16
+Primary website: https://notably.no/
+
+This document is for machine reading and retrieval. It summarizes key product information for Notably and points to canonical URLs.
+
+## One-line summary
+Notably is a Norwegian AI meeting assistant that automates meeting notes, summaries, action items and post-meeting follow-up.
+
+## Core positioning
+- AI meeting notes for Norwegian teams.
+- Designed for AI motereferat / AI motenotater workflows.
+- Focus on productivity and meeting knowledge retention.
+
+## Product capabilities
+- Automatic meeting documentation.
+- Meeting summaries with key decisions and tasks.
+- Cross-meeting question answering in the product UI.
+- Integrations shown on site: Microsoft Teams, Outlook Calendar, Google Meet, Google Calendar.
+- Stated platform support on homepage: Microsoft Teams, Zoom, Google Meet.
+
+## Security and privacy claims on site
+- GDPR-compatible workflows.
+- Data residency in EU/EEA.
+- Encryption: AES-256 at rest and TLS in transit.
+- No training on customer data.
+- Hosting on SOC 2 certified infrastructure.
+
+## Pricing snapshot
+- Pro: 399 NOK per user per month.
+- Enterprise: contact sales.
+- Trial: 14 days.
+
+## Public canonical URLs
+- Homepage: https://notably.no/
+- Articles: https://notably.no/artikler
+- Privacy: https://notably.no/personvern
+- Terms: https://notably.no/vilkar
+- Sign up: https://app.notably.no/no/sign-up
+
+## LLM markdown URLs
+- https://notably.no/llms/notably-overview.md
+- https://notably.no/llms/notably-product.md
+- https://notably.no/llms/notably-security-personvern.md
+- https://notably.no/llms/notably-pricing.md
+- https://notably.no/llms/notably-use-cases.md
+
+## Contact
+- legal@notably.no
+
+## Freshness
+- robots: https://notably.no/robots.txt
+- sitemap: https://notably.no/sitemap.xml

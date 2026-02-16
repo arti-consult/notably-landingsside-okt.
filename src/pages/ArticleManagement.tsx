@@ -44,6 +44,8 @@ export default function ArticleManagement() {
   const [mediaImages, setMediaImages] = useState<MediaItem[]>([]);
   const [featuredImageUrl, setFeaturedImageUrl] = useState('');
   const [publishedAt, setPublishedAt] = useState<string | null>(null);
+  const [initialStatus, setInitialStatus] = useState<'draft' | 'published' | 'scheduled' | 'archived' | null>(null);
+  const [initialSlug, setInitialSlug] = useState('');
   const [uploading, setUploading] = useState(false);
   const [uploadAltText, setUploadAltText] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -105,8 +107,10 @@ export default function ArticleManagement() {
       setFaq(article.faq_json || []);
       setCategoryId(article.category_id || '');
       setStatus(article.status);
+      setInitialStatus(article.status);
       setFeaturedImageId(article.featured_image_id || '');
       setPublishedAt(article.published_at || null);
+      setInitialSlug(article.slug || '');
 
       if (article.media_library) {
         setFeaturedImageUrl(article.media_library.public_url);
@@ -207,6 +211,38 @@ export default function ArticleManagement() {
     setFaq(updated);
   };
 
+  const getCurrentAuthorSnapshot = async () => {
+    if (!user?.id) {
+      return {
+        authorName: 'Notably Team',
+        authorProfilePictureUrl: null as string | null,
+      };
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('admin_users')
+        .select('full_name, profile_picture_url')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.warn('Could not load admin profile for author snapshot:', error);
+      }
+
+      return {
+        authorName: data?.full_name?.trim() || 'Notably Team',
+        authorProfilePictureUrl: data?.profile_picture_url || null,
+      };
+    } catch (error) {
+      console.warn('Could not load admin profile for author snapshot:', error);
+      return {
+        authorName: 'Notably Team',
+        authorProfilePictureUrl: null as string | null,
+      };
+    }
+  };
+
   const handleSave = async (newStatus?: typeof status) => {
     if (!title || !slug || !content) {
       alert('Vennligst fyll ut tittel, slug og innhold');
@@ -218,6 +254,8 @@ export default function ArticleManagement() {
       const readingTime = calculateReadingTime(content);
       const toc = generateTableOfContents(content);
       const articleStatus = newStatus || status;
+      const previousStatus = isEditing ? initialStatus : null;
+      const previousSlug = isEditing ? initialSlug : '';
 
       let nextPublishedAt = publishedAt;
       if (articleStatus === 'published' && !nextPublishedAt) {
@@ -233,7 +271,6 @@ export default function ArticleManagement() {
         faq_json: faq,
         category_id: categoryId || null,
         status: articleStatus,
-        author_id: user?.id,
         featured_image_id: featuredImageId || null,
         reading_time_minutes: readingTime,
         published_at: nextPublishedAt,
@@ -247,9 +284,15 @@ export default function ArticleManagement() {
           .update(articleData)
           .eq('id', id);
       } else {
+        const authorSnapshot = await getCurrentAuthorSnapshot();
         const { data, error } = await supabase
           .from('articles')
-          .insert(articleData)
+          .insert({
+            ...articleData,
+            author_id: user?.id || null,
+            author_name: authorSnapshot.authorName,
+            author_profile_picture_url: authorSnapshot.authorProfilePictureUrl,
+          })
           .select()
           .single();
 
@@ -258,6 +301,8 @@ export default function ArticleManagement() {
       }
 
       setPublishedAt(nextPublishedAt);
+      setInitialStatus(articleStatus);
+      setInitialSlug(slug);
 
       await supabase
         .from('article_seo_metadata')
@@ -284,6 +329,30 @@ export default function ArticleManagement() {
         await supabase
           .from('article_tags')
           .insert(keywords.map(tag => ({ article_id: articleId, tag })));
+      }
+
+      const shouldTriggerRebuild =
+        articleStatus === 'published' ||
+        previousStatus === 'published' ||
+        (isEditing && previousSlug !== slug && (articleStatus === 'published' || previousStatus === 'published'));
+
+      if (shouldTriggerRebuild) {
+        try {
+          const { error: rebuildError } = await supabase.functions.invoke('trigger-site-rebuild', {
+            body: {
+              articleId,
+              status: articleStatus,
+              slug,
+              previousSlug: previousSlug || null,
+            },
+          });
+
+          if (rebuildError) {
+            console.warn('Could not trigger site rebuild hook:', rebuildError);
+          }
+        } catch (hookError) {
+          console.warn('Could not trigger site rebuild hook:', hookError);
+        }
       }
 
       alert('Artikkelen ble lagret!');

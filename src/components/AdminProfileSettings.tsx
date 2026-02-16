@@ -94,10 +94,12 @@ export default function AdminProfileSettings() {
     setMessage(null);
 
     try {
+      const displayName = profile.full_name?.trim() || 'Notably Team';
+
       const { error } = await supabase
         .from('admin_users')
         .update({
-          full_name: profile.full_name || null,
+          full_name: profile.full_name?.trim() || null,
           bio: profile.bio || null,
           profile_picture_url: profile.profile_picture_url,
           updated_at: new Date().toISOString(),
@@ -106,7 +108,24 @@ export default function AdminProfileSettings() {
 
       if (error) throw error;
 
-      setMessage({ type: 'success', text: 'Profil oppdatert' });
+      const { error: articleSyncError } = await supabase
+        .from('articles')
+        .update({
+          author_name: displayName,
+          author_profile_picture_url: profile.profile_picture_url,
+        })
+        .eq('author_id', user.id);
+
+      if (articleSyncError) {
+        console.error('Error syncing author data to articles:', articleSyncError);
+        setMessage({
+          type: 'success',
+          text: 'Profil oppdatert, men kunne ikke synkronisere eksisterende artikler.',
+        });
+        return;
+      }
+
+      setMessage({ type: 'success', text: 'Profil oppdatert og synkronisert til artikler' });
     } catch (error) {
       console.error('Error saving profile:', error);
       setMessage({ type: 'error', text: 'Kunne ikke lagre profil' });
