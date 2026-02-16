@@ -34,7 +34,7 @@ const ProblemSection = () => {
                 Utfordringen
               </p>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-5">
-                Møtene er ferdige, men jakten på innsikt fortsetter.
+                Etter møtet starter letingen etter beslutninger, oppgaver og neste steg.
               </h2>
               <p className="text-gray-600 text-lg leading-relaxed max-w-2xl">
                 Når møteinformasjon er spredt, går tiden til å lete i notater, chat og opptak i stedet for å skape fremdrift.
