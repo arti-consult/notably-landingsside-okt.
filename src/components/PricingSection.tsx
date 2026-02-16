@@ -76,6 +76,9 @@ const PricingSection = () => {
             {plans.map((plan, index) => {
               const price = plan.monthlyPrice;
               const priceInclVat = price !== null ? Math.round(price * 1.25) : null;
+              const ctaClass = plan.name === 'Pro'
+                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                : 'bg-gray-900 text-white hover:bg-black';
 
               return (
                 <div
@@ -134,11 +137,7 @@ const PricingSection = () => {
                     <button
                       type="button"
                       onClick={() => setIsContactModalOpen(true)}
-                      className={`w-full py-3.5 rounded-full font-medium transition-all duration-300 mt-auto block text-center ${
-                        plan.highlighted
-                          ? 'bg-black text-white hover:bg-gray-900'
-                          : 'bg-gray-900 text-white hover:bg-gray-800'
-                      }`}
+                      className={`w-full py-3.5 rounded-full font-medium transition-all duration-300 mt-auto block text-center ${ctaClass}`}
                     >
                       {plan.cta}
                     </button>
@@ -147,11 +146,7 @@ const PricingSection = () => {
                       href="https://app.notably.no/no/sign-up"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`w-full py-3.5 rounded-full font-medium transition-all duration-300 mt-auto block text-center ${
-                        plan.highlighted
-                          ? 'bg-black text-white hover:bg-gray-900'
-                          : 'bg-gray-900 text-white hover:bg-gray-800'
-                      }`}
+                      className={`w-full py-3.5 rounded-full font-medium transition-all duration-300 mt-auto block text-center ${ctaClass}`}
                     >
                       {plan.cta}
                     </a>
