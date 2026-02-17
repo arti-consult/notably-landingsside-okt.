@@ -72,7 +72,7 @@ const PricingSection = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             {plans.map((plan, index) => {
               const price = plan.monthlyPrice;
               const priceInclVat = price !== null ? Math.round(price * 1.25) : null;
@@ -83,7 +83,7 @@ const PricingSection = () => {
               return (
                 <div
                   key={index}
-                  className={`bg-white rounded-3xl p-8 transition-all duration-300 flex flex-col relative ${
+                  className={`bg-white rounded-3xl p-7 transition-all duration-300 flex flex-col relative ${
                     plan.highlighted
                       ? 'ring-2 ring-blue-600 shadow-xl scale-105'
                       : 'shadow-lg hover:shadow-xl'
@@ -95,14 +95,14 @@ const PricingSection = () => {
                     </div>
                   )}
 
-                  <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                  <p className="text-gray-600 mb-6">{plan.description}</p>
+                  <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
+                  <p className="text-gray-600 mb-5">{plan.description}</p>
 
-                  <div className="mb-6">
+                  <div className="mb-5">
                     {price !== null ? (
                       <>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-5xl font-bold">{price},-</span>
+                          <span className="text-[2.55rem] font-bold">{price},-</span>
                         </div>
                         <p className="text-gray-600 mt-2">
                           per bruker per måned
@@ -119,11 +119,11 @@ const PricingSection = () => {
                   </div>
 
                   <div className="flex-grow">
-                    <div className="space-y-4 mb-8">
+                    <div className="space-y-3 mb-7">
                       {plan.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-start gap-3">
-                          <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <Check className="w-3 h-3 text-blue-600" />
+                        <div key={idx} className="flex items-start gap-2.5">
+                          <div className="w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <Check className="w-2.5 h-2.5 text-blue-600" />
                           </div>
                           <span className="text-gray-700 text-sm leading-relaxed">
                             {feature}
@@ -137,7 +137,7 @@ const PricingSection = () => {
                     <button
                       type="button"
                       onClick={() => setIsContactModalOpen(true)}
-                      className={`w-full py-3.5 rounded-full font-medium transition-all duration-300 mt-auto block text-center ${ctaClass}`}
+                      className={`w-full py-3 rounded-full font-medium transition-all duration-300 mt-auto block text-center ${ctaClass}`}
                     >
                       {plan.cta}
                     </button>
@@ -146,7 +146,7 @@ const PricingSection = () => {
                       href="https://app.notably.no/no/sign-up"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`w-full py-3.5 rounded-full font-medium transition-all duration-300 mt-auto block text-center ${ctaClass}`}
+                      className={`w-full py-3 rounded-full font-medium transition-all duration-300 mt-auto block text-center ${ctaClass}`}
                     >
                       {plan.cta}
                     </a>
