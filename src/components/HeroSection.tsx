@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle2, Clock3, Languages } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export default function HeroSection() {
   return (
@@ -45,27 +45,6 @@ export default function HeroSection() {
               >
                 Book en demo
               </a>
-            </div>
-
-            <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
-              <div className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3">
-                <div className="flex items-center gap-2 text-slate-900 font-semibold text-sm">
-                  <Clock3 className="w-4 h-4 text-blue-600" />
-                  5 timer spart hver uke
-                </div>
-              </div>
-              <div className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3">
-                <div className="flex items-center gap-2 text-slate-900 font-semibold text-sm">
-                  <Languages className="w-4 h-4 text-blue-600" />
-                  90+ språk støttes
-                </div>
-              </div>
-              <div className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3">
-                <div className="flex items-center gap-2 text-slate-900 font-semibold text-sm">
-                  <CheckCircle2 className="w-4 h-4 text-blue-600" />
-                  Fra møte til oppfølging
-                </div>
-              </div>
             </div>
 
             <p className="mt-6 text-sm sm:text-base text-slate-500">

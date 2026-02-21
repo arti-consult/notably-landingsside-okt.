@@ -1,6 +1,5 @@
 import Navigation from '../components/Navigation';
 import HeroSection from '../components/HeroSection';
-import AppDemoSection from '../components/AppDemoSection';
 import MeetingSummarySection from '../components/MeetingSummarySection';
 import TestimonialSection from '../components/TestimonialSection';
 import SecuritySection from '../components/SecuritySection';
@@ -72,7 +71,6 @@ export default function HomePage() {
       <Navigation />
       <div className="relative bg-gradient-to-b from-slate-100 via-blue-50/70 to-gray-50">
         <HeroSection />
-        <AppDemoSection />
       </div>
       {/* <TrustSection /> */}
       <MeetingSummarySection />
