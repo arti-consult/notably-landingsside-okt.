@@ -70,7 +70,7 @@ export default function HomePage() {
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
       <Navigation />
-      <div className="relative bg-gradient-to-b from-blue-50/40 via-amber-50/30 to-gray-50">
+      <div className="relative bg-gradient-to-b from-slate-100 via-blue-50/70 to-gray-50">
         <HeroSection />
         <AppDemoSection />
       </div>
