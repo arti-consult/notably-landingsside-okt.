@@ -1,5 +1,6 @@
 import Navigation from '../components/Navigation';
 import HeroSection from '../components/HeroSection';
+import TrustSection from '../components/TrustSection';
 import MeetingSummarySection from '../components/MeetingSummarySection';
 import TestimonialSection from '../components/TestimonialSection';
 import SecuritySection from '../components/SecuritySection';
@@ -73,7 +74,7 @@ export default function HomePage() {
         <HeroSection />
         <div aria-hidden className="h-20 bg-gradient-to-b from-gray-50 to-white" />
       </div>
-      {/* <TrustSection /> */}
+      <TrustSection />
       <MeetingSummarySection />
       <TestimonialSection />
       <SecuritySection />
