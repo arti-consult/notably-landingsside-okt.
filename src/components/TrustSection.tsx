@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
 interface MediaLogo {
@@ -15,6 +15,7 @@ interface TrustLogo {
 }
 
 const targetCompanies = ['1881', 'O breivik eiendom', 'Pharma nordic', 'Møbelringen', 'Brave'] as const;
+const mobileCompanies = ['Brave', 'Møbelringen', '1881'] as const;
 
 const normalizeValue = (value: string | null | undefined) =>
   (value || '')
@@ -37,6 +38,11 @@ const matchesCompany = (logo: MediaLogo, company: string) => {
 
 export default function TrustSection() {
   const [logos, setLogos] = useState<TrustLogo[]>(targetCompanies.map((company) => ({ company, logo: null })));
+
+  const mobileLogos = useMemo(
+    () => mobileCompanies.map((company) => logos.find((item) => item.company === company) || { company, logo: null }),
+    [logos]
+  );
 
   useEffect(() => {
     const loadTrustLogos = async () => {
@@ -68,25 +74,49 @@ export default function TrustSection() {
             Brukt av team hos
           </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-            {logos.map((item) => (
+          <div className="grid grid-cols-3 gap-3 md:hidden">
+            {mobileLogos.map((item) => (
               <div
                 key={item.company}
-                className="h-20 sm:h-24 flex items-center justify-center px-3 sm:px-4"
+                className="h-14 flex items-center justify-center px-2"
               >
                 {item.logo ? (
                   <div className="relative inline-flex items-center justify-center max-w-full">
                     <img
                       src={item.logo.public_url}
                       alt={item.logo.alt_text || `${item.company} logo`}
-                      className="max-h-10 sm:max-h-12 w-auto max-w-full object-contain"
+                      className="max-h-8 w-auto max-w-full object-contain"
                       loading="lazy"
                       decoding="async"
                     />
-                    <div aria-hidden className="absolute inset-0 bg-white/35 pointer-events-none" />
+                    <div aria-hidden className="absolute inset-0 bg-white/25 pointer-events-none" />
                   </div>
                 ) : (
-                  <span className="text-sm sm:text-base font-semibold text-slate-600 text-center">{item.company}</span>
+                  <span className="text-xs font-semibold text-slate-600 text-center leading-tight">{item.company}</span>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden md:grid md:grid-cols-5 gap-6">
+            {logos.map((item) => (
+              <div
+                key={item.company}
+                className="h-24 lg:h-28 flex items-center justify-center px-4"
+              >
+                {item.logo ? (
+                  <div className="relative inline-flex items-center justify-center max-w-full">
+                    <img
+                      src={item.logo.public_url}
+                      alt={item.logo.alt_text || `${item.company} logo`}
+                      className="max-h-14 lg:max-h-16 w-auto max-w-full object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div aria-hidden className="absolute inset-0 bg-white/25 pointer-events-none" />
+                  </div>
+                ) : (
+                  <span className="text-base font-semibold text-slate-600 text-center">{item.company}</span>
                 )}
               </div>
             ))}
