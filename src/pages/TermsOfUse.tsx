@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import termsText from '../content/terms-of-use.txt?raw';
+import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL } from '../lib/seo';
 
 export default function TermsOfUse() {
   const headings = new Set([
@@ -96,6 +97,27 @@ export default function TermsOfUse() {
         <title>Vilkår for bruk - Notably</title>
         <meta name="description" content="Les våre vilkår for bruk for Notably. Denne siden beskriver rammer for bruk av tjenesten og ansvar mellom partene." />
         <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://notably.no/vilkar" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Notably" />
+        <meta property="og:locale" content="nb_NO" />
+        <meta property="og:url" content="https://notably.no/vilkar" />
+        <meta property="og:title" content="Vilkår for bruk - Notably" />
+        <meta
+          property="og:description"
+          content="Les våre vilkår for bruk for Notably. Denne siden beskriver rammer for bruk av tjenesten og ansvar mellom partene."
+        />
+        <meta property="og:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
+        <meta property="og:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://notably.no/vilkar" />
+        <meta name="twitter:title" content="Vilkår for bruk - Notably" />
+        <meta
+          name="twitter:description"
+          content="Les våre vilkår for bruk for Notably. Denne siden beskriver rammer for bruk av tjenesten og ansvar mellom partene."
+        />
+        <meta name="twitter:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
+        <meta name="twitter:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
       </Helmet>
 
       <div className="min-h-screen bg-black text-white">

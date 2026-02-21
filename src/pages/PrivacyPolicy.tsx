@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
+import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL } from '../lib/seo';
 
 export default function PrivacyPolicy() {
   return (
@@ -9,6 +10,27 @@ export default function PrivacyPolicy() {
         <title>Personvernerklæring - Notably</title>
         <meta name="description" content="Les vår personvernerklæring for informasjon om hvordan Notably samler inn, bruker og beskytter dine personopplysninger." />
         <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://notably.no/personvern" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Notably" />
+        <meta property="og:locale" content="nb_NO" />
+        <meta property="og:url" content="https://notably.no/personvern" />
+        <meta property="og:title" content="Personvernerklæring - Notably" />
+        <meta
+          property="og:description"
+          content="Les vår personvernerklæring for informasjon om hvordan Notably samler inn, bruker og beskytter dine personopplysninger."
+        />
+        <meta property="og:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
+        <meta property="og:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://notably.no/personvern" />
+        <meta name="twitter:title" content="Personvernerklæring - Notably" />
+        <meta
+          name="twitter:description"
+          content="Les vår personvernerklæring for informasjon om hvordan Notably samler inn, bruker og beskytter dine personopplysninger."
+        />
+        <meta name="twitter:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
+        <meta name="twitter:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
       </Helmet>
 
       <div className="min-h-screen bg-black text-white">

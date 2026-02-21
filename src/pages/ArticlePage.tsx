@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
-import { Clock, Calendar, Tag, ChevronRight, Home } from 'lucide-react';
+import { Clock, Calendar, Tag, ChevronRight, Home, Share2, Linkedin, Facebook, Link2 } from 'lucide-react';
+import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL, SITE_NAME, SITE_URL } from '../lib/seo';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 
@@ -15,6 +16,7 @@ interface Article {
   tldr: string | null;
   faq_json: Array<{ question: string; answer: string }> | null;
   published_at: string;
+  updated_at: string | null;
   reading_time_minutes: number;
   view_count: number;
   author_name: string | null;
@@ -44,6 +46,7 @@ export default function ArticlePage() {
   const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeHeading, setActiveHeading] = useState('');
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'error'>('idle');
 
   useEffect(() => {
     if (slug) {
@@ -183,12 +186,62 @@ export default function ArticlePage() {
     });
   };
 
-  const canonicalUrl = `https://notably.no/artikler/${article.slug}`;
+  const canonicalUrl = `${SITE_URL}/artikler/${article.slug}`;
   const metaTitle = article.article_seo_metadata?.meta_title || article.title;
-  const metaDescription = article.article_seo_metadata?.meta_description || article.excerpt || '';
-  const ogImage = article.article_seo_metadata?.og_image || article.media_library?.public_url || '';
+  const metaDescription = article.article_seo_metadata?.meta_description || article.excerpt || 'Les artikkelen på Notably.';
+  const ogTitle = article.article_seo_metadata?.og_title || metaTitle;
+  const ogDescription = article.article_seo_metadata?.og_description || metaDescription;
+  const ogImage = article.article_seo_metadata?.og_image || article.media_library?.public_url || DEFAULT_SOCIAL_IMAGE_URL;
+  const ogImageAlt = article.media_library?.alt_text || DEFAULT_SOCIAL_IMAGE_ALT;
   const authorName = article.author_name?.trim() || 'Notably Team';
   const authorInitial = authorName.charAt(0).toUpperCase();
+  const publishedTime = new Date(article.published_at).toISOString();
+  const modifiedTime = article.updated_at ? new Date(article.updated_at).toISOString() : publishedTime;
+  const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(canonicalUrl)}`;
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonicalUrl)}`;
+
+  const articleSchema = article.article_seo_metadata?.schema_json || {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: metaDescription,
+    image: [ogImage],
+    datePublished: publishedTime,
+    dateModified: modifiedTime,
+    author: {
+      '@type': 'Person',
+      name: authorName,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      logo: {
+        '@type': 'ImageObject',
+        url: DEFAULT_SOCIAL_IMAGE_URL,
+      },
+    },
+    mainEntityOfPage: canonicalUrl,
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(canonicalUrl);
+      } else {
+        const input = document.createElement('input');
+        input.value = canonicalUrl;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+      }
+      setCopyStatus('copied');
+    } catch {
+      setCopyStatus('error');
+    }
+
+    window.setTimeout(() => setCopyStatus('idle'), 2200);
+  };
 
   return (
     <>
@@ -199,22 +252,31 @@ export default function ArticlePage() {
         <link rel="canonical" href={canonicalUrl} />
 
         <meta property="og:type" content="article" />
+        <meta property="og:site_name" content={SITE_NAME} />
         <meta property="og:locale" content="nb_NO" />
-        <meta property="og:title" content={article.article_seo_metadata?.og_title || metaTitle} />
-        <meta property="og:description" content={article.article_seo_metadata?.og_description || metaDescription} />
+        <meta property="og:title" content={ogTitle} />
+        <meta property="og:description" content={ogDescription} />
         <meta property="og:url" content={canonicalUrl} />
-        {ogImage && <meta property="og:image" content={ogImage} />}
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:alt" content={ogImageAlt} />
+        <meta property="article:published_time" content={publishedTime} />
+        <meta property="article:modified_time" content={modifiedTime} />
+        <meta property="article:author" content={authorName} />
+        {article.article_categories?.name && (
+          <meta property="article:section" content={article.article_categories.name} />
+        )}
+        {article.article_tags?.map((tagObj, idx) => (
+          <meta key={`article-tag-${idx}`} property="article:tag" content={tagObj.tag} />
+        ))}
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={metaTitle} />
-        <meta name="twitter:description" content={metaDescription} />
-        {ogImage && <meta name="twitter:image" content={ogImage} />}
+        <meta name="twitter:url" content={canonicalUrl} />
+        <meta name="twitter:title" content={ogTitle} />
+        <meta name="twitter:description" content={ogDescription} />
+        <meta name="twitter:image" content={ogImage} />
+        <meta name="twitter:image:alt" content={ogImageAlt} />
 
-        {article.article_seo_metadata?.schema_json && (
-          <script type="application/ld+json">
-            {JSON.stringify(article.article_seo_metadata.schema_json)}
-          </script>
-        )}
+        <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
       </Helmet>
 
       <Navigation />
@@ -298,7 +360,7 @@ export default function ArticlePage() {
                 <div className="flex justify-center mb-8">
                   <img
                     src={article.media_library.public_url}
-                    alt={article.media_library.alt_text}
+                    alt={article.media_library.alt_text || article.title}
                     className="max-w-3xl w-full h-auto rounded-xl shadow-lg"
                   />
                 </div>
@@ -349,6 +411,46 @@ export default function ArticlePage() {
                   </div>
                 </div>
               )}
+
+              <div className="mt-12 pt-8 border-t border-gray-200">
+                <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 sm:p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Share2 className="w-5 h-5 text-gray-500" />
+                    <h2 className="text-base font-semibold text-gray-900">Del artikkelen</h2>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <a
+                      href={linkedInShareUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-blue-300 hover:text-blue-700"
+                      aria-label="Del på LinkedIn"
+                    >
+                      <Linkedin className="w-4 h-4" />
+                      LinkedIn
+                    </a>
+                    <a
+                      href={facebookShareUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-blue-300 hover:text-blue-700"
+                      aria-label="Del på Facebook"
+                    >
+                      <Facebook className="w-4 h-4" />
+                      Facebook
+                    </a>
+                    <button
+                      type="button"
+                      onClick={handleCopyLink}
+                      className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-blue-300 hover:text-blue-700"
+                      aria-label="Kopier lenke"
+                    >
+                      <Link2 className="w-4 h-4" />
+                      {copyStatus === 'copied' ? 'Lenke kopiert' : copyStatus === 'error' ? 'Kunne ikke kopiere' : 'Kopier lenke'}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <aside className="lg:col-span-1">
@@ -391,7 +493,7 @@ export default function ArticlePage() {
                     {related.media_library && (
                       <img
                         src={related.media_library.public_url}
-                        alt={related.media_library.alt_text}
+                        alt={related.media_library.alt_text || related.title}
                         className="w-full h-48 object-cover rounded-lg mb-4 group-hover:opacity-90 transition-opacity"
                       />
                     )}

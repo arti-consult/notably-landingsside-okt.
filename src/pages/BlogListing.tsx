@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '../lib/supabase';
+import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL } from '../lib/seo';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { Clock, Search } from 'lucide-react';
@@ -103,6 +104,7 @@ export default function BlogListing() {
         <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
         <link rel="canonical" href="https://notably.no/artikler" />
         <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Notably" />
         <meta property="og:locale" content="nb_NO" />
         <meta property="og:url" content="https://notably.no/artikler" />
         <meta property="og:title" content="Artikler - Notably" />
@@ -110,6 +112,17 @@ export default function BlogListing() {
           property="og:description"
           content="Les artikler om møtereferat, AI-transkripsjon, produktivitet og mer fra Notably."
         />
+        <meta property="og:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
+        <meta property="og:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://notably.no/artikler" />
+        <meta name="twitter:title" content="Artikler - Notably" />
+        <meta
+          name="twitter:description"
+          content="Les artikler om møtereferat, AI-transkripsjon, produktivitet og mer fra Notably."
+        />
+        <meta name="twitter:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
+        <meta name="twitter:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
       </Helmet>
 
       <Navigation />

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Plus, CreditCard as Edit, Trash2, Eye, Search, Filter, ArrowLeft } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 interface Article {
   id: string;
@@ -108,7 +109,12 @@ export default function ArticleList() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <Helmet>
+        <title>Admin artikler - Notably</title>
+        <meta name="robots" content="noindex,nofollow" />
+      </Helmet>
+      <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-start justify-between mb-8">
           <div className="flex flex-col">
@@ -264,5 +270,6 @@ export default function ArticleList() {
         </div>
       </div>
     </div>
+    </>
   );
 }

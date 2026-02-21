@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
 import { AuthProvider } from './contexts/AuthContext.tsx';
@@ -13,7 +13,13 @@ import BlogListing from './pages/BlogListing.tsx';
 import ArticlePage from './pages/ArticlePage.tsx';
 import PrivacyPolicy from './pages/PrivacyPolicy.tsx';
 import TermsOfUse from './pages/TermsOfUse.tsx';
+import NotFound from './pages/NotFound.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
+
+function BlogSlugRedirect() {
+  const { slug = '' } = useParams<{ slug: string }>();
+  return <Navigate to={`/artikler/${slug}`} replace />;
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -27,9 +33,9 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/artikler" element={<BlogListing />} />
             <Route path="/artikler/:slug" element={<ArticlePage />} />
             <Route path="/blog" element={<Navigate to="/artikler" replace />} />
-            <Route path="/blog/:slug" element={<Navigate to="/artikler/:slug" replace />} />
+            <Route path="/blog/:slug" element={<BlogSlugRedirect />} />
             <Route path="/blogg" element={<Navigate to="/artikler" replace />} />
-            <Route path="/blogg/:slug" element={<Navigate to="/artikler/:slug" replace />} />
+            <Route path="/blogg/:slug" element={<BlogSlugRedirect />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route
               path="/admin"
@@ -63,7 +69,7 @@ createRoot(document.getElementById('root')!).render(
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>

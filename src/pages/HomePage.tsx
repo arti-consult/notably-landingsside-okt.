@@ -14,6 +14,7 @@ import FeaturesGrid from '../components/FeaturesGrid';
 import CTASection from '../components/CTASection';
 import Footer from '../components/Footer';
 import { Helmet } from 'react-helmet-async';
+import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL, SITE_URL } from '../lib/seo';
 
 export default function HomePage() {
   const structuredData = {
@@ -22,8 +23,8 @@ export default function HomePage() {
       {
         '@type': 'Organization',
         name: 'Notably',
-        url: 'https://notably.no/',
-        logo: 'https://notably.no/Notably%20logo%20icon.svg',
+        url: `${SITE_URL}/`,
+        logo: DEFAULT_SOCIAL_IMAGE_URL,
       },
       {
         '@type': 'SoftwareApplication',
@@ -31,7 +32,7 @@ export default function HomePage() {
         applicationCategory: 'BusinessApplication',
         operatingSystem: 'Web',
         inLanguage: 'nb',
-        url: 'https://notably.no/',
+        url: `${SITE_URL}/`,
         offers: {
           '@type': 'Offer',
           price: '399',
@@ -52,6 +53,7 @@ export default function HomePage() {
         <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
         <link rel="canonical" href="https://notably.no/" />
         <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Notably" />
         <meta property="og:locale" content="nb_NO" />
         <meta property="og:url" content="https://notably.no/" />
         <meta property="og:title" content="Notably - AI Møteassistent for Norske Bedrifter | Automatiske Møtereferater" />
@@ -59,14 +61,17 @@ export default function HomePage() {
           property="og:description"
           content="Notably er den norske AI-møteassistenten som automatisk tar møtenotater, skriver referater og besvarer spørsmål om møtene dine."
         />
-        <meta property="og:image" content="https://notably.no/Notably%20logo%20icon.svg" />
+        <meta property="og:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
+        <meta property="og:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://notably.no/" />
         <meta name="twitter:title" content="Notably - AI Møteassistent for Norske Bedrifter | Automatiske Møtereferater" />
         <meta
           name="twitter:description"
           content="Notably er den norske AI-møteassistenten som automatisk tar møtenotater, skriver referater og besvarer spørsmål om møtene dine."
         />
-        <meta name="twitter:image" content="https://notably.no/Notably%20logo%20icon.svg" />
+        <meta name="twitter:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
+        <meta name="twitter:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
       <Navigation />
