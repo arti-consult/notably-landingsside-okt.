@@ -3,7 +3,7 @@ import DisplayCards from './DisplayCards';
 
 export default function MeetingSummarySection() {
   return (
-    <section className="py-20 page-container bg-white">
+    <section className="py-20 page-container bg-gradient-to-b from-blue-50/35 via-white to-white">
       <div className="max-w-6xl mx-auto grid md:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-10 items-center">
         <div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 text-gray-900">Glem stresset med å ta notater.</h2>

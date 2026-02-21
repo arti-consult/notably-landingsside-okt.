@@ -69,8 +69,9 @@ export default function HomePage() {
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
       <Navigation />
-      <div className="relative bg-gradient-to-b from-slate-100 via-blue-50/70 to-gray-50">
+      <div className="relative overflow-hidden bg-gradient-to-b from-slate-100 via-blue-50/70 to-white">
         <HeroSection />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent to-white" />
       </div>
       {/* <TrustSection /> */}
       <MeetingSummarySection />
