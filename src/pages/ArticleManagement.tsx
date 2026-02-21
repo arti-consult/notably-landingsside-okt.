@@ -304,14 +304,18 @@ export default function ArticleManagement() {
       setInitialStatus(articleStatus);
       setInitialSlug(slug);
 
-      await supabase
+      const { error: seoMetadataError } = await supabase
         .from('article_seo_metadata')
         .upsert({
           article_id: articleId,
           meta_title: metaTitle,
           meta_description: metaDescription,
           meta_keywords: keywords,
+        }, {
+          onConflict: 'article_id',
         });
+
+      if (seoMetadataError) throw seoMetadataError;
 
       await supabase
         .from('article_table_of_contents')
