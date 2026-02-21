@@ -5,18 +5,16 @@ export interface NotablyCtaAttributes {
   description: string;
   primaryText: string;
   primaryUrl: string;
-  secondaryText: string;
-  secondaryUrl: string;
 }
 
 export const DEFAULT_NOTABLY_CTA: NotablyCtaAttributes = {
   title: 'Vil du slippe manuelle møtereferater?',
-  description: 'Notably transkriberer møter på norsk, lager oppsummeringer og henter ut handlingspunkter automatisk.',
+  description: 'Notably transkriberer møter på 90+ språk, lager oppsummeringer og henter ut handlingspunkter automatisk.',
   primaryText: 'Prøv Notably gratis',
   primaryUrl: 'https://notably.no/',
-  secondaryText: 'Les mer',
-  secondaryUrl: 'https://notably.no/',
 };
+
+const NOTABLY_CTA_LOGO_URL = 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1771673146531.png';
 
 const sanitizeText = (value: unknown, fallback: string): string => {
   if (typeof value !== 'string') {
@@ -97,22 +95,6 @@ export const NotablyCta = Node.create({
           'data-primary-url': sanitizeUrl(attributes.primaryUrl, DEFAULT_NOTABLY_CTA.primaryUrl),
         }),
       },
-      secondaryText: {
-        default: DEFAULT_NOTABLY_CTA.secondaryText,
-        parseHTML: (element: HTMLElement) =>
-          sanitizeText(element.getAttribute('data-secondary-text'), DEFAULT_NOTABLY_CTA.secondaryText),
-        renderHTML: (attributes: Record<string, unknown>) => ({
-          'data-secondary-text': sanitizeText(attributes.secondaryText, DEFAULT_NOTABLY_CTA.secondaryText),
-        }),
-      },
-      secondaryUrl: {
-        default: DEFAULT_NOTABLY_CTA.secondaryUrl,
-        parseHTML: (element: HTMLElement) =>
-          sanitizeUrl(element.getAttribute('data-secondary-url'), DEFAULT_NOTABLY_CTA.secondaryUrl),
-        renderHTML: (attributes: Record<string, unknown>) => ({
-          'data-secondary-url': sanitizeUrl(attributes.secondaryUrl, DEFAULT_NOTABLY_CTA.secondaryUrl),
-        }),
-      },
     };
   },
 
@@ -126,8 +108,6 @@ export const NotablyCta = Node.create({
     const description = sanitizeText(attrs.description, DEFAULT_NOTABLY_CTA.description);
     const primaryText = sanitizeText(attrs.primaryText, DEFAULT_NOTABLY_CTA.primaryText);
     const primaryUrl = sanitizeUrl(attrs.primaryUrl, DEFAULT_NOTABLY_CTA.primaryUrl);
-    const secondaryText = sanitizeText(attrs.secondaryText, DEFAULT_NOTABLY_CTA.secondaryText);
-    const secondaryUrl = sanitizeUrl(attrs.secondaryUrl, DEFAULT_NOTABLY_CTA.secondaryUrl);
 
     return [
       'div',
@@ -138,7 +118,19 @@ export const NotablyCta = Node.create({
       [
         'div',
         { class: 'notably-inline-cta__inner' },
-        ['div', { class: 'notably-inline-cta__logo', 'aria-hidden': 'true' }, 'N'],
+        [
+          'div',
+          { class: 'notably-inline-cta__logo' },
+          [
+            'img',
+            {
+              class: 'notably-inline-cta__logo-image',
+              src: NOTABLY_CTA_LOGO_URL,
+              alt: 'Notably logo',
+              loading: 'lazy',
+            },
+          ],
+        ],
         [
           'div',
           { class: 'notably-inline-cta__text' },
@@ -148,7 +140,6 @@ export const NotablyCta = Node.create({
         [
           'div',
           { class: 'notably-inline-cta__actions' },
-          ['a', { class: 'notably-inline-cta__learn', href: secondaryUrl }, secondaryText],
           ['a', { class: 'notably-inline-cta__button', href: primaryUrl }, primaryText],
         ],
       ],
@@ -165,8 +156,6 @@ export const NotablyCta = Node.create({
             description: sanitizeText(attributes.description, DEFAULT_NOTABLY_CTA.description),
             primaryText: sanitizeText(attributes.primaryText, DEFAULT_NOTABLY_CTA.primaryText),
             primaryUrl: sanitizeUrl(attributes.primaryUrl, DEFAULT_NOTABLY_CTA.primaryUrl),
-            secondaryText: sanitizeText(attributes.secondaryText, DEFAULT_NOTABLY_CTA.secondaryText),
-            secondaryUrl: sanitizeUrl(attributes.secondaryUrl, DEFAULT_NOTABLY_CTA.secondaryUrl),
           };
 
           return commands.insertContent({

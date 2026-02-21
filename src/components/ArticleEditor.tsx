@@ -320,28 +320,6 @@ export default function ArticleEditor({ content, onChange, onImageClick }: Artic
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Sekundær lenketekst</label>
-                  <input
-                    type="text"
-                    value={ctaData.secondaryText}
-                    onChange={(e) => updateCtaField('secondaryText', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Sekundær lenke</label>
-                  <input
-                    type="text"
-                    value={ctaData.secondaryUrl}
-                    onChange={(e) => updateCtaField('secondaryUrl', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    placeholder="/demo eller https://notably.no/"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Primær knappetekst</label>
                   <input
                     type="text"
