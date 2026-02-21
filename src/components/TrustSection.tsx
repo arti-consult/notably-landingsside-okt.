@@ -14,7 +14,7 @@ interface TrustLogo {
   logo: MediaLogo | null;
 }
 
-const targetCompanies = ['1881', 'O breivik eiendom', 'Pharma nordic', 'Møbelringen'] as const;
+const targetCompanies = ['1881', 'O breivik eiendom', 'Pharma nordic', 'Møbelringen', 'Brave'] as const;
 
 const normalizeValue = (value: string | null | undefined) =>
   (value || '')
@@ -68,20 +68,23 @@ export default function TrustSection() {
             Brukt av team hos
           </p>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {logos.map((item) => (
               <div
                 key={item.company}
-                className="h-20 sm:h-24 rounded-2xl border border-slate-200 bg-white flex items-center justify-center px-5"
+                className="h-20 sm:h-24 flex items-center justify-center px-3 sm:px-4"
               >
                 {item.logo ? (
-                  <img
-                    src={item.logo.public_url}
-                    alt={item.logo.alt_text || `${item.company} logo`}
-                    className="max-h-10 sm:max-h-12 w-auto max-w-full object-contain opacity-80 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-200"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <div className="relative inline-flex items-center justify-center max-w-full">
+                    <img
+                      src={item.logo.public_url}
+                      alt={item.logo.alt_text || `${item.company} logo`}
+                      className="max-h-10 sm:max-h-12 w-auto max-w-full object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div aria-hidden className="absolute inset-0 bg-white/35 pointer-events-none" />
+                  </div>
                 ) : (
                   <span className="text-sm sm:text-base font-semibold text-slate-600 text-center">{item.company}</span>
                 )}
