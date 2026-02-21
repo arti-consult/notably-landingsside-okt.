@@ -11,7 +11,7 @@ export const DEFAULT_NOTABLY_CTA: NotablyCtaAttributes = {
   title: 'Vil du slippe manuelle møtereferater?',
   description: 'Notably transkriberer møter på 90+ språk, lager oppsummeringer og henter ut handlingspunkter automatisk.',
   primaryText: 'Prøv Notably gratis',
-  primaryUrl: 'https://notably.no/',
+  primaryUrl: 'https://app.notably.no/no/sign-up',
 };
 
 const NOTABLY_CTA_LOGO_URL = 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1771673146531.png';
