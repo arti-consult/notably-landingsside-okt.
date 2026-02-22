@@ -1,4 +1,4 @@
-import { Shield, Globe, FileText, Video, MessageSquare, CircleUser as UserCircle } from 'lucide-react';
+import { Shield, Video, MessageSquare, CircleUser as UserCircle } from 'lucide-react';
 import DisplayCards from './DisplayCards';
 
 export default function MeetingSummarySection() {
@@ -7,29 +7,13 @@ export default function MeetingSummarySection() {
       <div className="max-w-6xl mx-auto grid md:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-10 items-center">
         <div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 text-gray-900">Glem stresset med å ta notater.</h2>
-          <p className="text-gray-600 text-base sm:text-lg mb-6 lg:mb-8">
+          <p className="text-gray-600 text-base sm:text-lg mb-5 lg:mb-6">
             Notably gjør jobben for deg og fanger alle viktige detaljer - så du kan være fullt til stede i samtalen.
           </p>
-          <div className="flex flex-wrap gap-2 sm:gap-3">
-            <span className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-sm flex items-center gap-2 text-blue-700">
+          <div className="inline-flex">
+            <span className="px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-full text-sm sm:text-base inline-flex items-center gap-2 text-blue-700">
               <Shield className="w-4 h-4" />
               GDPR-kompatibel
-            </span>
-            <span className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-sm flex items-center gap-2 text-blue-700">
-              <Globe className="w-4 h-4" />
-              100+ språk
-            </span>
-            <span className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-sm flex items-center gap-2 text-blue-700">
-              <FileText className="w-4 h-4" />
-              Oppgaver og beslutninger
-            </span>
-            <span className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-sm flex items-center gap-2 text-blue-700">
-              <Globe className="w-4 h-4" />
-              Hostet i Europa
-            </span>
-            <span className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-sm flex items-center gap-2 text-blue-700">
-              <Shield className="w-4 h-4" />
-              Personvern først
             </span>
           </div>
         </div>
