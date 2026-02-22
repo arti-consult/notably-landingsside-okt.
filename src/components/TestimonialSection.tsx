@@ -68,7 +68,16 @@ export default function TestimonialSection() {
               "Notably gjør oss i stand til å bruke møtetiden smartere - vi slipper å bruke timer på manuell
               referatskriving"
             </p>
-            <p className="mt-5 text-base font-medium text-gray-700 sm:text-lg">Bent Andreassen, CEO i Pharma Nordic</p>
+            <p className="mt-5 text-base font-medium text-gray-700 sm:text-lg">Bent Andreassen - CEO</p>
+            <div className="mt-4">
+              <img
+                src="/Pharma%20Nordic%20logo.png"
+                alt="Pharma Nordic logo"
+                className="h-7 w-auto object-contain"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
           </div>
         </div>
       </div>
