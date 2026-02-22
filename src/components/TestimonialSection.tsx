@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
 const pharmaNordicArticleSlug = 'pharma-nordic-notably-frigjor-tid-fra-forste-mote';
+const pharmaNordicLogoUrl = 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1771237686841.svg';
 
 interface TestimonialImage {
   public_url: string;
@@ -53,7 +54,7 @@ export default function TestimonialSection() {
             ) : (
               <div className="flex h-full items-center justify-center px-6">
                 <img
-                  src="/Pharma%20Nordic%20logo.png"
+                  src={pharmaNordicLogoUrl}
                   alt="Pharma Nordic logo"
                   className="h-10 w-auto object-contain"
                   loading="lazy"
@@ -71,7 +72,7 @@ export default function TestimonialSection() {
             <p className="mt-5 text-base font-medium text-gray-700 sm:text-lg">Bent Andreassen - CEO</p>
             <div className="mt-4">
               <img
-                src="/Pharma%20Nordic%20logo.png"
+                src={pharmaNordicLogoUrl}
                 alt="Pharma Nordic logo"
                 className="h-7 w-auto object-contain"
                 loading="lazy"
