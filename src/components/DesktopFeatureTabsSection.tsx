@@ -20,22 +20,22 @@ const tabs: DesktopFeatureTab[] = [
   {
     id: 'motereferat',
     label: 'Møtereferat',
-    imageSrc: '/placeholders/motereferat-1440x900.svg',
-    alt: 'Placeholder-bilde for møtereferat',
+    imageSrc: 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1771942302907.png',
+    alt: 'Møtereferat-visning i Notably',
     icon: <FileText className="h-4 w-4" aria-hidden />,
   },
   {
     id: 'ai-assistent',
     label: 'AI-assistent',
-    imageSrc: '/placeholders/ai-assistent-1440x900.svg',
-    alt: 'Placeholder-bilde for AI-assistent',
+    imageSrc: 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1771942327121.png',
+    alt: 'AI-assistent-visning i Notably',
     icon: <Bot className="h-4 w-4" aria-hidden />,
   },
   {
     id: 'deling',
     label: 'Deling',
-    imageSrc: '/placeholders/deling-1440x900.svg',
-    alt: 'Placeholder-bilde for deling',
+    imageSrc: 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1771942315758.png',
+    alt: 'Delingsvisning i Notably',
     icon: <Share2 className="h-4 w-4" aria-hidden />,
   },
 ];
