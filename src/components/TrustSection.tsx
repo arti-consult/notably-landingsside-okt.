@@ -85,6 +85,8 @@ export default function TrustSection() {
                     <img
                       src={item.logo.public_url}
                       alt={item.logo.alt_text || `${item.company} logo`}
+                      width={160}
+                      height={48}
                       className="max-h-8 w-auto max-w-full object-contain"
                       loading="lazy"
                       decoding="async"
@@ -109,6 +111,8 @@ export default function TrustSection() {
                     <img
                       src={item.logo.public_url}
                       alt={item.logo.alt_text || `${item.company} logo`}
+                      width={220}
+                      height={72}
                       className="max-h-14 lg:max-h-16 w-auto max-w-full object-contain"
                       loading="lazy"
                       decoding="async"

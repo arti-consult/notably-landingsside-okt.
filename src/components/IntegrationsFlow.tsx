@@ -7,7 +7,11 @@ const IntegrationsFlow = () => {
             <img 
               src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1762605154714.svg" 
               alt="Microsoft Teams" 
+              width={96}
+              height={96}
               className="w-20 h-20 md:w-24 md:h-24 object-contain" 
+              loading="lazy"
+              decoding="async"
             />
           </div>
 
@@ -15,7 +19,11 @@ const IntegrationsFlow = () => {
             <img 
               src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1762605170864.svg" 
               alt="Outlook Calendar" 
+              width={96}
+              height={96}
               className="w-20 h-20 md:w-24 md:h-24 object-contain" 
+              loading="lazy"
+              decoding="async"
             />
           </div>
 
@@ -23,7 +31,11 @@ const IntegrationsFlow = () => {
             <img 
               src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1762605184963.svg" 
               alt="Google Meet" 
+              width={96}
+              height={96}
               className="w-20 h-20 md:w-24 md:h-24 object-contain" 
+              loading="lazy"
+              decoding="async"
             />
           </div>
 
@@ -31,7 +43,11 @@ const IntegrationsFlow = () => {
             <img 
               src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1762605201664.svg" 
               alt="Google Calendar" 
+              width={96}
+              height={96}
               className="w-20 h-20 md:w-24 md:h-24 object-contain" 
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
@@ -54,7 +70,10 @@ const IntegrationsFlow = () => {
           <img 
             src="/Notably logo icon.svg" 
             alt="Notably" 
+            width={64}
+            height={64}
             className="w-12 h-12 md:w-16 md:h-16 brightness-0 invert" 
+            decoding="async"
           />
           <p className="text-sm md:text-base font-semibold text-white mt-2">Notably</p>
         </div>

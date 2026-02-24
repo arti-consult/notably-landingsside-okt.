@@ -47,6 +47,8 @@ export default function TestimonialSection() {
               <img
                 src={articleImage.public_url}
                 alt={articleImage.alt_text || 'Bent Andreassen fra Pharma Nordic'}
+                width={1200}
+                height={900}
                 className="h-full w-full object-cover"
                 loading="lazy"
                 decoding="async"
@@ -56,6 +58,8 @@ export default function TestimonialSection() {
                 <img
                   src={pharmaNordicLogoUrl}
                   alt="Pharma Nordic logo"
+                  width={240}
+                  height={64}
                   className="h-10 w-auto object-contain"
                   loading="lazy"
                   decoding="async"
@@ -74,6 +78,8 @@ export default function TestimonialSection() {
               <img
                 src={pharmaNordicLogoUrl}
                 alt="Pharma Nordic logo"
+                width={180}
+                height={56}
                 className="h-7 w-auto object-contain"
                 loading="lazy"
                 decoding="async"

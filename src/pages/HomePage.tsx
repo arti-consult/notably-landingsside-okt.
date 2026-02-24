@@ -2,22 +2,24 @@ import Navigation from '../components/Navigation';
 import HeroSection from '../components/HeroSection';
 import TrustSection from '../components/TrustSection';
 import MeetingSummarySection from '../components/MeetingSummarySection';
-import DesktopFeatureTabsSection from '../components/DesktopFeatureTabsSection';
-import TestimonialSection from '../components/TestimonialSection';
-import SecuritySection from '../components/SecuritySection';
-import AIAnswersSection from '../components/AIAnswersSection';
-import IntegrationsSection from '../components/IntegrationsSection';
-import AllMeetingsSection from '../components/AllMeetingsSection';
-import UseCasesSection from '../components/UseCasesSection';
-import PricingSection from '../components/PricingSection';
-import ProblemSection from '../components/ProblemSection';
-import FeaturesGrid from '../components/FeaturesGrid';
-import CTASection from '../components/CTASection';
-import Footer from '../components/Footer';
+import DeferredRender from '../components/DeferredRender';
 import { Helmet } from 'react-helmet-async';
 import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL, SITE_URL } from '../lib/seo';
-import { useEffect } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+
+const DesktopFeatureTabsSection = lazy(() => import('../components/DesktopFeatureTabsSection'));
+const TestimonialSection = lazy(() => import('../components/TestimonialSection'));
+const SecuritySection = lazy(() => import('../components/SecuritySection'));
+const AIAnswersSection = lazy(() => import('../components/AIAnswersSection'));
+const IntegrationsSection = lazy(() => import('../components/IntegrationsSection'));
+const AllMeetingsSection = lazy(() => import('../components/AllMeetingsSection'));
+const UseCasesSection = lazy(() => import('../components/UseCasesSection'));
+const PricingSection = lazy(() => import('../components/PricingSection'));
+const ProblemSection = lazy(() => import('../components/ProblemSection'));
+const FeaturesGrid = lazy(() => import('../components/FeaturesGrid'));
+const CTASection = lazy(() => import('../components/CTASection'));
+const Footer = lazy(() => import('../components/Footer'));
 
 export default function HomePage() {
   const location = useLocation();
@@ -105,19 +107,22 @@ export default function HomePage() {
       </div>
       <TrustSection />
       <MeetingSummarySection />
-      <DesktopFeatureTabsSection />
-      <TestimonialSection />
-      <SecuritySection />
-      <AIAnswersSection />
-      <IntegrationsSection />
-      <AllMeetingsSection />
-
-      <UseCasesSection />
-      <PricingSection />
-      <ProblemSection />
-      <FeaturesGrid />
-      <CTASection />
-      <Footer />
+      <DeferredRender rootMargin="300px 0px">
+        <Suspense fallback={null}>
+          <DesktopFeatureTabsSection />
+          <TestimonialSection />
+          <SecuritySection />
+          <AIAnswersSection />
+          <IntegrationsSection />
+          <AllMeetingsSection />
+          <UseCasesSection />
+          <PricingSection />
+          <ProblemSection />
+          <FeaturesGrid />
+          <CTASection />
+          <Footer />
+        </Suspense>
+      </DeferredRender>
     </div>
   );
 }

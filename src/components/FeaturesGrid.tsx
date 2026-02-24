@@ -115,7 +115,11 @@ export default function FeaturesGrid() {
                 <img
                   src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1759703485126.png"
                   alt="EU-flagg"
+                  width={80}
+                  height={80}
                   className="w-20 h-20 object-contain"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
             </div>
@@ -215,7 +219,11 @@ export default function FeaturesGrid() {
               <img
                 src="https://images.pexels.com/photos/927022/pexels-photo-927022.jpeg?auto=compress&cs=tinysrgb&w=1200"
                 alt="Languages"
+                width={1200}
+                height={1800}
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10"></div>
             </div>

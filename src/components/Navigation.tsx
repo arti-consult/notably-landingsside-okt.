@@ -45,7 +45,14 @@ export default function Navigation() {
               aria-label="Gå til forsiden"
               className="flex items-center cursor-pointer"
             >
-              <img src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1760975960292.png" alt="Notably" className="h-8" />
+              <img
+                src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1760975960292.png"
+                alt="Notably"
+                width={168}
+                height={32}
+                decoding="async"
+                className="h-8 w-auto"
+              />
             </Link>
 
             <div className="hidden md:flex items-center gap-8">
@@ -73,11 +80,11 @@ export default function Navigation() {
           <AnimatePresence>
             {mobileMenuOpen && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
-                className="md:hidden overflow-hidden"
+                initial={{ opacity: 0, y: -6, scaleY: 0.96 }}
+                animate={{ opacity: 1, y: 0, scaleY: 1 }}
+                exit={{ opacity: 0, y: -6, scaleY: 0.96 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
+                className="md:hidden overflow-hidden origin-top"
               >
                 <div className="flex flex-col gap-4 pt-4 pb-2">
                   <Link to="/artikler" className="text-gray-700 hover:text-black transition-colors">Artikler</Link>

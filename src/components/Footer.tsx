@@ -12,7 +12,14 @@ export default function Footer() {
     <footer className="bg-black text-gray-400 py-12 page-container border-t border-gray-800">
       <div className="max-w-7xl mx-auto flex flex-col items-center text-center gap-6">
         <div className="mb-2">
-          <img src="/Notably logo icon.svg" alt="Notably" className="h-8 brightness-0 invert" />
+          <img
+            src="/Notably logo icon.svg"
+            alt="Notably"
+            width={168}
+            height={32}
+            decoding="async"
+            className="h-8 w-auto brightness-0 invert"
+          />
         </div>
         <p className="text-sm">Norskutviklet AI-agent som automatisk lager møtereferat fra dine digitale og fysiske møter.</p>
 
