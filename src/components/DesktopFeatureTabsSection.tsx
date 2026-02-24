@@ -91,13 +91,13 @@ export default function DesktopFeatureTabsSection() {
             aria-labelledby={`desktop-feature-tab-${activeTab.id}`}
             className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50"
           >
-            <div className="w-full aspect-[15.5/10] overflow-hidden">
+            <div className="w-full aspect-[14.6/10] overflow-hidden">
               <img
                 src={activeTab.imageSrc}
                 alt={activeTab.alt}
                 width={1440}
                 height={900}
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-cover object-top origin-top scale-[1.08]"
                 loading="lazy"
                 decoding="async"
               />
