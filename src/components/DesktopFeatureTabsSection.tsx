@@ -44,9 +44,7 @@ const TAB_DURATION_MS = 7000;
 
 export default function DesktopFeatureTabsSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const animationFrameRef = useRef<number | null>(null);
   const [activeTabId, setActiveTabId] = useState(tabs[0].id);
-  const [progress, setProgress] = useState(0);
   const [isInView, setIsInView] = useState(false);
   const [autoRotateEnabled, setAutoRotateEnabled] = useState(true);
 
@@ -78,42 +76,21 @@ export default function DesktopFeatureTabsSection() {
 
   useEffect(() => {
     if (!autoRotateEnabled || !isInView) {
-      setProgress(0);
-      if (animationFrameRef.current !== null) {
-        cancelAnimationFrame(animationFrameRef.current);
-        animationFrameRef.current = null;
-      }
       return;
     }
 
-    let cycleStartTime = performance.now();
-
-    const animate = (now: number) => {
-      const elapsed = now - cycleStartTime;
-      setProgress(Math.min(elapsed / TAB_DURATION_MS, 1));
-
-      if (elapsed >= TAB_DURATION_MS) {
-        setActiveTabId(tabs[(activeTabIndex + 1) % tabs.length].id);
-        cycleStartTime = now;
-      }
-
-      animationFrameRef.current = requestAnimationFrame(animate);
-    };
-
-    animationFrameRef.current = requestAnimationFrame(animate);
+    const timeoutId = window.setTimeout(() => {
+      setActiveTabId(tabs[(activeTabIndex + 1) % tabs.length].id);
+    }, TAB_DURATION_MS);
 
     return () => {
-      if (animationFrameRef.current !== null) {
-        cancelAnimationFrame(animationFrameRef.current);
-        animationFrameRef.current = null;
-      }
+      window.clearTimeout(timeoutId);
     };
   }, [activeTabIndex, autoRotateEnabled, isInView]);
 
   const handleTabClick = (tabId: string) => {
     setActiveTabId(tabId);
     setAutoRotateEnabled(false);
-    setProgress(0);
   };
 
   return (
@@ -129,6 +106,7 @@ export default function DesktopFeatureTabsSection() {
             <div role="tablist" aria-label="Velg app-visning" className="flex items-center rounded-xl border border-slate-200 bg-slate-100 p-1.5">
               {tabs.map((tab) => {
                 const isActive = tab.id === activeTab.id;
+                const shouldAnimateTimer = isActive && autoRotateEnabled && isInView;
                 return (
                   <button
                     key={tab.id}
@@ -146,13 +124,17 @@ export default function DesktopFeatureTabsSection() {
                   >
                     <span
                       aria-hidden
-                      className="absolute inset-y-0 left-0 rounded-lg bg-blue-100/90 transition-[width] duration-100 ease-linear"
-                      style={{
-                        width:
-                          isActive && autoRotateEnabled && isInView
-                            ? `${Math.min(progress * 100, 100)}%`
-                            : '0%',
-                      }}
+                      className="absolute inset-0 z-0 origin-left scale-x-0 rounded-lg bg-blue-100/90"
+                      style={
+                        shouldAnimateTimer
+                          ? {
+                              animationName: 'tabProgressFill',
+                              animationDuration: `${TAB_DURATION_MS}ms`,
+                              animationTimingFunction: 'linear',
+                              animationFillMode: 'forwards',
+                            }
+                          : undefined
+                      }
                     />
                     <span className="relative z-10 inline-flex items-center gap-2">
                       {tab.icon}
