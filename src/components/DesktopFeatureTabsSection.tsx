@@ -7,7 +7,6 @@ type DesktopFeatureTab = {
   imageSrc: string;
   alt: string;
   icon: ReactNode;
-  fit?: 'cover' | 'contain';
 };
 
 const tabs: DesktopFeatureTab[] = [
@@ -17,7 +16,6 @@ const tabs: DesktopFeatureTab[] = [
     imageSrc: 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1771941136611.png',
     alt: 'Dashboard-visning i Notably',
     icon: <LayoutDashboard className="h-4 w-4" aria-hidden />,
-    fit: 'contain',
   },
   {
     id: 'motereferat',
@@ -93,15 +91,17 @@ export default function DesktopFeatureTabsSection() {
             aria-labelledby={`desktop-feature-tab-${activeTab.id}`}
             className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50"
           >
-            <img
-              src={activeTab.imageSrc}
-              alt={activeTab.alt}
-              width={1440}
-              height={900}
-              className={`w-full h-auto aspect-[16/10] ${activeTab.fit === 'contain' ? 'object-contain bg-slate-100' : 'object-cover'}`}
-              loading="lazy"
-              decoding="async"
-            />
+            <div className="w-full aspect-[15.5/10] overflow-hidden">
+              <img
+                src={activeTab.imageSrc}
+                alt={activeTab.alt}
+                width={1440}
+                height={900}
+                className="w-full h-full object-cover object-center"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
           </div>
         </div>
       </div>
