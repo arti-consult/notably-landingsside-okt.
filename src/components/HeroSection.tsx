@@ -13,7 +13,7 @@ export default function HeroSection() {
           <div className="relative text-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 mb-6">
               <CheckCircle2 className="w-4 h-4" />
-              AI møteassistent for norske team
+              AI møteassistent for norske bedrifter
             </div>
 
             <h1 className="mx-auto max-w-4xl text-4xl sm:text-5xl md:text-6xl lg:text-[4rem] font-semibold tracking-tight text-slate-950 leading-[1.04]">

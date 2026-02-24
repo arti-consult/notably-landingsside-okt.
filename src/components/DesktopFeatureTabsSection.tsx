@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { FileText, LayoutDashboard, Bot, Share2 } from 'lucide-react';
 
 type DesktopFeatureTab = {
@@ -40,16 +40,84 @@ const tabs: DesktopFeatureTab[] = [
   },
 ];
 
-export default function DesktopFeatureTabsSection() {
-  const [activeTabId, setActiveTabId] = useState(tabs[0].id);
+const TAB_DURATION_MS = 7000;
 
+export default function DesktopFeatureTabsSection() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const [activeTabId, setActiveTabId] = useState(tabs[0].id);
+  const [progress, setProgress] = useState(0);
+  const [isInView, setIsInView] = useState(false);
+  const [autoRotateEnabled, setAutoRotateEnabled] = useState(true);
+
+  const activeTabIndex = useMemo(
+    () => tabs.findIndex((tab) => tab.id === activeTabId),
+    [activeTabId]
+  );
   const activeTab = useMemo(
     () => tabs.find((tab) => tab.id === activeTabId) ?? tabs[0],
     [activeTabId]
   );
 
+  useEffect(() => {
+    const element = sectionRef.current;
+    if (!element) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!autoRotateEnabled || !isInView) {
+      setProgress(0);
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+      return;
+    }
+
+    let cycleStartTime = performance.now();
+
+    const animate = (now: number) => {
+      const elapsed = now - cycleStartTime;
+      setProgress(Math.min(elapsed / TAB_DURATION_MS, 1));
+
+      if (elapsed >= TAB_DURATION_MS) {
+        setActiveTabId(tabs[(activeTabIndex + 1) % tabs.length].id);
+        cycleStartTime = now;
+      }
+
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+    };
+  }, [activeTabIndex, autoRotateEnabled, isInView]);
+
+  const handleTabClick = (tabId: string) => {
+    setActiveTabId(tabId);
+    setAutoRotateEnabled(false);
+    setProgress(0);
+  };
+
   return (
-    <section className="hidden lg:block page-container pb-24 bg-white">
+    <section ref={sectionRef} className="hidden lg:block page-container pb-24 bg-white">
       <div className="max-w-6xl mx-auto">
         <div className="rounded-[30px] border border-slate-200 bg-gradient-to-b from-slate-100 via-slate-50 to-white p-4 xl:p-5 shadow-[0_30px_90px_-55px_rgba(15,23,42,0.7)]">
           <div className="mb-4 flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3">
@@ -69,15 +137,27 @@ export default function DesktopFeatureTabsSection() {
                     aria-selected={isActive}
                     aria-controls={`desktop-feature-tabpanel-${tab.id}`}
                     id={`desktop-feature-tab-${tab.id}`}
-                    onClick={() => setActiveTabId(tab.id)}
-                    className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                    onClick={() => handleTabClick(tab.id)}
+                    className={`relative inline-flex items-center gap-2 overflow-hidden rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                       isActive
                         ? 'bg-white text-slate-900 shadow-sm'
                         : 'text-slate-600 hover:bg-white/70 hover:text-slate-900'
                     }`}
                   >
-                    {tab.icon}
-                    {tab.label}
+                    <span
+                      aria-hidden
+                      className="absolute inset-y-0 left-0 rounded-lg bg-blue-100/90 transition-[width] duration-100 ease-linear"
+                      style={{
+                        width:
+                          isActive && autoRotateEnabled && isInView
+                            ? `${Math.min(progress * 100, 100)}%`
+                            : '0%',
+                      }}
+                    />
+                    <span className="relative z-10 inline-flex items-center gap-2">
+                      {tab.icon}
+                      {tab.label}
+                    </span>
                   </button>
                 );
               })}
