@@ -7,15 +7,17 @@ type DesktopFeatureTab = {
   imageSrc: string;
   alt: string;
   icon: ReactNode;
+  fit?: 'cover' | 'contain';
 };
 
 const tabs: DesktopFeatureTab[] = [
   {
     id: 'dashboard',
     label: 'dashboard',
-    imageSrc: '/placeholders/dashboard-1440x900.svg',
-    alt: 'Placeholder-bilde for dashboard',
+    imageSrc: 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1771941136611.png',
+    alt: 'Dashboard-visning i Notably',
     icon: <LayoutDashboard className="h-4 w-4" aria-hidden />,
+    fit: 'contain',
   },
   {
     id: 'motereferat',
@@ -96,8 +98,9 @@ export default function DesktopFeatureTabsSection() {
               alt={activeTab.alt}
               width={1440}
               height={900}
-              className="w-full h-auto aspect-[16/10] object-cover"
+              className={`w-full h-auto aspect-[16/10] ${activeTab.fit === 'contain' ? 'object-contain bg-slate-100' : 'object-cover'}`}
               loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
