@@ -2,6 +2,7 @@ import Navigation from '../components/Navigation';
 import HeroSection from '../components/HeroSection';
 import TrustSection from '../components/TrustSection';
 import MeetingSummarySection from '../components/MeetingSummarySection';
+import DesktopFeatureTabsSection from '../components/DesktopFeatureTabsSection';
 import TestimonialSection from '../components/TestimonialSection';
 import SecuritySection from '../components/SecuritySection';
 import AIAnswersSection from '../components/AIAnswersSection';
@@ -81,6 +82,7 @@ export default function HomePage() {
       </div>
       <TrustSection />
       <MeetingSummarySection />
+      <DesktopFeatureTabsSection />
       <TestimonialSection />
       <SecuritySection />
       <AIAnswersSection />

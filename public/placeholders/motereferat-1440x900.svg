@@ -1,0 +1,17 @@
+<svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="120" y1="64" x2="1320" y2="836" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ECFEFF" />
+      <stop offset="1" stop-color="#DBEAFE" />
+    </linearGradient>
+  </defs>
+  <rect width="1440" height="900" rx="36" fill="url(#bg)" />
+  <rect x="72" y="64" width="1296" height="84" rx="20" fill="white" opacity="0.92" />
+  <rect x="72" y="192" width="340" height="636" rx="28" fill="white" opacity="0.86" />
+  <rect x="448" y="192" width="920" height="120" rx="24" fill="white" opacity="0.9" />
+  <rect x="448" y="336" width="920" height="120" rx="24" fill="white" opacity="0.9" />
+  <rect x="448" y="480" width="920" height="120" rx="24" fill="white" opacity="0.9" />
+  <rect x="448" y="624" width="920" height="204" rx="24" fill="white" opacity="0.9" />
+  <text x="720" y="430" fill="#0F172A" font-size="72" font-family="Arial, sans-serif" text-anchor="middle">MOTEREFERAT</text>
+  <text x="720" y="496" fill="#334155" font-size="34" font-family="Arial, sans-serif" text-anchor="middle">Placeholder 1440 x 900</text>
+</svg>
