@@ -34,7 +34,7 @@ const tabs: DesktopFeatureTab[] = [
   {
     id: 'deling',
     label: 'Deling',
-    imageSrc: 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1771942315758.png',
+    imageSrc: 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1771943250343.png',
     alt: 'Delingsvisning i Notably',
     icon: <Share2 className="h-4 w-4" aria-hidden />,
   },

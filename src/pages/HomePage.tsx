@@ -16,8 +16,31 @@ import CTASection from '../components/CTASection';
 import Footer from '../components/Footer';
 import { Helmet } from 'react-helmet-async';
 import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL, SITE_URL } from '../lib/seo';
+import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function HomePage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const state = location.state as { scrollTo?: string } | null;
+    if (state?.scrollTo !== 'pricing') {
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => {
+      const pricingSection = document.getElementById('pricing');
+      if (pricingSection) {
+        pricingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+
+    navigate(location.pathname, { replace: true, state: null });
+
+    return () => cancelAnimationFrame(frame);
+  }, [location.pathname, location.state, navigate]);
+
   const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
