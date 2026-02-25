@@ -1,4 +1,5 @@
-import { ArrowUpRight, Briefcase, Building2, ShieldCheck, Users2 } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -6,22 +7,22 @@ import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL } from '../lib/seo';
 
 const workPrinciples = [
   {
-    title: 'Tett samarbeid med kunden',
+    number: '01',
+    title: 'Praktisk først',
     description:
-      'ARTI beskriver selv at de ønsker å være en viktig del av kundens team. Denne arbeidsformen brukes også i utviklingen av Notably.',
-    icon: Users2,
+      'Vi bygger løsninger som faktisk tas i bruk i arbeidshverdagen, ikke pilotprosjekter som stopper opp.',
   },
   {
-    title: 'Gjennomføringskraft i praksis',
+    number: '02',
+    title: 'Trygg implementering',
     description:
-      'Vi prioriterer løsninger som fungerer i den virkelige arbeidshverdagen, ikke bare på idéstadiet. Det gir forutsigbar leveranse og raske forbedringer.',
-    icon: Briefcase,
+      'Vi kombinerer fart med governance, sikkerhet og tydelige rammer for ansvarlig AI-bruk.',
   },
   {
-    title: 'Faglig tyngde og struktur',
+    number: '03',
+    title: 'Målbar effekt',
     description:
-      'Erfaring med strategi, implementering, prosjektledelse og prosessutvikling gir et solid fundament for produktet og måten vi jobber på.',
-    icon: ShieldCheck,
+      'Vi definerer KPI-er tidlig og følger leveransen tett for å sikre dokumenterte gevinster.',
   },
 ];
 
@@ -69,104 +70,149 @@ export default function AboutPage() {
 
       <Navigation />
 
-      <main className="min-h-screen bg-gray-50 pt-24">
-        <section className="px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="max-w-7xl mx-auto">
-            <div className="rounded-3xl border border-gray-200 bg-gradient-to-br from-white via-blue-50/50 to-slate-100 p-8 md:p-12">
-              <p className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-100/70 px-4 py-1.5 text-sm font-medium text-blue-900">
-                <Building2 className="h-4 w-4" />
-                Selskapet bak Notably
-              </p>
-
-              <h1 className="mt-6 text-4xl md:text-5xl font-semibold text-gray-900 leading-tight">
-                Om oss
+      <main className="min-h-screen bg-[#eceff2] pt-24 text-slate-900">
+        <section className="px-6 md:px-[9%] xl:px-[14%] py-14 md:py-20">
+          <div className="mx-auto max-w-7xl grid gap-10 lg:grid-cols-[1fr_1.02fr] lg:items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="max-w-xl"
+            >
+              <p className="text-xs uppercase tracking-[0.32em] text-slate-500">Om oss</p>
+              <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl leading-[1.03] font-semibold text-slate-900">
+                Vi gjør AI konkret for norske virksomheter.
               </h1>
-
-              <p className="mt-6 max-w-3xl text-lg text-gray-700">
-                Notably er utviklet av <strong className="text-gray-900">ARTI Consult AS</strong>. ARTI hjelper private og
-                offentlige virksomheter med strategiske endringsprosjekter, og erfaringen derfra er grunnlaget for
-                hvordan vi bygger Notably.
+              <p className="mt-6 text-lg leading-relaxed text-slate-700">
+                <strong className="text-slate-900">ARTI Consult AS</strong> er selskapet bak Notably. Vi jobber tett med
+                ledere og fagmiljøer for å gå fra AI-idé til produksjon, med trygg fremdrift og dokumentert effekt.
               </p>
 
-              <div className="mt-8 flex flex-wrap items-center gap-4">
+              <div className="mt-9 flex flex-wrap items-center gap-4">
                 <a
                   href="https://www.articonsult.no/om-oss/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-white font-medium hover:bg-blue-700 transition-colors"
+                  className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-white font-semibold hover:bg-slate-800 transition-colors"
                 >
-                  Les mer om ARTI
+                  Les om ARTI
                   <ArrowUpRight className="h-4 w-4" />
                 </a>
+                <a
+                  href="#hvordan-vi-jobber"
+                  className="inline-flex items-center gap-2 text-slate-700 font-semibold hover:text-slate-950 transition-colors"
+                >
+                  Hvordan vi jobber
+                  <ArrowUpRight className="h-4 w-4" />
+                </a>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.65, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+              className="relative aspect-[4/4.1] overflow-hidden rounded-[2rem] border border-slate-300/70 bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 shadow-[0_24px_55px_-26px_rgba(15,23,42,0.7)]"
+            >
+              <div className="absolute -top-16 right-[-10%] h-56 w-56 rounded-full bg-blue-300/30 blur-3xl" />
+              <div className="absolute -bottom-24 left-[-10%] h-72 w-72 rounded-full bg-cyan-200/20 blur-3xl" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_22%,rgba(255,255,255,0.32),transparent_36%)]" />
+              <div className="absolute inset-0 bg-[linear-gradient(130deg,rgba(255,255,255,0.08)_0%,transparent_45%,rgba(96,165,250,0.18)_100%)]" />
+
+              <div className="absolute top-6 right-6 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-slate-100/90 backdrop-blur">
+                ARTI x Notably
+              </div>
+
+              <div className="absolute left-6 right-6 bottom-6 rounded-2xl border border-white/20 bg-white/12 p-5 backdrop-blur-md">
+                <p className="text-sm uppercase tracking-[0.2em] text-slate-200/85">Slik jobber vi</p>
+                <p className="mt-3 text-2xl leading-tight font-semibold text-white">
+                  Fra strategi til produksjon, med sikkerhet, tempo og målbar verdi.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="px-6 md:px-[9%] xl:px-[14%] py-10 md:py-16">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.65 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto max-w-5xl text-center text-3xl sm:text-4xl lg:text-[3rem] leading-[1.17] font-semibold tracking-tight text-slate-900"
+          >
+            Vi tror AI skal gi mennesker mer tid til arbeid som betyr noe. Vår jobb er å gjøre det mulig, trygt, raskt
+            og med varig effekt.
+          </motion.p>
+        </section>
+
+        <section id="hvordan-vi-jobber" className="scroll-mt-28 px-6 md:px-[9%] xl:px-[14%] py-16 md:py-20">
+          <div className="mx-auto max-w-7xl">
+            <h2 className="text-3xl sm:text-4xl font-semibold text-slate-900">Hvordan vi jobber</h2>
+
+            <div className="mt-10 grid gap-8 md:grid-cols-3">
+              {workPrinciples.map((principle, index) => (
+                <motion.article
+                  key={principle.number}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.45 }}
+                  transition={{ duration: 0.5, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                  className="border-t border-slate-300 pt-7"
+                >
+                  <p className="text-sm font-medium tracking-[0.22em] text-slate-500">{principle.number}</p>
+                  <h3 className="mt-5 text-3xl font-semibold leading-tight text-slate-900">{principle.title}</h3>
+                  <p className="mt-4 text-lg leading-relaxed text-slate-700">{principle.description}</p>
+                </motion.article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="px-6 md:px-[9%] xl:px-[14%] pb-24">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto max-w-7xl rounded-[2rem] border border-slate-300 bg-white/80 p-8 md:p-12 shadow-[0_20px_45px_-35px_rgba(15,23,42,0.55)] backdrop-blur"
+          >
+            <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+              <div>
+                <p className="text-xs uppercase tracking-[0.32em] text-slate-500">Kunder og erfaring</p>
+                <h2 className="mt-4 text-3xl sm:text-4xl font-semibold leading-tight text-slate-900">
+                  ARTI har levert prosjekter for noen av Norges mest krevende virksomheter.
+                </h2>
+                <p className="mt-5 text-lg leading-relaxed text-slate-700">
+                  På kundelisten finner vi blant annet Orkla, Politiet, Skagenfondene, Telenor, Pareto og Selvaag
+                  Bolig, i tillegg til en rekke andre private og offentlige aktører.
+                </p>
                 <a
                   href="https://www.articonsult.no/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-3 text-gray-800 font-medium hover:bg-gray-100 transition-colors"
+                  className="mt-7 inline-flex items-center gap-2 text-blue-700 font-semibold hover:text-blue-900 transition-colors"
                 >
                   Besøk articonsult.no
                   <ArrowUpRight className="h-4 w-4" />
                 </a>
               </div>
-            </div>
-          </div>
-        </section>
 
-        <section className="px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-8 max-w-3xl">
-              <h2 className="text-3xl font-semibold text-gray-900">Hvordan vi jobber</h2>
-              <p className="mt-4 text-gray-700 leading-relaxed">
-                ARTI jobber tett med kunder for å skape målbare resultater. De samme prinsippene ligger til grunn for
-                hvordan Notably utvikles, driftes og forbedres.
-              </p>
-            </div>
-            <div className="grid gap-6 md:grid-cols-3">
-              {workPrinciples.map((principle) => (
-                <article key={principle.title} className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-                  <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
-                    <principle.icon className="h-5 w-5" />
-                  </div>
-                  <h2 className="text-xl font-semibold text-gray-900">{principle.title}</h2>
-                  <p className="mt-3 text-gray-600 leading-relaxed">{principle.description}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="px-4 sm:px-6 lg:px-8 pb-20">
-          <div className="max-w-7xl mx-auto rounded-3xl border border-gray-200 bg-white p-8 md:p-12">
-            <h2 className="text-3xl font-semibold text-gray-900">Kunder og erfaring</h2>
-            <p className="mt-4 max-w-3xl text-gray-700 leading-relaxed">
-              ARTI har bistått både private og offentlige aktører. På kundelisten finner vi blant annet Orkla, Politiet,
-              Skagenfondene, Telenor, Pareto og Selvaag Bolig, i tillegg til en rekke andre virksomheter.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              {customerExamples.map((customer) => (
-                <span
-                  key={customer}
-                  className="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700"
-                >
-                  {customer}
+              <div className="flex flex-wrap content-start gap-3">
+                {customerExamples.map((customer) => (
+                  <span
+                    key={customer}
+                    className="rounded-full border border-slate-300 bg-slate-100/80 px-4 py-2 text-sm font-semibold text-slate-700"
+                  >
+                    {customer}
+                  </span>
+                ))}
+                <span className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700">
+                  ... og flere
                 </span>
-              ))}
+              </div>
             </div>
-
-            <p className="mt-8 text-gray-600">
-              Vil du lese mer om hvordan ARTI jobber med strategi, implementering og gjennomføring?
-            </p>
-            <a
-              href="https://www.articonsult.no/om-oss/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center gap-2 text-blue-700 font-medium hover:text-blue-800"
-            >
-              Se ARTI sin om-oss-side
-              <ArrowUpRight className="h-4 w-4" />
-            </a>
-          </div>
+          </motion.div>
         </section>
       </main>
 
