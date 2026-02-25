@@ -5,27 +5,6 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL } from '../lib/seo';
 
-const workPrinciples = [
-  {
-    number: '01',
-    title: 'Praktisk først',
-    description:
-      'Vi bygger løsninger som faktisk tas i bruk i arbeidshverdagen, ikke pilotprosjekter som stopper opp.',
-  },
-  {
-    number: '02',
-    title: 'Trygg implementering',
-    description:
-      'Vi kombinerer fart med governance, sikkerhet og tydelige rammer for ansvarlig AI-bruk.',
-  },
-  {
-    number: '03',
-    title: 'Målbar effekt',
-    description:
-      'Vi definerer KPI-er tidlig og følger leveransen tett for å sikre dokumenterte gevinster.',
-  },
-];
-
 const customerExamples = [
   'Orkla',
   'Politiet',
@@ -34,6 +13,8 @@ const customerExamples = [
   'Pareto',
   'Selvaag Bolig',
 ];
+
+const HERO_IMAGE_URL = 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1772011939789.svg';
 
 export default function AboutPage() {
   return (
@@ -99,10 +80,12 @@ export default function AboutPage() {
                   <ArrowUpRight className="h-4 w-4" />
                 </a>
                 <a
-                  href="#hvordan-vi-jobber"
+                  href="https://www.articonsult.no/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-slate-700 font-semibold hover:text-slate-950 transition-colors"
                 >
-                  Hvordan vi jobber
+                  Besøk articonsult.no
                   <ArrowUpRight className="h-4 w-4" />
                 </a>
               </div>
@@ -112,23 +95,15 @@ export default function AboutPage() {
               initial={{ opacity: 0, y: 24, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.65, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-              className="relative aspect-[4/4.1] overflow-hidden rounded-[2rem] border border-slate-300/70 bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 shadow-[0_24px_55px_-26px_rgba(15,23,42,0.7)]"
+              className="relative aspect-[4/4.1] overflow-hidden rounded-[2rem] border border-slate-300/70 bg-white shadow-[0_24px_55px_-26px_rgba(15,23,42,0.7)]"
             >
-              <div className="absolute -top-16 right-[-10%] h-56 w-56 rounded-full bg-blue-300/30 blur-3xl" />
-              <div className="absolute -bottom-24 left-[-10%] h-72 w-72 rounded-full bg-cyan-200/20 blur-3xl" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_22%,rgba(255,255,255,0.32),transparent_36%)]" />
-              <div className="absolute inset-0 bg-[linear-gradient(130deg,rgba(255,255,255,0.08)_0%,transparent_45%,rgba(96,165,250,0.18)_100%)]" />
-
-              <div className="absolute top-6 right-6 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-slate-100/90 backdrop-blur">
-                ARTI x Notably
-              </div>
-
-              <div className="absolute left-6 right-6 bottom-6 rounded-2xl border border-white/20 bg-white/12 p-5 backdrop-blur-md">
-                <p className="text-sm uppercase tracking-[0.2em] text-slate-200/85">Slik jobber vi</p>
-                <p className="mt-3 text-2xl leading-tight font-semibold text-white">
-                  Fra strategi til produksjon, med sikkerhet, tempo og målbar verdi.
-                </p>
-              </div>
+              <img
+                src={HERO_IMAGE_URL}
+                alt="ARTI Consult team i møte"
+                className="h-full w-full object-cover"
+                loading="eager"
+                fetchPriority="high"
+              />
             </motion.div>
           </div>
         </section>
@@ -139,34 +114,11 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.65 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto max-w-5xl text-center text-3xl sm:text-4xl lg:text-[3rem] leading-[1.17] font-semibold tracking-tight text-slate-900"
+            className="mx-auto max-w-5xl text-center text-3xl sm:text-4xl lg:text-[3rem] leading-[1.35] font-semibold tracking-tight text-slate-900"
           >
             Vi tror AI skal gi mennesker mer tid til arbeid som betyr noe. Vår jobb er å gjøre det mulig, trygt, raskt
             og med varig effekt.
           </motion.p>
-        </section>
-
-        <section id="hvordan-vi-jobber" className="scroll-mt-28 px-6 md:px-[9%] xl:px-[14%] py-16 md:py-20">
-          <div className="mx-auto max-w-7xl">
-            <h2 className="text-3xl sm:text-4xl font-semibold text-slate-900">Hvordan vi jobber</h2>
-
-            <div className="mt-10 grid gap-8 md:grid-cols-3">
-              {workPrinciples.map((principle, index) => (
-                <motion.article
-                  key={principle.number}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.45 }}
-                  transition={{ duration: 0.5, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
-                  className="border-t border-slate-300 pt-7"
-                >
-                  <p className="text-sm font-medium tracking-[0.22em] text-slate-500">{principle.number}</p>
-                  <h3 className="mt-5 text-3xl font-semibold leading-tight text-slate-900">{principle.title}</h3>
-                  <p className="mt-4 text-lg leading-relaxed text-slate-700">{principle.description}</p>
-                </motion.article>
-              ))}
-            </div>
-          </div>
         </section>
 
         <section className="px-6 md:px-[9%] xl:px-[14%] pb-24">
