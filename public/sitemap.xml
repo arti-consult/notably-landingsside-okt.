@@ -2,46 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://notably.no/</loc>
-    <lastmod>2026-02-16T11:03:00.881Z</lastmod>
+    <lastmod>2026-02-25T08:26:47.468Z</lastmod>
+  </url>
+  <url>
+    <loc>https://notably.no/om-oss</loc>
+    <lastmod>2026-02-25T08:26:47.468Z</lastmod>
   </url>
   <url>
     <loc>https://notably.no/artikler</loc>
-    <lastmod>2026-02-16T11:03:00.881Z</lastmod>
+    <lastmod>2026-02-25T08:26:47.468Z</lastmod>
   </url>
   <url>
     <loc>https://notably.no/personvern</loc>
-    <lastmod>2026-02-16T11:03:00.881Z</lastmod>
+    <lastmod>2026-02-25T08:26:47.468Z</lastmod>
   </url>
   <url>
     <loc>https://notably.no/vilkar</loc>
-    <lastmod>2026-02-16T11:03:00.881Z</lastmod>
+    <lastmod>2026-02-25T08:26:47.468Z</lastmod>
   </url>
   <url>
     <loc>https://notably.no/llms.txt</loc>
-    <lastmod>2026-02-16T11:03:00.881Z</lastmod>
+    <lastmod>2026-02-25T08:26:47.468Z</lastmod>
   </url>
   <url>
     <loc>https://notably.no/llms-full.txt</loc>
-    <lastmod>2026-02-16T11:03:00.881Z</lastmod>
+    <lastmod>2026-02-25T08:26:47.468Z</lastmod>
   </url>
   <url>
     <loc>https://notably.no/llms/notably-overview.md</loc>
-    <lastmod>2026-02-16T11:03:00.881Z</lastmod>
+    <lastmod>2026-02-25T08:26:47.468Z</lastmod>
   </url>
   <url>
     <loc>https://notably.no/llms/notably-product.md</loc>
-    <lastmod>2026-02-16T11:03:00.881Z</lastmod>
+    <lastmod>2026-02-25T08:26:47.468Z</lastmod>
   </url>
   <url>
     <loc>https://notably.no/llms/notably-security-personvern.md</loc>
-    <lastmod>2026-02-16T11:03:00.881Z</lastmod>
+    <lastmod>2026-02-25T08:26:47.468Z</lastmod>
   </url>
   <url>
     <loc>https://notably.no/llms/notably-pricing.md</loc>
-    <lastmod>2026-02-16T11:03:00.881Z</lastmod>
+    <lastmod>2026-02-25T08:26:47.468Z</lastmod>
   </url>
   <url>
     <loc>https://notably.no/llms/notably-use-cases.md</loc>
-    <lastmod>2026-02-16T11:03:00.881Z</lastmod>
+    <lastmod>2026-02-25T08:26:47.468Z</lastmod>
   </url>
 </urlset>

@@ -15,6 +15,7 @@ const BlogListing = lazy(() => import('./pages/BlogListing.tsx'));
 const ArticlePage = lazy(() => import('./pages/ArticlePage.tsx'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy.tsx'));
 const TermsOfUse = lazy(() => import('./pages/TermsOfUse.tsx'));
+const AboutPage = lazy(() => import('./pages/AboutPage.tsx'));
 const NotFound = lazy(() => import('./pages/NotFound.tsx'));
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute.tsx'));
 
@@ -64,6 +65,7 @@ createRoot(document.getElementById('root')!).render(
               <Route path="/" element={<HomePage />} />
               <Route path="/personvern" element={<PrivacyPolicy />} />
               <Route path="/vilkar" element={<TermsOfUse />} />
+              <Route path="/om-oss" element={<AboutPage />} />
               <Route path="/artikler" element={<BlogListing />} />
               <Route path="/artikler/:slug" element={<ArticlePage />} />
               <Route path="/blog" element={<Navigate to="/artikler" replace />} />

@@ -39,6 +39,9 @@ export default function Footer() {
         </div>
 
         <div className="mt-4 pt-6 border-t border-gray-800 text-sm flex flex-col gap-3">
+          <Link to="/om-oss" className="hover:text-white transition-colors">
+            Om oss
+          </Link>
           <Link to="/personvern" className="hover:text-white transition-colors">
             Personvern
           </Link>
