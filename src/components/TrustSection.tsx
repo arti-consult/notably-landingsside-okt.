@@ -67,18 +67,18 @@ export default function TrustSection() {
   }, []);
 
   return (
-    <section className="py-12 sm:py-14 bg-white">
+    <section className="relative z-10 -mt-16 sm:-mt-20 md:-mt-24 pt-2 sm:pt-3 pb-4 sm:pb-6 bg-white">
       <div className="page-container">
         <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs sm:text-sm font-semibold tracking-[0.12em] uppercase text-slate-500 mb-7">
+          <p className="text-center text-xs sm:text-sm font-semibold tracking-[0.12em] uppercase text-slate-500 mb-3 sm:mb-4">
             Brukt av team hos
           </p>
 
-          <div className="grid grid-cols-3 gap-3 md:hidden">
+          <div className="grid grid-cols-3 gap-1.5 sm:gap-2 md:hidden">
             {mobileLogos.map((item) => (
               <div
                 key={item.company}
-                className="h-14 flex items-center justify-center px-2"
+                className="h-10 sm:h-12 flex items-center justify-center px-1.5 sm:px-2"
               >
                 {item.logo ? (
                   <div className="relative inline-flex items-center justify-center max-w-full">
@@ -87,7 +87,7 @@ export default function TrustSection() {
                       alt={item.logo.alt_text || `${item.company} logo`}
                       width={160}
                       height={48}
-                      className="max-h-8 w-auto max-w-full object-contain"
+                      className="max-h-7 sm:max-h-8 w-auto max-w-full object-contain"
                       loading="lazy"
                       decoding="async"
                     />
@@ -100,11 +100,11 @@ export default function TrustSection() {
             ))}
           </div>
 
-          <div className="hidden md:grid md:grid-cols-5 gap-6">
+          <div className="hidden md:grid md:grid-cols-5 gap-2 lg:gap-4">
             {logos.map((item) => (
               <div
                 key={item.company}
-                className="h-24 lg:h-28 flex items-center justify-center px-4"
+                className="h-12 lg:h-14 flex items-center justify-center px-2 lg:px-3"
               >
                 {item.logo ? (
                   <div className="relative inline-flex items-center justify-center max-w-full">
@@ -113,7 +113,7 @@ export default function TrustSection() {
                       alt={item.logo.alt_text || `${item.company} logo`}
                       width={220}
                       height={72}
-                      className="max-h-14 lg:max-h-16 w-auto max-w-full object-contain"
+                      className="max-h-10 lg:max-h-12 w-auto max-w-full object-contain"
                       loading="lazy"
                       decoding="async"
                     />

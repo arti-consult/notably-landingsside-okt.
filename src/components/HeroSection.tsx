@@ -2,7 +2,7 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export default function HeroSection() {
   return (
-    <section className="pt-24 sm:pt-32 md:pt-36 pb-14 md:pb-24 page-container relative overflow-hidden">
+    <section className="pt-24 sm:pt-32 md:pt-36 pb-8 sm:pb-10 md:pb-14 page-container relative overflow-hidden">
       <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[36rem] h-[36rem] bg-blue-200/30 blur-3xl rounded-full pointer-events-none" />
       <div className="absolute -top-16 right-[-8rem] w-[22rem] h-[22rem] bg-indigo-200/35 blur-3xl rounded-full pointer-events-none" />
 
