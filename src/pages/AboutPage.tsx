@@ -65,8 +65,9 @@ export default function AboutPage() {
                 Vi gjør AI konkret for norske virksomheter.
               </h1>
               <p className="mt-6 text-lg leading-relaxed text-slate-700">
-                <strong className="text-slate-900">ARTI Consult AS</strong> er selskapet bak Notably. Vi jobber tett med
-                ledere og fagmiljøer for å gå fra AI-idé til produksjon, med trygg fremdrift og dokumentert effekt.
+                <strong className="text-slate-900">ARTI Consult AS</strong> er selskapet bak Notably. Vi utvikler
+                AI-produkter som løser konkrete problemer i tydelige markeder, og jobber tett med ledere og fagmiljøer
+                for å ta løsninger fra idé til produksjon med trygg fremdrift og dokumentert effekt.
               </p>
 
               <div className="mt-9 flex flex-wrap items-center gap-4">
