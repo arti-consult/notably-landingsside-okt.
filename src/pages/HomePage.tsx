@@ -103,7 +103,7 @@ export default function HomePage() {
       <Navigation />
       <div className="relative overflow-hidden bg-gradient-to-b from-slate-100 via-blue-50/70 to-gray-50">
         <HeroSection />
-        <div aria-hidden className="h-2 sm:h-3 bg-gradient-to-b from-gray-50 to-white" />
+        <div aria-hidden className="h-1 sm:h-2 bg-gradient-to-b from-gray-50 to-white" />
       </div>
       <TrustSection />
       <MeetingSummarySection />

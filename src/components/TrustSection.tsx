@@ -67,7 +67,7 @@ export default function TrustSection() {
   }, []);
 
   return (
-    <section className="relative z-10 -mt-16 sm:-mt-20 md:-mt-24 pt-2 sm:pt-3 pb-4 sm:pb-6 bg-white">
+    <section className="relative z-10 pt-1 sm:pt-2 pb-4 sm:pb-6 bg-white">
       <div className="page-container">
         <div className="max-w-6xl mx-auto">
           <p className="text-center text-xs sm:text-sm font-semibold tracking-[0.12em] uppercase text-slate-500 mb-3 sm:mb-4">
