@@ -1,17 +1,18 @@
 # Notably pricing
-Last updated: 2026-02-16
+Last updated: 2026-03-07
 Canonical URL: https://notably.no/
 
 ## Plans shown on website
-- Pro: 399 NOK per user per month.
+- Notably: 399 NOK per user per month.
 - Enterprise: contact sales.
-- Trial: 14 days free trial.
+- Trial: 14 days free trial on the standard plan.
 
 ## Pricing-related points shown on site
 - No training on customer data (listed in plan features).
 - GDPR-compatible.
 - Hosted in Europe.
 - Norwegian support.
+- Enterprise-specific options include SSO, onboarding, SLA/custom agreements, volume discounts, and dedicated contact.
 
 ## Commercial links
 - Sign up: https://app.notably.no/no/sign-up

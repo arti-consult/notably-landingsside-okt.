@@ -8,6 +8,7 @@ interface PricingPlan {
   description: string;
   features: string[];
   highlighted?: boolean;
+  badge?: string;
   cta: string;
 }
 
@@ -31,31 +32,37 @@ const PricingSection = () => {
 
   const plans: PricingPlan[] = [
     {
-      name: 'Pro',
+      name: 'Notably',
       monthlyPrice: 399,
-      description: 'For profesjonelle brukere',
+      description: 'For team som vil slippe manuelle møtereferater og følge opp raskere.',
       features: [
-        'Uendelig møter',
-        'Ingen trening på dataen din',
-        'Prioritert support'
+        'Automatiske møtereferater og oppsummeringer',
+        'Oppgaver og beslutninger samlet etter hvert møte',
+        'Spør Notably om tidligere møter',
+        'Fungerer med Teams, Zoom, Google Meet og fysiske møter',
+        'Google Calendar- og Outlook-integrasjoner',
+        'Del referater med teamet',
+        'Ingen modelltrening på kundedata',
+        'Norsk support'
       ],
       highlighted: true,
-      cta: 'Start gratis'
+      badge: '14 dager gratis',
+      cta: 'Start 14 dager gratis'
     },
     {
       name: 'Enterprise',
       monthlyPrice: null,
-      description: 'For team med 20+ brukere',
+      description: 'For større team eller virksomheter med egne krav til utrulling, sikkerhet og avtaleverk.',
       features: [
-        'Alt i Pro-planen',
+        'Alt i Notably',
         'Skreddersydd onboarding',
         'SLA og tilpassede avtaler',
         'SSO',
-        'Volume-baserte rabatter',
-        'Dedikert kundekontakt',
-        'Ingen trening på dataen din'
+        'Volumrabatter',
+        'Dedikert kontaktperson',
+        'Støtte i sikkerhets- og innkjøpsprosess'
       ],
-      cta: 'Kontakt oss'
+      cta: 'Snakk med oss'
     }
   ];
 
@@ -65,18 +72,19 @@ const PricingSection = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Prisplaner for alle behov
+              En enkel pris. Enterprise ved behov.
             </h2>
             <p className="text-gray-600 text-lg mb-8">
-              Velg planen som passer best for deg. Ingen skjulte kostnader.
+              Start med full tilgang i 14 dager. 399 kr per bruker per måned. For større team tilbyr vi
+              enterprise med SSO, onboarding og tilpassede avtaler.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             {plans.map((plan, index) => {
               const price = plan.monthlyPrice;
-              const priceInclVat = price !== null ? Math.round(price * 1.25) : null;
-              const ctaClass = plan.name === 'Pro'
+              const isSelfServePlan = price !== null;
+              const ctaClass = plan.highlighted
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
                 : 'bg-gray-900 text-white hover:bg-black';
 
@@ -89,9 +97,9 @@ const PricingSection = () => {
                       : 'shadow-lg hover:shadow-xl'
                   }`}
                 >
-                  {plan.highlighted && (
+                  {plan.badge && (
                     <div className="absolute -top-4 right-6 px-4 py-1 bg-blue-600 text-white text-sm font-medium rounded-full">
-                      Mest populær
+                      {plan.badge}
                     </div>
                   )}
 
@@ -105,16 +113,16 @@ const PricingSection = () => {
                           <span className="text-[2.55rem] font-bold">{price},-</span>
                         </div>
                         <p className="text-gray-600 mt-2">
-                          per bruker per måned
+                          per bruker / mnd eks. mva.
                         </p>
-                        {plan.name === 'Pro' && priceInclVat !== null && (
-                          <div className="mt-2 inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
-                            {priceInclVat},- inkl. MVA (25%)
-                          </div>
-                        )}
                       </>
                     ) : (
-                      <div className="text-3xl font-bold">Kontakt oss</div>
+                      <>
+                        <div className="text-3xl font-bold">Tilbud etter behov</div>
+                        <p className="text-gray-600 mt-2">
+                          Ta kontakt for pris, oppsett og utrulling.
+                        </p>
+                      </>
                     )}
                   </div>
 
@@ -133,7 +141,7 @@ const PricingSection = () => {
                     </div>
                   </div>
 
-                  {plan.name === 'Enterprise' ? (
+                  {!isSelfServePlan ? (
                     <button
                       type="button"
                       onClick={() => setIsContactModalOpen(true)}
@@ -158,7 +166,7 @@ const PricingSection = () => {
 
           <div className="mt-16 text-center">
             <p className="text-gray-600 mb-6">
-              Alle planer inkluderer 14 dagers gratis prøveperiode
+              Start med 14 dagers gratis prøveperiode
             </p>
             <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500">
               <div className="flex items-center gap-2">
@@ -224,10 +232,10 @@ const PricingSection = () => {
               <div className="flex items-start justify-between gap-4 mb-5">
                 <div>
                   <h3 id="enterprise-contact-title" className="text-xl sm:text-2xl font-bold text-gray-900">
-                    Kontakt Enterprise
+                    Snakk med oss om Enterprise
                   </h3>
                   <p className="text-sm text-gray-600 mt-1">
-                    Ta kontakt for tilbud og oppsett.
+                    Ta kontakt for pris, oppsett og utrulling.
                   </p>
                 </div>
                 <button

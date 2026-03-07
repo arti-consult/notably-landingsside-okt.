@@ -1,5 +1,5 @@
 # Notably - LLM full snapshot
-Last updated: 2026-02-16
+Last updated: 2026-03-07
 Primary website: https://notably.no/
 
 This document is for machine reading and retrieval. It summarizes key product information for Notably and points to canonical URLs.
@@ -27,9 +27,9 @@ Notably is a Norwegian AI meeting assistant that automates meeting notes, summar
 - Hosting on SOC 2 certified infrastructure.
 
 ## Pricing snapshot
-- Pro: 399 NOK per user per month.
+- Notably: 399 NOK per user per month.
 - Enterprise: contact sales.
-- Trial: 14 days.
+- Trial: 14 days on the standard plan.
 
 ## Public canonical URLs
 - Homepage: https://notably.no/
