@@ -38,7 +38,7 @@ export default function HeroSection() {
                 <ArrowRight className="w-5 h-5" />
               </a>
               <a
-                href="https://calendly.com/d/cxdp-xt7-q9z/notably-motereferat-med-ai"
+                href="https://calendly.com/arti-jorgen/notably-demo"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-7 py-4 text-slate-700 font-semibold text-lg hover:border-blue-300 hover:text-blue-700 transition-colors"
