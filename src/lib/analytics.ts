@@ -1,5 +1,6 @@
 const GA_MEASUREMENT_ID = 'G-NJRML2BKQP';
 const FB_PIXEL_ID = '1783628368949768';
+const TIKTOK_PIXEL_ID = 'D81GS73C77U5V9M1RKG0';
 
 declare global {
   interface Window {
@@ -13,6 +14,8 @@ declare global {
       push?: (...args: unknown[]) => void;
     };
     _fbq?: Window['fbq'];
+    TiktokAnalyticsObject?: string;
+    ttq?: any;
   }
 }
 
@@ -70,6 +73,56 @@ const initMetaPixel = () => {
   window.fbq('track', 'PageView');
 };
 
+const initTikTokPixel = () => {
+  if (window.ttq) {
+    return;
+  }
+
+  (function (w: any, d: Document, t: string) {
+    w.TiktokAnalyticsObject = t;
+    const ttq = (w[t] = w[t] || []);
+    ttq.methods = [
+      'page', 'track', 'identify', 'instances', 'debug', 'on', 'off', 'once',
+      'ready', 'alias', 'group', 'enableCookie', 'disableCookie', 'holdConsent',
+      'revokeConsent', 'grantConsent',
+    ];
+    ttq.setAndDefer = function (target: any, method: string) {
+      target[method] = function () {
+        target.push([method].concat(Array.prototype.slice.call(arguments, 0)));
+      };
+    };
+    for (let i = 0; i < ttq.methods.length; i++) {
+      ttq.setAndDefer(ttq, ttq.methods[i]);
+    }
+    ttq.instance = function (id: string) {
+      const e = ttq._i[id] || [];
+      for (let n = 0; n < ttq.methods.length; n++) {
+        ttq.setAndDefer(e, ttq.methods[n]);
+      }
+      return e;
+    };
+    ttq.load = function (e: string, n?: any) {
+      const r = 'https://analytics.tiktok.com/i18n/pixel/events.js';
+      ttq._i = ttq._i || {};
+      ttq._i[e] = [];
+      ttq._i[e]._u = r;
+      ttq._t = ttq._t || {};
+      ttq._t[e] = +new Date();
+      ttq._o = ttq._o || {};
+      ttq._o[e] = n || {};
+      const script = d.createElement('script');
+      script.type = 'text/javascript';
+      script.async = true;
+      script.src = r + '?sdkid=' + e + '&lib=' + t;
+      const first = d.getElementsByTagName('script')[0];
+      first.parentNode?.insertBefore(script, first);
+    };
+
+    ttq.load(TIKTOK_PIXEL_ID);
+    ttq.page();
+  })(window, document, 'ttq');
+};
+
 export const initMarketingTracking = () => {
   if (marketingInitialized || typeof window === 'undefined') {
     return;
@@ -78,4 +131,5 @@ export const initMarketingTracking = () => {
   marketingInitialized = true;
   initGoogleAnalytics();
   initMetaPixel();
+  initTikTokPixel();
 };
