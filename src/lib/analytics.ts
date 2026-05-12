@@ -133,3 +133,41 @@ export const initMarketingTracking = () => {
   initMetaPixel();
   initTikTokPixel();
 };
+
+const readCookie = (name: string): string | undefined => {
+  if (typeof document === 'undefined') return undefined;
+  const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + '=([^;]*)'));
+  return match ? decodeURIComponent(match[1]) : undefined;
+};
+
+const readQueryParam = (name: string): string | undefined => {
+  if (typeof window === 'undefined') return undefined;
+  return new URLSearchParams(window.location.search).get(name) || undefined;
+};
+
+export type TikTokTrackingContext = {
+  event_id: string;
+  ttp?: string;
+  ttclid?: string;
+  url?: string;
+  user_agent?: string;
+};
+
+export const buildTikTokContext = (): TikTokTrackingContext => ({
+  event_id: typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+  ttp: readCookie('_ttp'),
+  ttclid: readQueryParam('ttclid') || readCookie('ttclid'),
+  url: typeof window !== 'undefined' ? window.location.href : undefined,
+  user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+});
+
+export const trackTikTokEvent = (
+  eventName: string,
+  params: Record<string, unknown>,
+  ctx: TikTokTrackingContext,
+) => {
+  if (typeof window === 'undefined' || !window.ttq) return;
+  window.ttq.track(eventName, params, { event_id: ctx.event_id });
+};

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2, CheckCircle2, Sparkles } from 'lucide-react';
+import { buildTikTokContext, trackTikTokEvent } from '../lib/analytics';
 
 export default function WaitlistSection() {
   const [email, setEmail] = useState('');
@@ -19,6 +20,8 @@ export default function WaitlistSection() {
     setStatus('loading');
     setMessage('');
 
+    const tiktokCtx = buildTikTokContext();
+
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/waitlist-signup`,
@@ -28,13 +31,14 @@ export default function WaitlistSection() {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           },
-          body: JSON.stringify({ email }),
+          body: JSON.stringify({ email, tiktok: tiktokCtx }),
         }
       );
 
       const data = await response.json();
 
       if (response.ok) {
+        trackTikTokEvent('CompleteRegistration', { content_name: 'Waitlist' }, tiktokCtx);
         setStatus('success');
         setMessage(data.message || 'Du er nå på ventelisten!');
         setEmail('');

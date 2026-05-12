@@ -6,6 +6,71 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Client-Info, Apikey',
 };
 
+const TIKTOK_PIXEL_ID = 'D81GS73C77U5V9M1RKG0';
+const TIKTOK_EVENTS_API_URL = 'https://business-api.tiktok.com/open_api/v1.3/event/track/';
+
+const sha256 = async (value: string): Promise<string> => {
+  const data = new TextEncoder().encode(value.trim().toLowerCase());
+  const buffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+};
+
+type TikTokContext = {
+  event_id?: string;
+  ttp?: string;
+  ttclid?: string;
+  user_agent?: string;
+  url?: string;
+  ip?: string;
+};
+
+const sendTikTokCompleteRegistration = async (email: string, ctx: TikTokContext) => {
+  const accessToken = Deno.env.get('TIKTOK_EVENTS_ACCESS_TOKEN');
+  if (!accessToken) {
+    console.warn('TIKTOK_EVENTS_ACCESS_TOKEN not set — skipping Events API call');
+    return;
+  }
+
+  const hashedEmail = await sha256(email);
+  const payload = {
+    event_source: 'web',
+    event_source_id: TIKTOK_PIXEL_ID,
+    data: [
+      {
+        event: 'CompleteRegistration',
+        event_time: Math.floor(Date.now() / 1000),
+        event_id: ctx.event_id,
+        user: {
+          email: hashedEmail,
+          ...(ctx.ttp ? { ttp: ctx.ttp } : {}),
+          ...(ctx.ttclid ? { ttclid: ctx.ttclid } : {}),
+          ...(ctx.ip ? { ip: ctx.ip } : {}),
+          ...(ctx.user_agent ? { user_agent: ctx.user_agent } : {}),
+        },
+        page: ctx.url ? { url: ctx.url } : undefined,
+      },
+    ],
+  };
+
+  try {
+    const res = await fetch(TIKTOK_EVENTS_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Token': accessToken,
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      console.error('TikTok Events API error:', res.status, await res.text());
+    }
+  } catch (err) {
+    console.error('TikTok Events API request failed:', err);
+  }
+};
+
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, {
@@ -15,7 +80,8 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { email } = await req.json();
+    const body = await req.json();
+    const { email, tiktok } = body as { email?: string; tiktok?: TikTokContext };
 
     if (!email || !email.includes('@')) {
       return new Response(
@@ -154,7 +220,7 @@ Deno.serve(async (req: Request) => {
     if (!emailResponse.ok) {
       const errorText = await emailResponse.text();
       console.error('Resend API error:', errorText);
-      
+
       await supabase
         .from('waitlist')
         .update({ email_sent: false })
@@ -165,6 +231,14 @@ Deno.serve(async (req: Request) => {
         .update({ email_sent: true })
         .eq('email', email);
     }
+
+    const ip = (req.headers.get('x-forwarded-for') || '').split(',')[0].trim() || undefined;
+    const user_agent = req.headers.get('user-agent') || undefined;
+    await sendTikTokCompleteRegistration(email, {
+      ...(tiktok || {}),
+      ip: tiktok?.ip || ip,
+      user_agent: tiktok?.user_agent || user_agent,
+    });
 
     return new Response(
       JSON.stringify({ 
