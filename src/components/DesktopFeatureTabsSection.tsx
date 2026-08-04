@@ -94,7 +94,7 @@ export default function DesktopFeatureTabsSection() {
   };
 
   return (
-    <section ref={sectionRef} className="hidden lg:block page-container pb-24 bg-white">
+    <section ref={sectionRef} className="hidden lg:block page-container pt-20 pb-24 bg-white">
       <div className="max-w-6xl mx-auto">
         <div className="rounded-[30px] border border-slate-200 bg-gradient-to-b from-slate-100 via-slate-50 to-white p-4 xl:p-5 shadow-[0_30px_90px_-55px_rgba(15,23,42,0.7)]">
           <div className="mb-4 flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3">

@@ -110,9 +110,9 @@ export default function HomePage() {
       <MeetingSummarySection />
       <DeferredRender rootMargin="300px 0px">
         <Suspense fallback={null}>
-          <DesktopFeatureTabsSection />
           <MobileAppSection />
           <TestimonialSection />
+          <DesktopFeatureTabsSection />
           <SecuritySection />
           <AIAnswersSection />
           <IntegrationsSection />
