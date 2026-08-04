@@ -56,6 +56,46 @@
   animation: dashFlow 1.5s linear infinite;
 }
 
+@keyframes notablyWave {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.notably-wave-bar {
+  transform-origin: center;
+  animation: notablyWave 1.1s ease-in-out infinite;
+}
+
+@keyframes notablyRecPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+}
+
+.notably-rec-dot {
+  animation: notablyRecPulse 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notably-wave-bar,
+  .notably-rec-dot {
+    animation: none;
+  }
+}
+
 @keyframes tabProgressFill {
   from {
     transform: scaleX(0);

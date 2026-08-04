@@ -14,6 +14,7 @@ const SecuritySection = lazy(() => import('../components/SecuritySection'));
 const AIAnswersSection = lazy(() => import('../components/AIAnswersSection'));
 const IntegrationsSection = lazy(() => import('../components/IntegrationsSection'));
 const AllMeetingsSection = lazy(() => import('../components/AllMeetingsSection'));
+const MobileAppSection = lazy(() => import('../components/MobileAppSection'));
 const UseCasesSection = lazy(() => import('../components/UseCasesSection'));
 const PricingSection = lazy(() => import('../components/PricingSection'));
 const ProblemSection = lazy(() => import('../components/ProblemSection'));
@@ -110,6 +111,7 @@ export default function HomePage() {
       <DeferredRender rootMargin="300px 0px">
         <Suspense fallback={null}>
           <DesktopFeatureTabsSection />
+          <MobileAppSection />
           <TestimonialSection />
           <SecuritySection />
           <AIAnswersSection />
