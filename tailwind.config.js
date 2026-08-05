@@ -3,6 +3,19 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      // Overstyrer standard-stacken, så alt – overskrifter og brødtekst – arver
+      // Schibsted Grotesk fra html. Systemfontene står igjen som fallback.
+      fontFamily: {
+        sans: [
+          'Schibsted Grotesk',
+          'ui-sans-serif',
+          'system-ui',
+          '-apple-system',
+          'Segoe UI',
+          'Roboto',
+          'sans-serif',
+        ],
+      },
       colors: {
         border: "hsl(var(--border))",
         background: "hsl(var(--background))",

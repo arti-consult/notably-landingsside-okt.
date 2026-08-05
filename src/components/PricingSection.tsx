@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, ShieldCheck, Headphones, X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 
 interface PricingPlan {
   name: string;
@@ -71,7 +71,7 @@ const PricingSection = () => {
       <section id="pricing" className="py-20 page-container bg-gray-50 scroll-mt-24 md:scroll-mt-28">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-slate-950 mb-4">
               En enkel pris. Enterprise ved behov.
             </h2>
             <p className="text-gray-600 text-lg mb-8">
@@ -168,38 +168,6 @@ const PricingSection = () => {
             <p className="text-gray-600 mb-6">
               Start med 14 dagers gratis prøveperiode
             </p>
-            <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-blue-600" />
-                <span>GDPR-kompatibel</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="relative w-5 h-5">
-                  <div className="absolute inset-0 bg-blue-600 rounded-full"></div>
-                  <svg viewBox="0 0 24 24" className="absolute inset-0 w-full h-full">
-                    {Array.from({ length: 12 }).map((_, i) => {
-                      const angle = (i * 30 * Math.PI) / 180;
-                      const x = 12 + 7 * Math.sin(angle);
-                      const y = 12 - 7 * Math.cos(angle);
-                      return (
-                        <circle
-                          key={i}
-                          cx={x}
-                          cy={y}
-                          r="1.2"
-                          fill="#FCD34D"
-                        />
-                      );
-                    })}
-                  </svg>
-                </div>
-                <span>Hostet i Europa</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Headphones className="w-5 h-5 text-blue-600" />
-                <span>Norsk support</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>

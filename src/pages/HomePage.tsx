@@ -1,24 +1,22 @@
 import Navigation from '../components/Navigation';
 import HeroSection from '../components/HeroSection';
 import TrustSection from '../components/TrustSection';
-import MeetingSummarySection from '../components/MeetingSummarySection';
+import ProblemSection from '../components/ProblemSection';
 import DeferredRender from '../components/DeferredRender';
 import { Helmet } from 'react-helmet-async';
 import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL, SITE_URL } from '../lib/seo';
 import { Suspense, lazy, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const DesktopFeatureTabsSection = lazy(() => import('../components/DesktopFeatureTabsSection'));
+const MobileAppSection = lazy(() => import('../components/MobileAppSection'));
 const TestimonialSection = lazy(() => import('../components/TestimonialSection'));
-const SecuritySection = lazy(() => import('../components/SecuritySection'));
+const DesktopFeatureTabsSection = lazy(() => import('../components/DesktopFeatureTabsSection'));
+const CapabilitiesSection = lazy(() => import('../components/CapabilitiesSection'));
 const AIAnswersSection = lazy(() => import('../components/AIAnswersSection'));
 const IntegrationsSection = lazy(() => import('../components/IntegrationsSection'));
-const AllMeetingsSection = lazy(() => import('../components/AllMeetingsSection'));
-const MobileAppSection = lazy(() => import('../components/MobileAppSection'));
 const UseCasesSection = lazy(() => import('../components/UseCasesSection'));
+const SecuritySection = lazy(() => import('../components/SecuritySection'));
 const PricingSection = lazy(() => import('../components/PricingSection'));
-const ProblemSection = lazy(() => import('../components/ProblemSection'));
-const FeaturesGrid = lazy(() => import('../components/FeaturesGrid'));
 const CTASection = lazy(() => import('../components/CTASection'));
 const Footer = lazy(() => import('../components/Footer'));
 
@@ -102,25 +100,22 @@ export default function HomePage() {
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
       <Navigation />
-      <div className="relative overflow-hidden bg-gradient-to-b from-slate-100 via-blue-50/70 to-gray-50">
+      <div className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-white">
         <HeroSection />
-        <div aria-hidden className="h-1 sm:h-2 bg-gradient-to-b from-gray-50 to-white" />
       </div>
       <TrustSection />
-      <MeetingSummarySection />
+      <ProblemSection />
       <DeferredRender rootMargin="300px 0px">
         <Suspense fallback={null}>
           <MobileAppSection />
           <TestimonialSection />
           <DesktopFeatureTabsSection />
-          <SecuritySection />
+          <CapabilitiesSection />
           <AIAnswersSection />
           <IntegrationsSection />
-          <AllMeetingsSection />
           <UseCasesSection />
+          <SecuritySection />
           <PricingSection />
-          <ProblemSection />
-          <FeaturesGrid />
           <CTASection />
           <Footer />
         </Suspense>

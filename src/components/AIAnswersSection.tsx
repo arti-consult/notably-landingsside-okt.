@@ -1,63 +1,92 @@
-import { Plus, Mic, ArrowUp } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { MessageSquare, Search } from 'lucide-react';
 
-const questions = [
-  { text: 'Hva var hovedpunktene fra forrige møte?', featured: false },
-  { text: 'Hvem er den beste kandidaten fra intervjuene denne uken?', featured: false },
-  { text: 'Hva skjer på markedsføringsfronten?', featured: false },
-  { text: 'Hva har vært hovedtemaene den siste uken?', featured: true },
+const exampleQuestions = [
+  'Hva var hovedpunktene fra forrige møte?',
+  'Hvem er den beste kandidaten fra intervjuene?',
+  'Hva har vært hovedtemaene den siste uken?',
+];
+
+const conversation = [
+  { text: 'Hva ble besluttet i møtet om Q2-strategi?', isUser: true },
+  {
+    text: 'Det ble besluttet å fokusere på tre områder: øke markedsandelen i Norden med 15 %, lansere to nye produktfunksjoner innen juni, og styrke kundeservice-teamet med tre ansatte.',
+    isUser: false,
+  },
+  { text: 'Hvem er ansvarlig for produktlanseringen?', isUser: true },
+  {
+    text: 'Sara Jensen er prosjektleder, med støtte fra tech-teamet ledet av Tomas Andersen.',
+    isUser: false,
+  },
 ];
 
 export default function AIAnswersSection() {
   return (
     <section className="py-20 page-container bg-gray-50">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-5xl font-bold mb-6">
-            Få nyttige <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600">svar</span>
+      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-14">
+        <div>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="text-4xl font-semibold tracking-tight text-slate-950 md:text-5xl"
+          >
+            Spør om alt som
             <br />
-            fra alle dine møter
-          </h2>
-          <p className="text-gray-700 text-lg max-w-3xl mx-auto">
-            Still hvilket som helst spørsmål på tvers av alle dine tidligere møter og la Notably finne svarene du
-            leter etter umiddelbart. Trygt hostet i Europa.
+            har blitt sagt.
+          </motion.h2>
+
+          <p className="mt-6 max-w-md text-lg leading-relaxed text-slate-600">
+            Still hvilket som helst spørsmål på tvers av alle møtene dine, og få svaret med
+            én gang — enten møtet var i går eller i fjor.
           </p>
+
+          <ul className="mt-8 space-y-2.5">
+            {exampleQuestions.map((question) => (
+              <li
+                key={question}
+                className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
+              >
+                <Search className="h-4 w-4 shrink-0 text-slate-400" aria-hidden />
+                <span className="text-[15px] text-slate-700">{question}</span>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-2xl p-6 mb-8 max-w-3xl mx-auto">
-          <div className="space-y-2 mb-4">
-            {questions.map((question, index) => (
-              <div
-                key={index}
-                className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-xl transition-colors cursor-pointer group"
-              >
-                <div className="w-5 h-5 rounded-full bg-gray-200 flex-shrink-0 mt-0.5 group-hover:bg-gray-300 transition-colors"></div>
-                <p className={`text-sm ${question.featured ? 'text-gray-700 font-medium' : 'text-gray-600'}`}>
-                  {question.text}
-                </p>
-              </div>
-            ))}
+        <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-[0_28px_70px_-45px_rgba(15,23,42,0.5)] sm:p-6">
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600">
+              <MessageSquare className="h-5 w-5 text-white" aria-hidden />
+            </span>
+            <div>
+              <p className="font-semibold text-slate-900">Notably AI</p>
+              <p className="text-xs text-slate-500">Søker i alle møtene dine</p>
+            </div>
           </div>
 
-          <div className="border-t border-gray-200 pt-4">
-            <div className="flex items-center gap-3">
-              <button className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors flex items-center justify-center flex-shrink-0">
-                <Plus className="w-4 h-4 text-gray-600" />
-              </button>
-              <div className="flex-1">
-                <input
-                  type="text"
-                  placeholder="Spør Notably AI..."
-                  className="w-full text-gray-400 text-base bg-transparent outline-none"
-                  disabled
-                />
-              </div>
-              <button className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors flex items-center justify-center flex-shrink-0">
-                <Mic className="w-4 h-4 text-gray-600" />
-              </button>
-              <button className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 transition-colors flex items-center justify-center flex-shrink-0">
-                <ArrowUp className="w-5 h-5 text-white" />
-              </button>
-            </div>
+          <div className="space-y-3 pt-5">
+            {conversation.map((message, index) => (
+              <motion.div
+                key={message.text}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.45, delay: index * 0.55, ease: 'easeOut' }}
+                className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-[14px] leading-relaxed ${
+                    message.isUser
+                      ? 'rounded-br-md bg-blue-600 text-white'
+                      : 'rounded-bl-md bg-slate-100 text-slate-700'
+                  }`}
+                >
+                  {message.text}
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>

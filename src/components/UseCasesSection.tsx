@@ -172,7 +172,7 @@ const UseCasesSection = () => {
   return (
     <section className="py-20 page-container bg-white">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
+        <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-slate-950 text-center mb-16">
           Bruksområder for alle bransjer
         </h2>
 

@@ -5,7 +5,7 @@ export default function SecuritySection() {
     <section className="py-20 page-container bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Sikkerhet og personvern</h2>
+          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-slate-950 mb-4">Sikkerhet og personvern</h2>
           <p className="text-gray-700 text-lg max-w-2xl mx-auto">GDPR, EU/EØS‑dataresidens og sterk kryptering. Vi trener aldri på dine data.</p>
         </div>
 

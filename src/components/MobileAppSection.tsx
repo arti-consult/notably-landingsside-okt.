@@ -315,9 +315,7 @@ export default function MobileAppSection() {
               >
                 Møtereferatene
                 <br />
-                <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300 bg-clip-text text-transparent">
-                  rett i lomma.
-                </span>
+                rett i lomma.
               </motion.h2>
 
               <motion.p

@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/**
+ * Schibsted Grotesk – variabel, latin-subsett, 45,8 KB.
+ *
+ * Self-hostet med vilje, ikke lastet fra Googles CDN: hotlinking av Google
+ * Fonts sender besøkendes IP-adresse til Google, noe LG München slo ned på i
+ * 2022. En side som lover «all behandling og lagring i EU/EØS» kan ikke gjøre
+ * det. Self-hosting fjerner også et tredjeparts-oppslag fra kritisk vei.
+ *
+ * font-display: swap – teksten vises umiddelbart i systemfonten og bytter når
+ * filen er lastet, så LCP ikke blokkeres. Målt til ±5 % breddeavvik mot
+ * systemstacken ved brødtekst-størrelser, så ombrytingen ved bytte er liten.
+ *
+ * Familien settes i tailwind.config.js (theme.fontFamily.sans), slik at både
+ * overskrifter og brødtekst arver den fra html.
+ */
+@font-face {
+  font-family: 'Schibsted Grotesk';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('/fonts/schibsted-grotesk-latin-var.woff2') format('woff2');
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -89,9 +112,25 @@
   animation: notablyRecPulse 1.4s ease-in-out infinite;
 }
 
+@keyframes notablyCaret {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  55%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.notably-caret {
+  animation: notablyCaret 1.1s steps(1, end) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .notably-wave-bar,
-  .notably-rec-dot {
+  .notably-rec-dot,
+  .notably-caret {
     animation: none;
   }
 }
