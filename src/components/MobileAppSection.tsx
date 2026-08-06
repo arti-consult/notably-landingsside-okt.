@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import {
   motion,
   useReducedMotion,
   useScroll,
-  useSpring,
   useTransform,
   type Variants,
 } from 'framer-motion';
 import { Mic, Sparkles, Check } from 'lucide-react';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 const APP_STORE_URL = 'https://apps.apple.com/no/app/notably/id6783667184?l=nb';
 
@@ -241,49 +241,35 @@ const PhoneMockup = () => (
 export default function MobileAppSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const prefersReducedMotion = useReducedMotion();
-  // Vippingen av telefonen krever bredde vi bare har fra lg og opp.
-  const [allowTilt, setAllowTilt] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia('(min-width: 1024px)');
-    const update = () => setAllowTilt(query.matches);
-    update();
-    query.addEventListener('change', update);
-    return () => query.removeEventListener('change', update);
-  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start'],
   });
 
-  const rawY = useTransform(scrollYProgress, [0, 0.5, 1], [56, 0, -48]);
-  const rawRotate = useTransform(scrollYProgress, [0, 0.5, 1], [6, 0, -3.5]);
-  const y = useSpring(rawY, { stiffness: 80, damping: 22, mass: 0.6 });
-  const rotate = useSpring(rawRotate, { stiffness: 70, damping: 22, mass: 0.6 });
+  // Se HeroSection: springer jager scrollen på egen rAF-løkke og hakker når
+  // hovedtråden er presset. Verdiene utledes direkte i stedet.
+  const y = useTransform(scrollYProgress, [0, 0.5, 1], [56, 0, -48]);
+  const rotate = useTransform(scrollYProgress, [0, 0.5, 1], [6, 0, -3.5]);
   const scale = useTransform(scrollYProgress, [0, 0.4], [0.94, 1]);
-  const glowScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.75, 1.1, 0.85]);
-  const gridY = useTransform(scrollYProgress, [0, 1], ['-6%', '6%']);
 
-  const phoneStyle = prefersReducedMotion
-    ? undefined
-    : allowTilt
-      ? { y, rotate, scale }
-      : { y, scale };
+  // Hele parallaksen, ikke bare vippingen, kjører fra lg og opp. Vippingen
+  // krevde uansett bredde vi ikke har på mobil, og resten koster mer i
+  // scroll-arbeid enn den gir tilbake på en liten skjerm.
+  const allowParallax = useMediaQuery('(min-width: 1024px)') && !prefersReducedMotion;
+  const phoneStyle = allowParallax ? { y, rotate, scale } : undefined;
 
   return (
     <section ref={sectionRef} id="mobilapp" className="relative page-container bg-white py-16 sm:py-20 scroll-mt-24">
       <div className="mx-auto max-w-7xl">
         <div className="relative overflow-hidden rounded-[1.75rem] bg-slate-950 px-5 py-14 ring-1 ring-inset ring-white/[0.07] sm:rounded-[2.5rem] sm:px-10 sm:py-16 lg:px-14 lg:py-20">
           {/* Atmosfære */}
-          <motion.div
+          <div
             aria-hidden
-            style={prefersReducedMotion ? undefined : { y: gridY }}
             className="pointer-events-none absolute inset-0 -top-[10%] h-[120%] opacity-[0.35] [background-image:linear-gradient(to_right,rgba(148,163,184,0.12)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.12)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_72%)]"
           />
-          <motion.div
+          <div
             aria-hidden
-            style={prefersReducedMotion ? undefined : { scale: glowScale }}
             className="pointer-events-none absolute -right-32 top-0 h-[30rem] w-[30rem] rounded-full bg-blue-600/25 blur-[120px] lg:right-0"
           />
           <div
@@ -357,7 +343,9 @@ export default function MobileAppSection() {
                 whileInView={prefersReducedMotion ? undefined : { opacity: 1 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.7, ease: 'easeOut' }}
-                className="relative"
+                // Egen komposittlag, så den store skyggen ikke rastreres på
+                // nytt for hver frame under scroll.
+                className={allowParallax ? 'relative will-change-transform' : 'relative'}
               >
                 <PhoneMockup />
               </motion.div>

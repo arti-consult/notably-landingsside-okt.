@@ -3,11 +3,11 @@ import {
   motion,
   useReducedMotion,
   useScroll,
-  useSpring,
   useTransform,
   type Variants,
 } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 const containerVariants: Variants = {
   hidden: {},
@@ -154,9 +154,16 @@ export default function HeroSection() {
     [prefersReducedMotion]
   );
 
-  const rawY = useTransform(scrollYProgress, [0, 1], [0, -70]);
-  const y = useSpring(rawY, { stiffness: 90, damping: 24, mass: 0.6 });
+  // Ingen useSpring her. En spring jager scrollposisjonen på egen rAF-løkke,
+  // og når hovedtråden nedprioriteres under momentum-scroll på mobil mister den
+  // frames og hopper for å ta igjen. useTransform utleder verdien direkte fra
+  // scrollen og kan aldri ligge etter.
+  const y = useTransform(scrollYProgress, [0, 1], [0, -70]);
   const rotate = useTransform(scrollYProgress, [0, 1], [-1.6, 1.2]);
+
+  // Parallaksen kjører bare fra lg og opp. Under det er effekten knapt synlig,
+  // og alt per-scroll-arbeid på hovedtråden faller bort.
+  const allowParallax = useMediaQuery('(min-width: 1024px)') && !prefersReducedMotion;
 
   return (
     <section
@@ -259,7 +266,14 @@ export default function HeroSection() {
               animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
             >
-              <motion.div style={prefersReducedMotion ? undefined : { y, rotate }}>
+              {/* Egen komposittlag. Kortet har en 80px uskarp skygge, og uten
+                  promotering må hele subtreet rastreres på nytt hver frame. */}
+              <motion.div
+                // will-change holder på et komposittlag, så det settes bare når
+                // det faktisk er noe som animeres.
+                className={allowParallax ? 'will-change-transform' : undefined}
+                style={allowParallax ? { y, rotate } : undefined}
+              >
                 <ReferatCard />
               </motion.div>
             </motion.div>
