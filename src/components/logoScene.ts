@@ -44,7 +44,10 @@ export async function mountLogoScene(
 
   const scene = new Scene();
   const camera = new PerspectiveCamera(34, 1, 0.1, 100);
-  camera.position.set(0, 0, 8.2);
+  // Modellen er 3,85 enheter høy. På 8,2 ga det bare 0,58 enheters klaring
+  // opp og ned, som er i knappeste laget når rotasjonen svinger den rundt.
+  // 9,6 dobler margen til ~1,0 uten at logoen blir merkbart mindre.
+  camera.position.set(0, 0, 9.6);
 
   // Glansen i materialet kommer herfra – modellen har ingen teksturer.
   const pmrem = new PMREMGenerator(renderer);
@@ -101,8 +104,9 @@ export async function mountLogoScene(
       // Farten moduleres i stedet for å begrense vinkelen: logoen bremser når
       // den vender flatsiden mot deg og haster gjennom profilen, der den bare
       // er en hvit strek. Amplituden må holdes under 0.5, ellers blir den
-      // deriverte null og rotasjonen ser ut til å hakke.
-      const eased = spin - Math.sin(spin * 2) * 0.35;
+      // deriverte null og rotasjonen ser ut til å hakke. 0,42 gir ~4 % kant-tid
+      // mot 28 % uten modulering.
+      const eased = spin - Math.sin(spin * 2) * 0.42;
 
       // Scrollen forskyver fasen, så den fortsatt reagerer på brukeren.
       model.rotation.y = eased + progress * 0.5;
