@@ -66,17 +66,25 @@
   animation: scroll 45s linear infinite;
 }
 
-@keyframes dashFlow {
-  0% {
-    stroke-dashoffset: 0;
+/**
+ * Puls som løper langs integrasjonskurvene. Banene har pathLength=100, så
+ * dash-oppsettet er lengdeuavhengig: ett 11-enheters segment i et 100-enheters
+ * mønster. Når dashoffset går 100 → 0 vandrer segmentet fra app til Notably,
+ * og fordi mønsteret er nøyaktig like langt som banen, kommer neste puls inn
+ * idet den forrige går ut. Det gir en sammenhengende strøm uten hopp.
+ */
+@keyframes notablyFlowPulse {
+  from {
+    stroke-dashoffset: 100;
   }
-  100% {
-    stroke-dashoffset: -30;
+  to {
+    stroke-dashoffset: 0;
   }
 }
 
-.flow-line {
-  animation: dashFlow 1.5s linear infinite;
+.notably-flow-pulse {
+  animation: notablyFlowPulse 3s linear infinite;
+  filter: drop-shadow(0 0 4px rgb(37 99 235 / 0.45));
 }
 
 @keyframes notablyWave {
@@ -132,6 +140,14 @@
   .notably-rec-dot,
   .notably-caret {
     animation: none;
+  }
+
+  /* Pulsen stoppes, men koblingen blir stående synlig i stedet for å fryse
+     midt på banen. */
+  .notably-flow-pulse {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-opacity: 0.4;
   }
 }
 

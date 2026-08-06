@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 import { BackgroundBeamsWithCollision } from './BackgroundBeamsWithCollision';
+import Logo3D from './Logo3D';
 
 export default function CTASection() {
   return (
@@ -12,6 +13,8 @@ export default function CTASection() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
+          <Logo3D />
+
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-6">
             <Sparkles className="w-4 h-4 text-white" />
             <span className="text-sm text-white font-medium">Klar til å komme i gang?</span>
