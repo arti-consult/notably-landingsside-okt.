@@ -5,6 +5,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
 import { AuthProvider } from './contexts/AuthContext.tsx';
 import { initMarketingTracking } from './lib/analytics.ts';
+import { hasMarketingConsent, onConsentChange } from './lib/consent.ts';
 
 const HomePage = lazy(() => import('./pages/HomePage.tsx'));
 const AdminLogin = lazy(() => import('./pages/AdminLogin.tsx'));
@@ -18,12 +19,18 @@ const TermsOfUse = lazy(() => import('./pages/TermsOfUse.tsx'));
 const AboutPage = lazy(() => import('./pages/AboutPage.tsx'));
 const NotFound = lazy(() => import('./pages/NotFound.tsx'));
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute.tsx'));
+const ConsentManager = lazy(() => import('./components/ConsentManager.tsx'));
 
 function BlogSlugRedirect() {
   const { slug = '' } = useParams<{ slug: string }>();
   return <Navigate to={`/artikler/${slug}`} replace />;
 }
 
+/**
+ * Laster de valgfrie sporingsverktøyene – men bare hvis besøkende allerede har
+ * sagt ja i Personvernvalg. Uten et lagret samtykke skjer ingenting her, og
+ * ConsentManager tar seg av å starte dem i det øyeblikket samtykket gis.
+ */
 function MarketingScriptsLoader() {
   useEffect(() => {
     if (!import.meta.env.PROD) {
@@ -31,11 +38,17 @@ function MarketingScriptsLoader() {
     }
 
     let timeoutId: number | null = null;
-    const onLoad = () => {
+
+    const start = () => {
+      if (!hasMarketingConsent()) {
+        return;
+      }
       timeoutId = window.setTimeout(() => {
         initMarketingTracking();
       }, 1200);
     };
+
+    const onLoad = () => start();
 
     if (document.readyState === 'complete') {
       onLoad();
@@ -43,8 +56,15 @@ function MarketingScriptsLoader() {
       window.addEventListener('load', onLoad, { once: true });
     }
 
+    const unsubscribe = onConsentChange((state) => {
+      if (state.marketing === 'granted') {
+        initMarketingTracking();
+      }
+    });
+
     return () => {
       window.removeEventListener('load', onLoad);
+      unsubscribe();
       if (timeoutId !== null) {
         window.clearTimeout(timeoutId);
       }
@@ -107,6 +127,7 @@ createRoot(document.getElementById('root')!).render(
               />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <ConsentManager />
           </Suspense>
         </AuthProvider>
       </BrowserRouter>

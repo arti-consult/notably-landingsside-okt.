@@ -7,8 +7,8 @@
  *
  * Self-hostet med vilje, ikke lastet fra Googles CDN: hotlinking av Google
  * Fonts sender besøkendes IP-adresse til Google, noe LG München slo ned på i
- * 2022. En side som lover «all behandling og lagring i EU/EØS» kan ikke gjøre
- * det. Self-hosting fjerner også et tredjeparts-oppslag fra kritisk vei.
+ * 2022. En side som lover at møtedata lagres i EU kan ikke gjøre det.
+ * Self-hosting fjerner også et tredjeparts-oppslag fra kritisk vei.
  *
  * font-display: swap – teksten vises umiddelbart i systemfonten og bytter når
  * filen er lastet, så LCP ikke blokkeres. Målt til ±5 % breddeavvik mot
