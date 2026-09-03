@@ -1,3 +1,13 @@
+/**
+ * Valgfrie analyse- og markedsføringsverktøy.
+ *
+ * Ingenting her lastes uten et aktivt samtykke fra Personvernvalg – se
+ * `src/lib/consent.ts`. `initMarketingTracking()` kalles kun når samtykket er
+ * «granted», og `revokeMarketingTracking()` sender revoke-signaler og sletter
+ * de markedsføringskapslene vi selv har tilgang til når det trekkes tilbake.
+ */
+
+const GTM_CONTAINER_ID = 'GTM-NLPB8M3S';
 const GA_MEASUREMENT_ID = 'G-NJRML2BKQP';
 const FB_PIXEL_ID = '1783628368949768';
 const TIKTOK_PIXEL_ID = 'D81GS73C77U5V9M1RKG0';
@@ -33,18 +43,44 @@ const appendScript = (id: string, src: string) => {
   document.head.appendChild(script);
 };
 
-const initGoogleAnalytics = () => {
-  appendScript('notably-ga-script', `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`);
-
+const ensureGtag = () => {
   window.dataLayer = window.dataLayer || [];
   window.gtag =
     window.gtag ||
     function gtag(...args: unknown[]) {
       window.dataLayer?.push(args);
     };
+};
 
-  window.gtag('js', new Date());
-  window.gtag('config', GA_MEASUREMENT_ID);
+/**
+ * Oppdaterer Consent Mode til «granted». Standardtilstanden settes til denied av
+ * stubben i index.html, før noe lastes, så dette må kjøres før containeren og
+ * gtag.js hentes – da arver alle tagger i Tag Manager riktig samtykke.
+ */
+const grantConsentMode = () => {
+  ensureGtag();
+  window.gtag?.('consent', 'update', {
+    ad_storage: 'granted',
+    ad_user_data: 'granted',
+    ad_personalization: 'granted',
+    analytics_storage: 'granted',
+  });
+};
+
+/** Tag Manager-containeren. Lastes kun etter samtykke – ikke fra index.html. */
+const initTagManager = () => {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+  appendScript('notably-gtm-script', `https://www.googletagmanager.com/gtm.js?id=${GTM_CONTAINER_ID}`);
+};
+
+const initGoogleAnalytics = () => {
+  ensureGtag();
+
+  appendScript('notably-ga-script', `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`);
+
+  window.gtag?.('js', new Date());
+  window.gtag?.('config', GA_MEASUREMENT_ID);
 };
 
 const initMetaPixel = () => {
@@ -69,6 +105,7 @@ const initMetaPixel = () => {
   window._fbq = fbq;
 
   appendScript('notably-fb-script', 'https://connect.facebook.net/en_US/fbevents.js');
+  window.fbq('consent', 'grant');
   window.fbq('init', FB_PIXEL_ID);
   window.fbq('track', 'PageView');
 };
@@ -129,9 +166,82 @@ export const initMarketingTracking = () => {
   }
 
   marketingInitialized = true;
+  grantConsentMode();
+  initTagManager();
   initGoogleAnalytics();
   initMetaPixel();
   initTikTokPixel();
+};
+
+export const isMarketingTrackingActive = () => marketingInitialized;
+
+/**
+ * Kapsler verktøyene setter på notably.no. Vi kan bare slette kapsler på vårt
+ * eget domene – det leverandørene allerede har mottatt, styres av deres vilkår.
+ */
+const MARKETING_COOKIE_NAMES = ['_gid', '_gcl_au', '_gcl_aw', '_gcl_dc', '_fbp', '_fbc', '_ttp', '_ttclid'];
+const MARKETING_COOKIE_PREFIXES = ['_ga', '_gac_', '_gcl_'];
+
+const cookieDomains = (): string[] => {
+  const host = window.location.hostname;
+  const domains = new Set<string>(['', host]);
+
+  const parts = host.split('.');
+  if (parts.length > 2) {
+    domains.add(`.${parts.slice(-2).join('.')}`);
+  }
+  if (parts.length > 1) {
+    domains.add(`.${host}`);
+  }
+
+  return Array.from(domains);
+};
+
+const clearMarketingCookies = () => {
+  if (typeof document === 'undefined') return;
+
+  const present = document.cookie
+    .split(';')
+    .map((entry) => entry.split('=')[0]?.trim())
+    .filter((name): name is string => Boolean(name));
+
+  const targets = present.filter(
+    (name) =>
+      MARKETING_COOKIE_NAMES.includes(name) ||
+      MARKETING_COOKIE_PREFIXES.some((prefix) => name.startsWith(prefix)),
+  );
+
+  for (const name of targets) {
+    for (const domain of cookieDomains()) {
+      const domainPart = domain ? `; domain=${domain}` : '';
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/${domainPart}`;
+    }
+  }
+};
+
+/**
+ * Trekker tilbake samtykket: sender revoke-signaler til verktøyene som allerede
+ * er lastet, og sletter kjente markedsføringskapsler. Selve skriptene fjernes
+ * først ved neste sidelasting, så kalleren laster siden på nytt etterpå.
+ */
+export const revokeMarketingTracking = () => {
+  if (typeof window === 'undefined') return;
+
+  try {
+    window.gtag?.('consent', 'update', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied',
+    });
+    window.fbq?.('consent', 'revoke');
+    window.ttq?.revokeConsent?.();
+  } catch {
+    // Et verktøy som ikke er lastet skal ikke stoppe resten av tilbaketrekkingen.
+  }
+
+  clearMarketingCookies();
+  marketingInitialized = false;
 };
 
 const readCookie = (name: string): string | undefined => {

@@ -1,5 +1,5 @@
 # Notably - LLM full snapshot
-Last updated: 2026-03-07
+Last updated: 2026-09-03
 Primary website: https://notably.no/
 
 This document is for machine reading and retrieval. It summarizes key product information for Notably and points to canonical URLs.
@@ -21,10 +21,11 @@ Notably is a Norwegian AI meeting assistant that automates meeting notes, summar
 
 ## Security and privacy claims on site
 - GDPR-compatible workflows.
-- Data residency in EU/EEA.
-- Encryption: AES-256 at rest and TLS in transit.
+- Core customer content systems self-hosted in Germany (Hetzner, Nuremberg and Falkenstein).
+- Encryption: TLS in transit, plus access controls and workspace separation.
 - No training on customer data.
-- Hosting on SOC 2 certified infrastructure.
+- Optional analytics and marketing tags (Google Tag Manager, Google Analytics, Meta Pixel, TikTok Pixel) load only after consent in Personvernvalg.
+- Application email and support chat are processed in the USA under their providers' terms.
 
 ## Pricing snapshot
 - Notably: 399 NOK per user per month.
@@ -46,7 +47,7 @@ Notably is a Norwegian AI meeting assistant that automates meeting notes, summar
 - https://notably.no/llms/notably-use-cases.md
 
 ## Contact
-- legal@notably.no
+- support@notably.no
 
 ## Freshness
 - robots: https://notably.no/robots.txt

@@ -1,5 +1,6 @@
 import { Instagram, Facebook, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { openPrivacyChoices } from '../lib/consent';
 
 export default function Footer() {
   const socialLinks = [
@@ -48,6 +49,9 @@ export default function Footer() {
           <Link to="/vilkar" className="hover:text-white transition-colors">
             Vilkår for bruk
           </Link>
+          <button type="button" onClick={openPrivacyChoices} className="hover:text-white transition-colors">
+            Personvernvalg
+          </button>
           <p>&copy; 2026 Notably. All rights reserved.</p>
         </div>
       </div>
