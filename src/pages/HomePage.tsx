@@ -120,12 +120,12 @@ export default function HomePage() {
         <Suspense fallback={null}>
           <CapabilitiesSection />
           <MobileAppSection />
+          <SecuritySection />
           <TestimonialSection />
           <DesktopFeatureTabsSection />
           <AIAnswersSection />
           <IntegrationsSection />
           <UseCasesSection />
-          <SecuritySection />
           <PricingSection />
           <Footer />
         </Suspense>

@@ -449,7 +449,7 @@ const cards = [
   },
   {
     title: 'Kobles til AI-en din',
-    description: 'Spør ChatGPT og Claude om møtene dine via MCP – uten å kopiere og lime.',
+    description: 'Spør ChatGPT og Claude om møtene dine via MCP – uten å kopiere og lime inn.',
     Visual: AiVisual,
   },
 ];
@@ -468,9 +468,9 @@ export default function CapabilitiesSection() {
   return (
     <section className="py-16 page-container bg-white sm:py-24">
       <div className="mx-auto max-w-6xl">
-        <h2 className="text-[1.75rem] font-semibold leading-[1.15] tracking-tight text-slate-800 sm:text-4xl md:text-5xl md:leading-[1.1]">
+        <h2 className="text-balance text-center text-[1.75rem] font-semibold leading-[1.15] tracking-tight text-slate-800 sm:text-4xl md:text-5xl md:leading-[1.1]">
           <span className="block">Passer inn i hverdagen deres.</span>
-          <span className="block text-slate-500 lg:pl-[22%]">Uten at dere endrer noe.</span>
+          <span className="block text-slate-500">Uten at dere endrer noe.</span>
         </h2>
 
         <motion.ul

@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   motion,
   useReducedMotion,
@@ -8,6 +8,7 @@ import {
 } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useMediaQuery } from '../hooks/useMediaQuery';
+import HeroMeetingVisual from './HeroMeetingVisual';
 
 const containerVariants: Variants = {
   hidden: {},
@@ -52,87 +53,53 @@ const headingLines = [
   { text: 'skriver seg selv.', ink: 'bg-gradient-to-b from-[#2563EB] to-[#1D4ED8]' },
 ];
 
-const participants = [
-  { initials: 'JN', className: 'bg-blue-600' },
-  { initials: 'SA', className: 'bg-emerald-600' },
-  { initials: 'TB', className: 'bg-amber-500' },
-  { initials: 'MK', className: 'bg-indigo-600' },
-];
+const TYPED_LINE = headingLines[1];
+/** Når skrivingen starter – etter at første linje har steget opp. */
+const TYPE_START_MS = 650;
+const TYPE_SPEED_MS = 45;
+/** Tre blink (animasjonen er 1,1 s) før markøren toner ut. */
+const CARET_BLINK_MS = 3300;
 
-const tasks = [
-  { owner: 'SA', name: 'Sara', task: 'Ferdigstille go-to-market', due: 'Fre' },
-  { owner: 'TB', name: 'Tomas', task: 'Oppdatere prisene', due: '12. jun' },
-];
+type CaretState = 'typing' | 'blinking' | 'gone';
 
-/** Referatet Notably produserer – hero-seksjonens visuelle anker. */
-const ReferatCard = () => (
-  <div aria-hidden className="relative w-full max-w-[26rem] lg:max-w-none">
-    {/* Kort bak, gir dybde */}
-    <div className="absolute -right-3 -top-4 h-full w-full rotate-[3deg] rounded-[26px] border border-slate-200/70 bg-white/60 shadow-[0_18px_50px_-30px_rgba(15,23,42,0.35)]" />
+/**
+ * Andre linje skriver seg selv, som overskriften sier. Teksten skrives fram én
+ * gang, markøren blinker noen ganger og forsvinner – så står overskriften rolig
+ * ved siden av animasjonen i kortet.
+ */
+const useTypedHeading = (reduced: boolean | null) => {
+  const [typed, setTyped] = useState(0);
+  const [caret, setCaret] = useState<CaretState>('typing');
 
-    <div className="relative overflow-hidden rounded-[26px] border border-slate-200/90 bg-white shadow-[0_36px_80px_-40px_rgba(15,23,42,0.45)]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
+  useEffect(() => {
+    if (reduced) return;
+    const total = TYPED_LINE.text.length;
+    let count = 0;
+    let interval = 0;
+    const start = window.setTimeout(() => {
+      interval = window.setInterval(() => {
+        count += 1;
+        setTyped(count);
+        if (count >= total) window.clearInterval(interval);
+      }, TYPE_SPEED_MS);
+    }, TYPE_START_MS);
+    const blink = window.setTimeout(
+      () => setCaret('blinking'),
+      TYPE_START_MS + total * TYPE_SPEED_MS + 100
+    );
+    const gone = window.setTimeout(
+      () => setCaret('gone'),
+      TYPE_START_MS + total * TYPE_SPEED_MS + 100 + CARET_BLINK_MS
+    );
+    return () => {
+      [start, blink, gone].forEach((id) => window.clearTimeout(id));
+      window.clearInterval(interval);
+    };
+  }, [reduced]);
 
-      <div className="relative p-6 sm:p-7">
-        <div className="flex items-start justify-between gap-4">
-          <h2 className="text-lg font-semibold leading-snug tracking-tight text-slate-900 sm:text-xl">
-            Statusmøte · Q3-lansering
-          </h2>
-          <span className="mt-0.5 inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200/70">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            Klart
-          </span>
-        </div>
-
-        <div className="mt-2.5 flex items-center gap-3">
-          <p className="text-[13px] text-slate-500">I dag 09:15 · 41 min</p>
-          <div className="flex -space-x-1.5">
-            {participants.map(({ initials, className }) => (
-              <span
-                key={initials}
-                className={`flex h-6 w-6 items-center justify-center rounded-full text-[9px] font-semibold text-white ring-2 ring-white ${className}`}
-              >
-                {initials}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="my-6 h-px bg-slate-100" />
-
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400">
-          Sammendrag
-        </p>
-        <p className="mt-2.5 text-[13.5px] leading-relaxed text-slate-600">
-          Teamet gikk gjennom fremdrift og risiko før lansering. Datoen justeres for å rekke
-          integrasjonstesten, og ansvaret for go-to-market er fordelt.
-        </p>
-
-        <p className="mt-6 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400">
-          Oppgaver
-        </p>
-        <ul className="mt-2.5 space-y-2">
-          {tasks.map(({ owner, name, task, due }) => (
-            <li
-              key={task}
-              className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/60 px-3 py-2.5"
-            >
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-[9px] font-semibold text-white">
-                {owner}
-              </span>
-              <span className="min-w-0 flex-1 truncate text-[13px] text-slate-700">
-                <span className="font-medium text-slate-900">{name}</span> · {task}
-              </span>
-              <span className="shrink-0 rounded-md bg-white px-2 py-0.5 text-[11px] font-medium text-slate-500 ring-1 ring-inset ring-slate-200">
-                {due}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  </div>
-);
+  if (reduced) return { typed: TYPED_LINE.text.length, caret: 'gone' as CaretState };
+  return { typed, caret };
+};
 
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -147,6 +114,7 @@ export default function HeroSection() {
     () => buildItemVariants(prefersReducedMotion),
     [prefersReducedMotion]
   );
+  const { typed, caret } = useTypedHeading(prefersReducedMotion);
   const lineVariants = useMemo(
     () => buildLineVariants(prefersReducedMotion),
     [prefersReducedMotion]
@@ -193,28 +161,44 @@ export default function HeroSection() {
               // alltid står på én linje, også på 1024px der kolonnen er smalest.
               className="text-[2.375rem] font-semibold leading-[1.12] tracking-[-0.025em] text-slate-800 sm:text-[3.25rem] lg:text-[3rem] lg:leading-[1.04] xl:text-[3.5rem] 2xl:text-[4rem]"
             >
-              {headingLines.map(({ text, ink }, index) => (
-                // Masken må ha plass til nedstreker, ellers klippes «g» i «seg».
-                <span key={text} className="block overflow-hidden pb-[0.14em] -mb-[0.14em]">
-                  <motion.span variants={lineVariants} className="block">
-                    {/* Tonal gradient i samme farge – lys som faller på blekk, ikke
-                        kromatisk gradient. Stoppene fortsetter fra linje til linje.
-                        I tvungen kontrastmodus overstyres bakgrunner, så gradienten
-                        slås av og teksten får systemfargen – ellers blir den usynlig. */}
-                    <span
-                      className={`bg-clip-text text-transparent forced-colors:bg-none forced-colors:text-[CanvasText] ${ink}`}
-                    >
-                      {text}
-                    </span>
-                    {index === headingLines.length - 1 && (
-                      <span
-                        aria-hidden
-                        className="notably-caret ml-[0.1em] inline-block h-[0.72em] w-[0.075em] rounded-[2px] bg-blue-600 align-baseline"
-                      />
-                    )}
-                  </motion.span>
+              {/* Første linje stiger opp bak en maske. Masken må ha plass til
+                  nedstreker, ellers klippes «g» i «seg». */}
+              <span className="block overflow-hidden pb-[0.14em] -mb-[0.14em]">
+                <motion.span variants={lineVariants} className="block">
+                  {/* Tonal gradient i samme farge – lys som faller på blekk, ikke
+                      kromatisk gradient. I tvungen kontrastmodus overstyres
+                      bakgrunner, så gradienten slås av og teksten får
+                      systemfargen – ellers blir den usynlig. */}
+                  <span
+                    className={`bg-clip-text text-transparent forced-colors:bg-none forced-colors:text-[CanvasText] ${headingLines[0].ink}`}
+                  >
+                    {headingLines[0].text}
+                  </span>
+                </motion.span>
+              </span>
+
+              {/* Andre linje skrives fram. Resten av teksten står gjennomsiktig
+                  bak markøren, så linjen har full bredde fra start og ingenting
+                  hopper – og teksten finnes bare én gang, for søk og skjermlesere. */}
+              {' '}
+              <span className="block pb-[0.14em] -mb-[0.14em]">
+                <span
+                  className={`bg-clip-text text-transparent forced-colors:bg-none forced-colors:text-[CanvasText] ${TYPED_LINE.ink}`}
+                >
+                  {TYPED_LINE.text.slice(0, typed)}
                 </span>
-              ))}
+                {/* Står i flyten også når den er tonet ut, så linjen ikke flytter seg. */}
+                <motion.span
+                  aria-hidden
+                  initial={false}
+                  animate={{ opacity: caret === 'gone' ? 0 : 1 }}
+                  transition={{ duration: 0.4 }}
+                  className={`ml-[0.04em] inline-block h-[0.72em] w-[0.075em] rounded-[2px] bg-blue-600 align-baseline ${
+                    caret === 'blinking' ? 'notably-caret' : ''
+                  }`}
+                />
+                <span className="text-transparent">{TYPED_LINE.text.slice(typed)}</span>
+              </span>
             </motion.h1>
 
             <motion.p
@@ -290,7 +274,7 @@ export default function HeroSection() {
                 className={allowParallax ? 'will-change-transform' : undefined}
                 style={allowParallax ? { y, rotate } : undefined}
               >
-                <ReferatCard />
+                <HeroMeetingVisual />
               </motion.div>
             </motion.div>
           </div>
