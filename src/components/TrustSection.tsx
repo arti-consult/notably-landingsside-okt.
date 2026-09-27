@@ -1,132 +1,78 @@
-import { useEffect, useMemo, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { useReducedMotion } from 'framer-motion';
 
-interface MediaLogo {
-  id: string;
-  name: string;
-  public_url: string;
-  alt_text: string | null;
-  file_name: string;
-}
+/**
+ * Kundelogoene ligger beskåret i public/logos/kunder, så raden ikke er avhengig
+ * av databasen. `scale` jevner ut optisk størrelse: brede ordmerker krymper,
+ * kvadratiske og stablede logoer får litt mer høyde.
+ */
+const logos = [
+  { name: 'Pharma Nordic', src: '/logos/kunder/pharma-nordic.svg', scale: 0.72 },
+  { name: 'Møbelringen', src: '/logos/kunder/mobelringen.webp', scale: 1.25 },
+  { name: 'Brave', src: '/logos/kunder/brave.webp', scale: 0.85 },
+  { name: '1881', src: '/logos/kunder/1881.webp', scale: 1.35 },
+  { name: 'Breivik Eiendom', src: '/logos/kunder/breivik-eiendom.svg', scale: 0.72 },
+  { name: 'Verdsette', src: '/logos/kunder/verdsette.webp', scale: 0.78 },
+  { name: 'TOR Entreprenør', src: '/logos/kunder/tor-entreprenor.webp', scale: 1.2 },
+  { name: 'Bø kommune', src: '/logos/kunder/bo-kommune.webp', scale: 1.1 },
+  { name: 'HTB', src: '/logos/kunder/htb.webp', scale: 1.1 },
+  { name: 'øh', src: '/logos/kunder/oh.svg', scale: 1 },
+];
 
-interface TrustLogo {
-  company: string;
-  logo: MediaLogo | null;
-}
-
-const targetCompanies = ['1881', 'O breivik eiendom', 'Pharma nordic', 'Møbelringen', 'Brave'] as const;
-const mobileCompanies = ['Brave', 'Møbelringen', '1881'] as const;
-
-const normalizeValue = (value: string | null | undefined) =>
-  (value || '')
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-const matchesCompany = (logo: MediaLogo, company: string) => {
-  const companyKey = normalizeValue(company);
-  const candidates = [
-    normalizeValue(logo.name),
-    normalizeValue(logo.file_name),
-    normalizeValue(logo.alt_text),
-  ];
-
-  return candidates.some((candidate) => candidate === companyKey || candidate.includes(companyKey));
-};
+const LogoRow = ({ hidden = false }: { hidden?: boolean }) => (
+  <ul aria-hidden={hidden || undefined} className="flex shrink-0 items-center gap-12 pr-12 sm:gap-16 sm:pr-16">
+    {logos.map(({ name, src, scale }) => (
+      <li key={name} className="flex shrink-0 items-center">
+        <img
+          src={src}
+          alt={hidden ? '' : name}
+          decoding="async"
+          style={{ height: `calc(var(--logo-h) * ${scale})` }}
+          className="w-auto opacity-80 transition-opacity duration-300 hover:opacity-100"
+        />
+      </li>
+    ))}
+  </ul>
+);
 
 export default function TrustSection() {
-  const [logos, setLogos] = useState<TrustLogo[]>(targetCompanies.map((company) => ({ company, logo: null })));
-
-  const mobileLogos = useMemo(
-    () => mobileCompanies.map((company) => logos.find((item) => item.company === company) || { company, logo: null }),
-    [logos]
-  );
-
-  useEffect(() => {
-    const loadTrustLogos = async () => {
-      const { data, error } = await supabase
-        .from('media_library')
-        .select('id, name, public_url, alt_text, file_name')
-        .order('created_at', { ascending: false });
-
-      if (error || !data) return;
-
-      const mediaItems = data as MediaLogo[];
-
-      const mapped = targetCompanies.map((company) => {
-        const found = mediaItems.find((item) => matchesCompany(item, company)) || null;
-        return { company, logo: found };
-      });
-
-      setLogos(mapped);
-    };
-
-    loadTrustLogos();
-  }, []);
+  const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section className="relative z-10 pt-1 sm:pt-2 pb-4 sm:pb-6 bg-white">
-      <div className="page-container">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs sm:text-sm font-semibold tracking-[0.12em] uppercase text-slate-500 mb-3 sm:mb-4">
-            Brukt av team hos
-          </p>
+    <section className="relative z-10 bg-white pb-8 pt-2 sm:pb-10">
+      <p className="page-container text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 sm:text-sm">
+        Brukt av team hos
+      </p>
 
-          <div className="grid grid-cols-3 gap-1.5 sm:gap-2 md:hidden">
-            {mobileLogos.map((item) => (
-              <div
-                key={item.company}
-                className="h-10 sm:h-12 flex items-center justify-center px-1.5 sm:px-2"
-              >
-                {item.logo ? (
-                  <div className="relative inline-flex items-center justify-center max-w-full">
-                    <img
-                      src={item.logo.public_url}
-                      alt={item.logo.alt_text || `${item.company} logo`}
-                      width={160}
-                      height={48}
-                      className="max-h-7 sm:max-h-8 w-auto max-w-full object-contain"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <div aria-hidden className="absolute inset-0 bg-white/25 pointer-events-none" />
-                  </div>
-                ) : (
-                  <span className="text-xs font-semibold text-slate-600 text-center leading-tight">{item.company}</span>
-                )}
-              </div>
+      {prefersReducedMotion ? (
+        // Uten bevegelse: én rolig rad som brytes over flere linjer.
+        <div className="page-container mt-6 [--logo-h:26px] sm:[--logo-h:30px]">
+          <ul className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-12 gap-y-6">
+            {logos.map(({ name, src, scale }) => (
+              <li key={name}>
+                <img
+                  src={src}
+                  alt={name}
+                  decoding="async"
+                  style={{ height: `calc(var(--logo-h) * ${scale})` }}
+                  className="w-auto opacity-80"
+                />
+              </li>
             ))}
-          </div>
-
-          <div className="hidden md:grid md:grid-cols-5 gap-2 lg:gap-4">
-            {logos.map((item) => (
-              <div
-                key={item.company}
-                className="h-12 lg:h-14 flex items-center justify-center px-2 lg:px-3"
-              >
-                {item.logo ? (
-                  <div className="relative inline-flex items-center justify-center max-w-full">
-                    <img
-                      src={item.logo.public_url}
-                      alt={item.logo.alt_text || `${item.company} logo`}
-                      width={220}
-                      height={72}
-                      className="max-h-10 lg:max-h-12 w-auto max-w-full object-contain"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <div aria-hidden className="absolute inset-0 bg-white/25 pointer-events-none" />
-                  </div>
-                ) : (
-                  <span className="text-base font-semibold text-slate-600 text-center">{item.company}</span>
-                )}
-              </div>
-            ))}
+          </ul>
+        </div>
+      ) : (
+        // Løkken: listen ligger to ganger etter hverandre, og sporet flyttes
+        // -50 %, så den andre kopien lander nøyaktig der den første startet.
+        <div className="group relative mt-6 overflow-hidden [--logo-h:26px] [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)] sm:[--logo-h:30px] lg:[--logo-h:32px]">
+          <div
+            className="notably-marquee flex w-max group-hover:[animation-play-state:paused]"
+            style={{ animationDuration: '45s' }}
+          >
+            <LogoRow />
+            <LogoRow hidden />
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }
