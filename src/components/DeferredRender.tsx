@@ -4,18 +4,20 @@ type DeferredRenderProps = {
   children: ReactNode;
   rootMargin?: string;
   threshold?: number;
+  forceRender?: boolean;
 };
 
 export default function DeferredRender({
   children,
   rootMargin = '1200px 0px',
   threshold = 0,
+  forceRender = false,
 }: DeferredRenderProps) {
   const placeholderRef = useRef<HTMLDivElement | null>(null);
   const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
-    if (shouldRender) {
+    if (shouldRender || forceRender) {
       return;
     }
 
@@ -35,9 +37,9 @@ export default function DeferredRender({
 
     observer.observe(placeholder);
     return () => observer.disconnect();
-  }, [rootMargin, shouldRender, threshold]);
+  }, [forceRender, rootMargin, shouldRender, threshold]);
 
-  if (shouldRender) {
+  if (shouldRender || forceRender) {
     return <>{children}</>;
   }
 

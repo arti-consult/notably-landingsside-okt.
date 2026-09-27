@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ShimmerButton } from './ShimmerButton';
+import { requestScrollToSection } from '../lib/scrollToSection';
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -23,10 +24,7 @@ export default function Navigation() {
 
     if (location.pathname === '/') {
       event.preventDefault();
-      const pricingSection = document.getElementById('pricing');
-      if (pricingSection) {
-        pricingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      requestScrollToSection('pricing');
       return;
     }
 

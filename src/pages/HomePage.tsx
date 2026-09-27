@@ -4,8 +4,9 @@ import TrustSection from '../components/TrustSection';
 import ProblemSection from '../components/ProblemSection';
 import DeferredRender from '../components/DeferredRender';
 import { Helmet } from 'react-helmet-async';
+import { SCROLL_TO_SECTION_EVENT, scrollToSectionWhenReady } from '../lib/scrollToSection';
 import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL, SITE_URL } from '../lib/seo';
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const MobileAppSection = lazy(() => import('../components/MobileAppSection'));
@@ -24,23 +25,34 @@ export default function HomePage() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [scrollTarget, setScrollTarget] = useState<{ id: string } | null>(() => {
+    const state = location.state as { scrollTo?: string } | null;
+    if (state?.scrollTo) return { id: state.scrollTo };
+    if (location.hash === '#pricing') return { id: 'pricing' };
+    return null;
+  });
+
   useEffect(() => {
     const state = location.state as { scrollTo?: string } | null;
-    if (state?.scrollTo !== 'pricing') {
-      return;
+    if (state?.scrollTo) {
+      navigate(location.pathname, { replace: true, state: null });
     }
-
-    const frame = requestAnimationFrame(() => {
-      const pricingSection = document.getElementById('pricing');
-      if (pricingSection) {
-        pricingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-
-    navigate(location.pathname, { replace: true, state: null });
-
-    return () => cancelAnimationFrame(frame);
   }, [location.pathname, location.state, navigate]);
+
+  useEffect(() => {
+    const handleScrollRequest = (event: Event) => {
+      const id = (event as CustomEvent<string>).detail;
+      setScrollTarget({ id });
+    };
+
+    window.addEventListener(SCROLL_TO_SECTION_EVENT, handleScrollRequest);
+    return () => window.removeEventListener(SCROLL_TO_SECTION_EVENT, handleScrollRequest);
+  }, []);
+
+  useEffect(() => {
+    if (!scrollTarget) return;
+    return scrollToSectionWhenReady(scrollTarget.id);
+  }, [scrollTarget]);
 
   const structuredData = {
     '@context': 'https://schema.org',
@@ -105,7 +117,7 @@ export default function HomePage() {
       </div>
       <TrustSection />
       <ProblemSection />
-      <DeferredRender rootMargin="300px 0px">
+      <DeferredRender rootMargin="300px 0px" forceRender={scrollTarget !== null}>
         <Suspense fallback={null}>
           <MobileAppSection />
           <TestimonialSection />
