@@ -135,10 +135,25 @@
   animation: notablyCaret 1.1s steps(1, end) infinite;
 }
 
+@keyframes notablyMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Listen ligger dobbelt i sporet, så -50 % lander nøyaktig på start. */
+.notably-marquee {
+  animation: notablyMarquee 28s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .notably-wave-bar,
   .notably-rec-dot,
-  .notably-caret {
+  .notably-caret,
+  .notably-marquee {
     animation: none;
   }
 

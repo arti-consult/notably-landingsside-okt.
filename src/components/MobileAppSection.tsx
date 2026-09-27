@@ -260,9 +260,9 @@ export default function MobileAppSection() {
   const phoneStyle = allowParallax ? { y, rotate, scale } : undefined;
 
   return (
-    <section ref={sectionRef} id="mobilapp" className="relative page-container bg-white py-16 sm:py-20 scroll-mt-24">
+    <section ref={sectionRef} id="mobilapp" className="relative page-container bg-white py-16 max-sm:px-0 sm:py-20 scroll-mt-24">
       <div className="mx-auto max-w-7xl">
-        <div className="relative overflow-hidden rounded-[1.75rem] bg-slate-950 px-5 py-14 ring-1 ring-inset ring-white/[0.07] sm:rounded-[2.5rem] sm:px-10 sm:py-16 lg:px-14 lg:py-20">
+        <div className="relative overflow-hidden bg-slate-950 px-6 py-14 ring-inset ring-white/[0.07] sm:rounded-[2.5rem] sm:ring-1 sm:px-10 sm:py-16 lg:px-14 lg:py-20">
           {/* Atmosfære */}
           <div
             aria-hidden

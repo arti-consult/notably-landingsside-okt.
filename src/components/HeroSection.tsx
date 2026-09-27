@@ -41,17 +41,15 @@ const buildLineVariants = (reduced: boolean | null): Variants => ({
 });
 
 /**
- * Overskriften settes i ett mørkt blekk med en tonal gradient over de to
- * linjene. Stoppene henger sammen: linje 2 starter der linje 1 slutter, slik at
- * skiftet leses som én flate og ikke som to striper.
- *
- * Gradienten går MØRKERE nedover, ikke lysere. To grunner: poenget landes på
- * siste linje, som da er den dypeste – ikke den svakeste – og ingen del av
- * teksten leses som grå. Lyseste punkt er ~12:1 mot hvitt.
+ * Første linje står i dyp marine, andre linje – poenget – i merkeblått. Hver
+ * linje har en svak tonal gradient i sin egen farge (lys som faller på blekk,
+ * ikke kromatisk gradient). Marine i stedet for nesten svart gjør heroen lysere
+ * og mer innbydende, særlig på mobil der overskriften fyller skjermen.
+ * Kontrast mot hvitt: marine ~13:1, blått ~5,2:1.
  */
 const headingLines = [
-  { text: 'Møtereferatet', ink: 'bg-gradient-to-b from-[#223049] to-[#141E33]' },
-  { text: 'skriver seg selv.', ink: 'bg-gradient-to-b from-[#141E33] to-[#080D18]' },
+  { text: 'Møtereferatet', ink: 'bg-gradient-to-b from-[#334155] to-[#1E293B]' },
+  { text: 'skriver seg selv.', ink: 'bg-gradient-to-b from-[#2563EB] to-[#1D4ED8]' },
 ];
 
 const participants = [
@@ -168,16 +166,18 @@ export default function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden px-6 pb-16 pt-32 sm:px-10 sm:pt-36 md:px-[12%] lg:pb-20 xl:pl-[19%] xl:pr-[12%]"
+      className="relative overflow-hidden px-6 pb-24 pt-32 sm:px-10 sm:pt-36 md:px-[12%] lg:pb-20 xl:pl-[19%] xl:pr-[12%]"
     >
-      {/* Atmosfære */}
+      {/* Atmosfære. På mobil fyller en full-styrke glød hele den smale skjermen
+          og legger en grå-blå hinne over teksten, så den krympes og trekkes ut i
+          hjørnene der. Full styrke først fra lg, der det er luft rundt. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-40 right-[-10%] h-[38rem] w-[38rem] rounded-full bg-blue-400/25 blur-[130px]"
+        className="pointer-events-none absolute -right-40 -top-48 h-[24rem] w-[24rem] rounded-full bg-sky-300/20 blur-[110px] lg:-top-40 lg:right-[-10%] lg:h-[38rem] lg:w-[38rem] lg:bg-blue-400/20 lg:blur-[130px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-[12%] top-16 h-[26rem] w-[26rem] rounded-full bg-indigo-400/20 blur-[120px]"
+        className="pointer-events-none absolute -left-48 top-[55%] h-[20rem] w-[20rem] rounded-full bg-indigo-300/15 blur-[110px] lg:-left-[12%] lg:top-16 lg:h-[26rem] lg:w-[26rem] lg:bg-indigo-400/15 lg:blur-[120px]"
       />
 
       <div className="relative mx-auto max-w-6xl">
@@ -191,7 +191,7 @@ export default function HeroSection() {
               // Trinnene er regnet mot Schibsted Grotesk, som er ~13 % bredere
               // enn systemfonten. Målt slik at «skriver seg selv.» pluss markøren
               // alltid står på én linje, også på 1024px der kolonnen er smalest.
-              className="text-[2.375rem] font-semibold leading-[1.12] tracking-[-0.025em] text-[#0B1120] sm:text-[3.25rem] lg:text-[3rem] lg:leading-[1.04] xl:text-[3.5rem] 2xl:text-[4rem]"
+              className="text-[2.375rem] font-semibold leading-[1.12] tracking-[-0.025em] text-slate-800 sm:text-[3.25rem] lg:text-[3rem] lg:leading-[1.04] xl:text-[3.5rem] 2xl:text-[4rem]"
             >
               {headingLines.map(({ text, ink }, index) => (
                 // Masken må ha plass til nedstreker, ellers klippes «g» i «seg».
@@ -219,9 +219,25 @@ export default function HeroSection() {
 
             <motion.p
               variants={itemVariants}
-              className="mt-7 max-w-md text-lg leading-relaxed text-slate-600 sm:text-xl"
+              className="mt-7 max-w-md text-lg leading-relaxed text-slate-500 sm:text-xl"
             >
-              Notably blir med i møtet, tar opp og skriver referatet — automatisk, og på norsk.
+              Notably blir med i møtet, tar opp og skriver referatet — automatisk, og på{' '}
+              {/* Flagget holdes på linje med siste ord, så det aldri står alene.
+                  Tegnet som SVG fordi emoji-flagg vises som «NO» på Windows. */}
+              <span className="whitespace-nowrap">
+                norsk
+                <svg
+                  viewBox="0 0 22 16"
+                  aria-hidden
+                  className="ml-2 inline-block h-[0.8em] w-auto -translate-y-[0.05em] rounded-[3px] align-baseline shadow-[0_0_0_1px_rgba(15,23,42,0.08)]"
+                >
+                  <rect width="22" height="16" fill="#BA0C2F" />
+                  <rect x="6" width="4" height="16" fill="#fff" />
+                  <rect y="6" width="22" height="4" fill="#fff" />
+                  <rect x="7" width="2" height="16" fill="#00205B" />
+                  <rect y="7" width="22" height="2" fill="#00205B" />
+                </svg>
+              </span>
             </motion.p>
 
             <motion.div
@@ -232,7 +248,7 @@ export default function HeroSection() {
                 href="https://app.notably.no/no/sign-up"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl border border-transparent bg-blue-600 px-6 py-4 text-lg font-semibold text-white shadow-[0_18px_36px_-18px_rgba(37,99,235,0.9)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
+                className="group inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl border border-transparent bg-blue-500 px-6 py-4 text-lg font-semibold text-white shadow-[0_14px_30px_-16px_rgba(59,130,246,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
               >
                 Start gratis
                 <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -256,7 +272,7 @@ export default function HeroSection() {
           <div className="relative flex justify-center lg:justify-end">
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 m-auto h-[24rem] w-[24rem] rounded-full bg-blue-400/20 blur-[100px]"
+              className="pointer-events-none absolute inset-0 m-auto h-[24rem] w-[24rem] rounded-full bg-blue-300/15 blur-[100px] lg:bg-blue-400/20"
             />
             {/* Ytre lag animerer inngangen, indre lag følger scroll –
                 de kan ikke dele samme y-verdi uten å overstyre hverandre. */}

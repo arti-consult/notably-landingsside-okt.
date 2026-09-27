@@ -18,7 +18,6 @@ const IntegrationsSection = lazy(() => import('../components/IntegrationsSection
 const UseCasesSection = lazy(() => import('../components/UseCasesSection'));
 const SecuritySection = lazy(() => import('../components/SecuritySection'));
 const PricingSection = lazy(() => import('../components/PricingSection'));
-const CTASection = lazy(() => import('../components/CTASection'));
 const Footer = lazy(() => import('../components/Footer'));
 
 export default function HomePage() {
@@ -112,23 +111,22 @@ export default function HomePage() {
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
       <Navigation />
-      <div className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-white">
+      <div className="relative overflow-hidden bg-gradient-to-b from-[#F7F9FF] via-white to-white">
         <HeroSection />
       </div>
       <TrustSection />
       <ProblemSection />
       <DeferredRender rootMargin="300px 0px" forceRender={scrollTarget !== null}>
         <Suspense fallback={null}>
+          <CapabilitiesSection />
           <MobileAppSection />
           <TestimonialSection />
           <DesktopFeatureTabsSection />
-          <CapabilitiesSection />
           <AIAnswersSection />
           <IntegrationsSection />
           <UseCasesSection />
           <SecuritySection />
           <PricingSection />
-          <CTASection />
           <Footer />
         </Suspense>
       </DeferredRender>
