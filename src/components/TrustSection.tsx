@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
 
 /**
@@ -18,6 +19,9 @@ const logos = [
   { name: 'øh', src: '/logos/kunder/oh.svg', scale: 1 },
 ];
 
+/** Fart i piksler per sekund – lik på alle skjermer, uansett hvor lang raden blir. */
+const SPEED = 42;
+
 const LogoRow = ({ hidden = false }: { hidden?: boolean }) => (
   <ul aria-hidden={hidden || undefined} className="flex shrink-0 items-center gap-12 pr-12 sm:gap-16 sm:pr-16">
     {logos.map(({ name, src, scale }) => (
@@ -36,6 +40,20 @@ const LogoRow = ({ hidden = false }: { hidden?: boolean }) => (
 
 export default function TrustSection() {
   const prefersReducedMotion = useReducedMotion();
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [duration, setDuration] = useState(45);
+
+  // Varigheten regnes ut fra radens faktiske bredde. En fast varighet gjør at
+  // logoene går saktere på mobil, der logoene og mellomrommene er mindre.
+  useEffect(() => {
+    const row = rowRef.current?.firstElementChild;
+    if (!row) return;
+    const update = () => setDuration(row.getBoundingClientRect().width / SPEED);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(row);
+    return () => observer.disconnect();
+  }, [prefersReducedMotion]);
 
   return (
     <section className="relative z-10 bg-white pb-8 pt-2 sm:pb-10">
@@ -64,9 +82,12 @@ export default function TrustSection() {
         // Løkken: listen ligger to ganger etter hverandre, og sporet flyttes
         // -50 %, så den andre kopien lander nøyaktig der den første startet.
         <div className="group relative mt-6 overflow-hidden [--logo-h:26px] [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)] sm:[--logo-h:30px] lg:[--logo-h:32px]">
+          {/* Pausen gjelder bare enheter med ekte peker – på mobil blir
+              :hover hengende etter et trykk og stopper rullingen. */}
           <div
-            className="notably-marquee flex w-max group-hover:[animation-play-state:paused]"
-            style={{ animationDuration: '45s' }}
+            ref={rowRef}
+            className="notably-marquee flex w-max [@media(hover:hover)]:group-hover:[animation-play-state:paused]"
+            style={{ animationDuration: `${duration}s` }}
           >
             <LogoRow />
             <LogoRow hidden />
