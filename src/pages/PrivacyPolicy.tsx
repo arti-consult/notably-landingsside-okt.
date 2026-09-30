@@ -47,7 +47,7 @@ export default function PrivacyPolicy() {
           <h1 className="text-4xl md:text-5xl font-bold mb-8">Personvernerklæring</h1>
 
           <div className="prose prose-invert max-w-none">
-            <p className="text-gray-400 mb-8">Sist oppdatert: 24.08.2026</p>
+            <p className="text-gray-400 mb-8">Sist oppdatert: 30.09.2026</p>
 
             <section className="mb-12">
               <p className="text-gray-300">
@@ -217,15 +217,18 @@ export default function PrivacyPolicy() {
             <section className="mb-12">
               <h2 className="text-2xl font-semibold mb-4">Microsoft-data vi får tilgang til</h2>
               <p className="text-gray-300 mb-4">
-                Når du kobler en Microsoft Outlook- eller Office 365-konto, ber vi bare om lese-tilgang som trengs for å
-                synkronisere møtene dine.
+                Når du kobler en Microsoft Outlook- eller Office 365-konto, ber vi om tilgang til kalenderdataene som
+                trengs for å finne og synkronisere møtene dine.
               </p>
               <ul className="list-disc pl-6 space-y-2 text-gray-300">
                 <li><strong className="text-white">Grunnleggende profil:</strong> Navn, e-postadresse og profilbilde hentet via Microsoft OAuth-strømmen slik at vi kan opprette og sikre kontoen din.</li>
-                <li><strong className="text-white">Kalendermetadata:</strong> Lese-tilgang til møtetitler, beskrivelser, start- og sluttider, arrangører, deltakere og konferanselenker fra kalenderne du godkjenner.</li>
+                <li><strong className="text-white">Kalendermetadata:</strong> Vi leser møtetitler, beskrivelser, start- og sluttider, arrangører, deltakere og konferanselenker fra kalenderne du godkjenner.</li>
                 <li><strong className="text-white">Varsler om endringer:</strong> Hendelsesvarsler fra tjenesten vår for kalendersynkronisering som forteller når møter opprettes, oppdateres eller avlyses slik at Notably holder seg synkronisert.</li>
               </ul>
-              <p className="text-gray-300 mt-4">Vi ber aldri om skrivetilgang til Microsoft 365-kalenderne dine eller e-posten din.</p>
+              <p className="text-gray-300 mt-4">
+                Kalenderkoblingen i Notably ber om lesetilgang og leser bare kalenderdata for å finne og synkronisere møter. Notably
+                oppretter, endrer eller sletter ikke kalenderhendelser og har ikke tilgang til innboksen din.
+              </p>
             </section>
 
             <section className="mb-12">
