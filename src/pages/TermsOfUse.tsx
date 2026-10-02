@@ -11,6 +11,7 @@ export default function TermsOfUse() {
     'Akseptabel bruk',
     'Konto og tilgang',
     'Datasenter og etterlevelse',
+    'Databehandleravtale',
     'Bruk av Google API-er',
     'Fakturering',
     'Sletting av konto',
@@ -91,6 +92,18 @@ export default function TermsOfUse() {
   flushParagraph();
   flushList();
 
+  // Gjør https-adresser i teksten klikkbare (f.eks. databehandleravtalen på os.notably.no).
+  const linkify = (text: string) =>
+    text.split(/(https:\/\/[^\s)]+)/g).map((part, k) =>
+      /^https:\/\//.test(part) ? (
+        <a key={k} href={part} target="_blank" rel="noopener noreferrer" className="text-white underline underline-offset-2 break-words">
+          {part}
+        </a>
+      ) : (
+        part
+      ),
+    );
+
   return (
     <>
       <Helmet>
@@ -152,14 +165,14 @@ export default function TermsOfUse() {
                 return (
                   <ul key={`ul-${i}`} className="list-disc pl-6 space-y-2 text-gray-300 mb-6">
                     {b.items.map((it, j) => (
-                      <li key={`li-${i}-${j}`}>{it}</li>
+                      <li key={`li-${i}-${j}`}>{linkify(it)}</li>
                     ))}
                   </ul>
                 );
               }
               return (
                 <p key={`p-${i}`} className="text-gray-300 mb-6">
-                  {b.text}
+                  {linkify(b.text)}
                 </p>
               );
             })}

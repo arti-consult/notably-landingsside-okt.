@@ -1,6 +1,6 @@
-Sist oppdatert: 03.09.2026
+Sist oppdatert: 02.10.2026
 Vilkår for bruk
-Disse vilkårene beskriver avtalen mellom deg og Notably AI. Ved å opprette en konto eller bruke tjenesten godtar du reglene nedenfor.
+Disse vilkårene beskriver avtalen mellom deg og Notably AI. Notably leveres av ARTI Consult AS, org.nr. 929 098 609. Ved å opprette en konto eller bruke tjenesten godtar du reglene nedenfor.
 Tjenestebeskrivelse
 Notably AI fanger virtuelle møter, lagrer mediene sikkert i EU, og bruker avtalte tale- og AI-databehandlere til transkripsjon og AI-oppsummeringer. Kalendersynk, møteopptak og planlegging av opptaksassistenten koordineres via vår databehandler for kalender og møteopptak, som opererer på våre vegne i denne arbeidsflyten. Notably drifter selv webappen, API-et, databasen, autentiseringen og lagringen av møtemedier på Hetzner-infrastruktur i Tyskland.
 Akseptabel bruk
@@ -15,6 +15,8 @@ Datasenter og etterlevelse
 Notably drifter kjernesystemene for kundeinnhold i Tyskland: webappen, API-et, arbeidsprosessene, PostgreSQL-databasen, autentiseringen og selvhostet Supabase-programvare kjører på Hetzner-infrastruktur i Nürnberg, og private møteopptak lagres i objektlagring som Hetzner administrerer i Falkenstein. Supabase Inc. hoster ikke Notablys kjernedatabase eller autentiseringstjeneste.
 Underleverandørene våre er bundet av databehandleravtaler. Enkelte tjenester, blant annet e-post fra applikasjonen og støttechat, behandles utenfor EU/EØS under en relevant rettslig overføringsmekanisme. Se personvernerklæringen for full oversikt over leverandører og overføringer.
 Mer informasjon om personvern finner du i vår Personvernerklæring.
+Databehandleravtale
+Når du bruker Notably på vegne av en virksomhet, er virksomheten behandlingsansvarlig for personopplysningene i møtene, og ARTI Consult AS er databehandler. Databehandleravtalen for Notably (https://os.notably.no/vilkar/databehandleravtale), med oversikten over underdatabehandlere (https://os.notably.no/vilkar/underdatabehandlere), er en del av disse vilkårene og godtas når du oppretter konto. Ved motstrid går databehandleravtalen foran disse vilkårene for behandling av personopplysninger.
 Bruk av Google API-er
 Når du kobler en Google-konto, gir du oss lese-tilgang til Google Calendar API kun for å levere møteopptak.
 	•	Vi ber om scopene https://www.googleapis.com/auth/calendar.readonly og https://www.googleapis.com/auth/calendar.events.readonly via vår databehandler for kalendersynkronisering. Vi ber aldri om skrivetilgang eller Gmail-scopes.
