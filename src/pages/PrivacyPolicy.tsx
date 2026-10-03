@@ -133,7 +133,7 @@ export default function PrivacyPolicy() {
                 riktig tidspunkt. Vi lagrer ikke IP-adressen din. Grunnlaget er berettiget interesse. Du kan når som
                 helst be oss slutte å kontakte deg ved å svare på e-posten eller skrive til{' '}
                 <a className="text-blue-400 hover:text-blue-300" href="mailto:support@notably.no">support@notably.no</a>.
-                Salgsopplysninger slettes senest 12 måneder etter siste kontakt, med mindre du blir kunde.
+                Vi lagrer kontaktopplysningene så lenge virksomheten er aktuell for oss som mulig kunde. Ber du oss slutte å kontakte deg, sletter eller sperrer vi opplysningene dine.
               </p>
             </section>
 
