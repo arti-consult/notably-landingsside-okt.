@@ -47,7 +47,7 @@ export default function PrivacyPolicy() {
           <h1 className="text-4xl md:text-5xl font-bold mb-8">Personvernerklæring</h1>
 
           <div className="prose prose-invert max-w-none">
-            <p className="text-gray-400 mb-8">Sist oppdatert: 24.08.2026</p>
+            <p className="text-gray-400 mb-8">Sist oppdatert: 03.10.2026</p>
 
             <section className="mb-12">
               <p className="text-gray-300">
@@ -62,7 +62,7 @@ export default function PrivacyPolicy() {
               <p className="text-gray-300 mb-4">
                 ARTI CONSULT AS, organisasjonsnummer 929 098 609 MVA, registrert i Foretaksregisteret med adresse
                 C. Sundts gate 55, 5004 Bergen, Norge («Notably», «vi», «oss»), er behandlingsansvarlig for
-                kontoadministrasjon, fakturering, produktdrift, sikkerhet, støtte og tjenesteanalyse.
+                kontoadministrasjon, fakturering, produktdrift, sikkerhet, støtte, tjenesteanalyse og salg.
               </p>
               <p className="text-gray-300">
                 Når en organisasjon bruker Notably til å behandle møteinnhold på sine vegne, vil organisasjonen normalt
@@ -120,6 +120,20 @@ export default function PrivacyPolicy() {
               <p className="text-gray-300 mt-4">
                 Personen eller organisasjonen som bestemmer at et møte skal tas opp, er ansvarlig for å ha
                 behandlingsgrunnlag og gi varslene som kreves for opptaket.
+              </p>
+            </section>
+
+            <section className="mb-12">
+              <h2 className="text-2xl font-semibold mb-4">Salg og kundekontakt</h2>
+              <p className="text-gray-300">
+                Når vi kontakter bedrifter om Notably, behandler vi kontaktopplysninger for personer i rollen deres
+                (navn, tittel, jobb-e-post og telefon) fra offentlige kilder som Brønnøysundregistrene og bedriftens
+                nettsider, og dialogen vi har med dem. Når du åpner tilbud, avtaledokumenter, IT-dokumentet eller
+                bookingsiden fra lenker vi har sendt, registrerer vi når og hvor ofte, slik at vi kan følge opp på
+                riktig tidspunkt. Vi lagrer ikke IP-adressen din. Grunnlaget er berettiget interesse. Du kan når som
+                helst be oss slutte å kontakte deg ved å svare på e-posten eller skrive til{' '}
+                <a className="text-blue-400 hover:text-blue-300" href="mailto:support@notably.no">support@notably.no</a>.
+                Salgsopplysninger slettes senest 12 måneder etter siste kontakt, med mindre du blir kunde.
               </p>
             </section>
 
