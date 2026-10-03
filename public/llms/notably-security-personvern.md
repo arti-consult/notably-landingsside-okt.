@@ -1,10 +1,11 @@
 # Notably security and privacy
-Last updated: 2026-09-03
+Last updated: 2026-10-03
 Canonical URL: https://notably.no/personvern
 
 ## Controller
 - ARTI CONSULT AS (org. no. 929 098 609 MVA), C. Sundts gate 55, 5004 Bergen, Norway, operates Notably.
 - When an organisation uses Notably to process meeting content on its behalf, the organisation is normally the controller and Notably the processor.
+- Sales contact: when contacting businesses about Notably, ARTI processes role-based contact details (name, title, work email, phone) from public sources such as the Brønnøysund Register Centre and company websites, plus the dialogue. Opening offers, agreement documents, the IT document or the booking page from links we sent is recorded (when and how often); IP addresses are not stored. Legal basis: legitimate interest. Opt out by replying or writing to support@notably.no. Sales data is deleted no later than 12 months after last contact unless the person becomes a customer.
 
 ## Security and privacy claims shown on website
 - GDPR-compatible workflows.
