@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion';
 import { ArrowUp, FileText, Sparkles } from 'lucide-react';
 
@@ -6,7 +6,13 @@ import { ArrowUp, FileText, Sparkles } from 'lucide-react';
  * Tre spørsmål som viser bredden: en beslutning, en ansvarlig og noe fra lenge
  * siden. Kildene viser at svaret hentes fra et bestemt møte.
  */
-const examples = [
+export interface AIAnswerExample {
+  question: string;
+  answer: string;
+  source: string;
+}
+
+const defaultExamples: AIAnswerExample[] = [
   {
     question: 'Hva ble bestemt om Q2-strategien?',
     answer:
@@ -32,7 +38,19 @@ const TYPE_SPEED = 38;
 const SEARCH_TIME = 1100;
 const HOLD_TIME = 3000;
 
-export default function AIAnswersSection() {
+interface AIAnswersSectionProps {
+  examples?: AIAnswerExample[];
+  heading?: ReactNode;
+  intro?: ReactNode;
+  className?: string;
+}
+
+export default function AIAnswersSection({
+  examples = defaultExamples,
+  heading = 'Spør om alt som har blitt sagt.',
+  intro = 'Notably søker i alle møtene dine og svarer med én gang – enten møtet var i går eller i fjor.',
+  className = 'bg-gray-50',
+}: AIAnswersSectionProps = {}) {
   const stageRef = useRef<HTMLDivElement>(null);
   const inView = useInView(stageRef, { amount: 0.5 });
   const prefersReducedMotion = useReducedMotion();
@@ -68,17 +86,16 @@ export default function AIAnswersSection() {
       }, HOLD_TIME);
     }
     return () => window.clearTimeout(timer);
-  }, [animate, phase, typed, question.length]);
+  }, [animate, phase, typed, question.length, examples.length]);
 
   return (
-    <section className="py-20 page-container bg-gray-50 sm:py-24">
+    <section className={`py-20 page-container sm:py-24 ${className}`}>
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-balance text-[1.75rem] font-semibold leading-[1.15] tracking-tight text-slate-800 sm:text-4xl md:text-5xl md:leading-[1.1]">
-          Spør om alt som har blitt sagt.
+          {heading}
         </h2>
         <p className="mx-auto mt-5 max-w-md text-balance text-lg leading-relaxed text-slate-600">
-          Notably søker i alle møtene dine og svarer med én gang – enten møtet var i går
-          eller i fjor.
+          {intro}
         </p>
       </div>
 

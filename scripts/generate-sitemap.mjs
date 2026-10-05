@@ -139,6 +139,7 @@ async function generate() {
   const buildDate = new Date().toISOString();
   const staticPaths = [
     '/',
+    '/advokat',
     '/om-oss',
     '/artikler',
     '/personvern',

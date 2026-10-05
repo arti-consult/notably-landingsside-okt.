@@ -91,6 +91,11 @@ export default function Footer() {
                 </a>
               </li>
               <li>
+                <Link to="/advokat" className={linkClass}>
+                  For advokater
+                </Link>
+              </li>
+              <li>
                 <External href="https://app.notably.no/no/sign-up">Start gratis</External>
               </li>
               <li>

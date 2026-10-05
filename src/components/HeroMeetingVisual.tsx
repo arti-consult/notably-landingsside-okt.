@@ -15,13 +15,27 @@ import { Check } from 'lucide-react';
  * over i den andre.
  */
 
-const speakers = [
+export interface MeetingSpeaker {
+  initials: string;
+  color: string;
+}
+
+export interface MeetingItem {
+  speaker: number;
+  said: string;
+  tag: string;
+  tagClass: string;
+  text: string;
+  due?: string;
+}
+
+const defaultSpeakers: MeetingSpeaker[] = [
   { initials: 'JN', color: 'bg-blue-600' },
   { initials: 'SA', color: 'bg-emerald-600' },
   { initials: 'MK', color: 'bg-indigo-600' },
 ];
 
-const items = [
+const defaultItems: MeetingItem[] = [
   {
     speaker: 0,
     said: 'Vi flytter lanseringen til 14. juni.',
@@ -55,7 +69,17 @@ const DONE_STEP = 6;
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-export default function HeroMeetingVisual() {
+interface HeroMeetingVisualProps {
+  title?: string;
+  speakers?: MeetingSpeaker[];
+  items?: MeetingItem[];
+}
+
+export default function HeroMeetingVisual({
+  title = 'Statusmøte · Q3',
+  speakers = defaultSpeakers,
+  items = defaultItems,
+}: HeroMeetingVisualProps = {}) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { amount: 0.3 });
   const prefersReducedMotion = useReducedMotion();
@@ -98,7 +122,7 @@ export default function HeroMeetingVisual() {
             {/* Toppen: møtet og status */}
             <div className="flex items-center justify-between gap-3">
               <h2 className="truncate text-lg font-semibold tracking-tight text-slate-900">
-                Statusmøte · Q3
+                {title}
               </h2>
               <AnimatePresence mode="wait" initial={false}>
                 {done ? (
