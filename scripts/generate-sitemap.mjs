@@ -140,6 +140,7 @@ async function generate() {
   const staticPaths = [
     '/',
     '/advokat',
+    '/regnskapsforer',
     '/om-oss',
     '/artikler',
     '/personvern',

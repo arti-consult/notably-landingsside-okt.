@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
 import { ArrowRight } from 'lucide-react';
 
 export const SIGNUP_URL = 'https://app.notably.no/no/sign-up';
@@ -80,3 +80,42 @@ export const SecondaryCta = ({
     {children}
   </a>
 );
+
+interface SliderProps {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  format: (v: number) => string;
+  onChange: (v: number) => void;
+}
+
+/** Glidebryter til kalkulatorene på bransjesidene. */
+export const Slider = ({ label, value, min, max, step, format, onChange }: SliderProps) => {
+  const id = useId();
+  const fill = ((value - min) / (max - min)) * 100;
+  return (
+    <div>
+      <div className="flex items-baseline justify-between gap-4">
+        <label htmlFor={id} className="text-[15px] font-medium text-slate-700">
+          {label}
+        </label>
+        <output htmlFor={id} className="shrink-0 text-lg font-semibold tabular-nums text-slate-900">
+          {format(value)}
+        </output>
+      </div>
+      <input
+        id={id}
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        style={{ background: `linear-gradient(to right, #2563eb ${fill}%, #e2e8f0 ${fill}%)` }}
+        className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-full accent-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:shadow-[0_2px_8px_rgba(15,23,42,0.35)]"
+      />
+    </div>
+  );
+};

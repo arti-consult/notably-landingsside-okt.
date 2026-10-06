@@ -96,6 +96,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/regnskapsforer" className={linkClass}>
+                  For regnskapsførere
+                </Link>
+              </li>
+              <li>
                 <External href="https://app.notably.no/no/sign-up">Start gratis</External>
               </li>
               <li>

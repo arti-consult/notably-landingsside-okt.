@@ -1,25 +1,28 @@
 import { useState } from 'react';
-import { Eyebrow, PrimaryCta, SectionHeading, Slider } from './shared';
+import { Eyebrow, PrimaryCta, SectionHeading, Slider } from '../advokat/shared';
 
-/** Tiden vi regner med at det tar å lese gjennom og kvalitetssikre et ferdig notat. */
+/** Tiden vi regner med at det tar å lese gjennom og rette et ferdig referat. */
 const REVIEW_MINUTES = 5;
 const WEEKS_PER_MONTH = 4;
+const HOURS_PER_DAY = 7.5;
 const PRICE_PER_MONTH = 399;
 
 const nok = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
 const hours = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 1, minimumFractionDigits: 0 });
 
 /**
- * Advokater tenker i timer og timepris. Kalkulatoren gjør gevinsten konkret
- * i deres egen valuta – og er åpen om forutsetningen.
+ * Byråene mangler folk mer enn de mangler oppdrag, så gevinsten vises både som
+ * kroner og som arbeidsdager. Timeprisen starter på 1 000 kr, midt i spennet
+ * Synega og Fiken oppgir for regnskapsførere.
  */
-export default function AdvokatRoiSection() {
-  const [meetings, setMeetings] = useState(8);
-  const [minutes, setMinutes] = useState(25);
-  const [rate, setRate] = useState(2500);
+export default function RegnskapRoiSection() {
+  const [meetings, setMeetings] = useState(10);
+  const [minutes, setMinutes] = useState(20);
+  const [rate, setRate] = useState(1000);
 
   const savedPerMeeting = Math.max(minutes - REVIEW_MINUTES, 0);
   const savedHours = (meetings * savedPerMeeting * WEEKS_PER_MONTH) / 60;
+  const savedDays = savedHours / HOURS_PER_DAY;
   const value = savedHours * rate;
   const multiple = value / PRICE_PER_MONTH;
 
@@ -28,13 +31,17 @@ export default function AdvokatRoiSection() {
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
           <Eyebrow>Regn på det selv</Eyebrow>
-          <SectionHeading className="mt-5" lead="Hva koster notatene deg i dag?" muted="I timer du kunne brukt på saken." />
+          <SectionHeading
+            className="mt-5"
+            lead="Hvor mye av fastprisen går til referater?"
+            muted="Prøv med dine egne tall."
+          />
         </div>
 
         <div className="mt-12 grid overflow-hidden rounded-[2rem] ring-1 ring-inset ring-slate-200/80 sm:mt-14 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-9 bg-slate-50 p-7 sm:p-10">
             <Slider
-              label="Møter med notatbehov per uke"
+              label="Kundemøter og interne møter per uke"
               value={meetings}
               min={1}
               max={30}
@@ -43,7 +50,7 @@ export default function AdvokatRoiSection() {
               onChange={setMeetings}
             />
             <Slider
-              label="Minutter du bruker på notat og referat per møte"
+              label="Minutter du bruker på referat og oppsummering per møte"
               value={minutes}
               min={5}
               max={60}
@@ -52,11 +59,11 @@ export default function AdvokatRoiSection() {
               onChange={setMinutes}
             />
             <Slider
-              label="Din timepris"
+              label="Hva en time er verdt for byrået"
               value={rate}
-              min={1000}
-              max={5000}
-              step={100}
+              min={600}
+              max={2000}
+              step={50}
               format={(v) => `${nok.format(v)} kr`}
               onChange={setRate}
             />
@@ -66,6 +73,12 @@ export default function AdvokatRoiSection() {
             <p className="text-sm font-medium uppercase tracking-[0.14em] text-slate-400">Tid frigjort per måned</p>
             <p className="mt-2 text-5xl font-semibold tracking-tight sm:text-6xl">
               {hours.format(savedHours)} <span className="text-2xl text-slate-400 sm:text-3xl">timer</span>
+            </p>
+            <p className="mt-2 text-[15px] text-slate-300">
+              Det er omtrent <span className="font-semibold text-white">
+                {hours.format(savedDays)} {savedDays > 1 ? 'arbeidsdager' : 'arbeidsdag'}
+              </span>{' '}
+              til kunder, årsoppgjør og rådgivning.
             </p>
 
             <div className="mt-8 border-t border-white/10 pt-6">
@@ -83,13 +96,13 @@ export default function AdvokatRoiSection() {
               </p>
             </div>
 
-            <PrimaryCta className="mt-8 self-start">Prøv på neste klientmøte</PrimaryCta>
+            <PrimaryCta className="mt-8 self-start">Prøv på neste kundemøte</PrimaryCta>
           </div>
         </div>
 
         <p className="mx-auto mt-5 max-w-2xl text-center text-sm leading-relaxed text-slate-500">
-          Anslag basert på {WEEKS_PER_MONTH} arbeidsuker per måned, og at du bruker ca. {REVIEW_MINUTES} minutter på å
-          lese gjennom og kvalitetssikre hvert notat. Pris eks. mva.
+          Anslag basert på {WEEKS_PER_MONTH} arbeidsuker per måned, arbeidsdager på {hours.format(HOURS_PER_DAY)} timer,
+          og at du bruker ca. {REVIEW_MINUTES} minutter på å lese gjennom hvert referat. Pris eks. mva.
         </p>
       </div>
     </section>

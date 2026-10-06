@@ -2,19 +2,23 @@ import { useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import { Eyebrow, SectionHeading, ease } from './shared';
-import { advokatFaqs } from './faqs';
+import { advokatFaqs, type Faq } from './faqs';
 
-
-export default function AdvokatFaqSection() {
+/** Brukes også på regnskapsførersiden, med egne spørsmål og undertittel. */
+export default function AdvokatFaqSection({
+  faqs = advokatFaqs,
+  muted = 'før første klientmøte.',
+  background = 'bg-white',
+}: { faqs?: Faq[]; muted?: string; background?: string } = {}) {
   const [open, setOpen] = useState<number | null>(0);
   const reduced = useReducedMotion();
 
   return (
-    <section id="faq" className="page-container scroll-mt-24 bg-white py-20 sm:py-24">
+    <section id="faq" className={`page-container scroll-mt-24 py-20 sm:py-24 ${background}`}>
       <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <Eyebrow>Spørsmål og svar</Eyebrow>
-          <SectionHeading className="mt-5" lead="Det du lurer på" muted="før første klientmøte." />
+          <SectionHeading className="mt-5" lead="Det du lurer på" muted={muted} />
           <p className="mt-5 max-w-sm text-lg leading-relaxed text-slate-600">
             Finner du ikke svaret? Skriv til{' '}
             <a href="mailto:support@notably.no" className="font-medium text-blue-700 underline-offset-4 hover:underline">
@@ -25,7 +29,7 @@ export default function AdvokatFaqSection() {
         </div>
 
         <ul className="divide-y divide-slate-200 border-y border-slate-200">
-          {advokatFaqs.map(({ question, answer }, i) => {
+          {faqs.map(({ question, answer }, i) => {
             const isOpen = open === i;
             return (
               <li key={question}>

@@ -4,7 +4,9 @@
     { "source": "/blog/:slug*", "destination": "/artikler/:slug*", "permanent": true },
     { "source": "/blogg", "destination": "/artikler", "permanent": true },
     { "source": "/blogg/:slug*", "destination": "/artikler/:slug*", "permanent": true },
-    { "source": "/advokater", "destination": "/advokat", "permanent": true }
+    { "source": "/advokater", "destination": "/advokat", "permanent": true },
+    { "source": "/regnskapsforere", "destination": "/regnskapsforer", "permanent": true },
+    { "source": "/regnskapsbyra", "destination": "/regnskapsforer", "permanent": true }
   ],
   "rewrites": [
     {

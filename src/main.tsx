@@ -18,6 +18,7 @@ const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy.tsx'));
 const TermsOfUse = lazy(() => import('./pages/TermsOfUse.tsx'));
 const AboutPage = lazy(() => import('./pages/AboutPage.tsx'));
 const AdvokatPage = lazy(() => import('./pages/AdvokatPage.tsx'));
+const RegnskapPage = lazy(() => import('./pages/RegnskapPage.tsx'));
 const NotFound = lazy(() => import('./pages/NotFound.tsx'));
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute.tsx'));
 const ConsentManager = lazy(() => import('./components/ConsentManager.tsx'));
@@ -89,6 +90,9 @@ createRoot(document.getElementById('root')!).render(
               <Route path="/om-oss" element={<AboutPage />} />
               <Route path="/advokat" element={<AdvokatPage />} />
               <Route path="/advokater" element={<Navigate to="/advokat" replace />} />
+              <Route path="/regnskapsforer" element={<RegnskapPage />} />
+              <Route path="/regnskapsforere" element={<Navigate to="/regnskapsforer" replace />} />
+              <Route path="/regnskapsbyra" element={<Navigate to="/regnskapsforer" replace />} />
               <Route path="/artikler" element={<BlogListing />} />
               <Route path="/artikler/:slug" element={<ArticlePage />} />
               <Route path="/blog" element={<Navigate to="/artikler" replace />} />
