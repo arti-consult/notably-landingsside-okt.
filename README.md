@@ -5,6 +5,11 @@ Kjøring
 - Utvikling: `npm run dev`
 - Bygg: `npm run build`
 
+Kontroll av sporingslastingen
+- Kjør `npm run test:tracking` med Node 22.6 eller nyere.
+- Testene bruker en simulert nettleser og sender ingen hendelser til leverandører.
+- Produksjonstagger lastes bare på HTTPS for notably.no og www.notably.no, med lagret samtykke. Nye lastinger på /admin er sperret.
+
 Miljøvariabler
 - Bruk `.env` lokalt (ikke committed). Se `.env.example` for mal.
 - Vercel: Sett `VITE_SUPABASE_URL` og `VITE_SUPABASE_ANON_KEY` i Project → Settings → Environment Variables. Se `VERCEL_SETUP.md`.

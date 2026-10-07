@@ -7,6 +7,8 @@
  * de markedsføringskapslene vi selv har tilgang til når det trekkes tilbake.
  */
 
+import { hasMarketingConsent } from './consent.ts';
+
 const GTM_CONTAINER_ID = 'GTM-NLPB8M3S';
 const GA_MEASUREMENT_ID = 'G-NJRML2BKQP';
 const FB_PIXEL_ID = '1783628368949768';
@@ -161,7 +163,14 @@ const initTikTokPixel = () => {
 };
 
 export const initMarketingTracking = () => {
-  if (marketingInitialized || typeof window === 'undefined') {
+  if (
+    marketingInitialized ||
+    typeof window === 'undefined' ||
+    window.location.protocol !== 'https:' ||
+    !['notably.no', 'www.notably.no'].includes(window.location.hostname) ||
+    /^\/admin(?:\/|$)/.test(window.location.pathname) ||
+    !hasMarketingConsent()
+  ) {
     return;
   }
 
