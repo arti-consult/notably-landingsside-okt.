@@ -19,6 +19,7 @@ const TermsOfUse = lazy(() => import('./pages/TermsOfUse.tsx'));
 const AboutPage = lazy(() => import('./pages/AboutPage.tsx'));
 const AdvokatPage = lazy(() => import('./pages/AdvokatPage.tsx'));
 const RegnskapPage = lazy(() => import('./pages/RegnskapPage.tsx'));
+const ByggPage = lazy(() => import('./pages/ByggPage.tsx'));
 const NotFound = lazy(() => import('./pages/NotFound.tsx'));
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute.tsx'));
 const ConsentManager = lazy(() => import('./components/ConsentManager.tsx'));
@@ -93,6 +94,10 @@ createRoot(document.getElementById('root')!).render(
               <Route path="/regnskapsforer" element={<RegnskapPage />} />
               <Route path="/regnskapsforere" element={<Navigate to="/regnskapsforer" replace />} />
               <Route path="/regnskapsbyra" element={<Navigate to="/regnskapsforer" replace />} />
+              <Route path="/bygg-og-anlegg" element={<ByggPage />} />
+              <Route path="/bygg" element={<Navigate to="/bygg-og-anlegg" replace />} />
+              <Route path="/entreprenor" element={<Navigate to="/bygg-og-anlegg" replace />} />
+              <Route path="/byggebransjen" element={<Navigate to="/bygg-og-anlegg" replace />} />
               <Route path="/artikler" element={<BlogListing />} />
               <Route path="/artikler/:slug" element={<ArticlePage />} />
               <Route path="/blog" element={<Navigate to="/artikler" replace />} />

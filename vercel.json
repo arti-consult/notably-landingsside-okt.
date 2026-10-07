@@ -6,7 +6,10 @@
     { "source": "/blogg/:slug*", "destination": "/artikler/:slug*", "permanent": true },
     { "source": "/advokater", "destination": "/advokat", "permanent": true },
     { "source": "/regnskapsforere", "destination": "/regnskapsforer", "permanent": true },
-    { "source": "/regnskapsbyra", "destination": "/regnskapsforer", "permanent": true }
+    { "source": "/regnskapsbyra", "destination": "/regnskapsforer", "permanent": true },
+    { "source": "/bygg", "destination": "/bygg-og-anlegg", "permanent": true },
+    { "source": "/entreprenor", "destination": "/bygg-og-anlegg", "permanent": true },
+    { "source": "/byggebransjen", "destination": "/bygg-og-anlegg", "permanent": true }
   ],
   "rewrites": [
     {
