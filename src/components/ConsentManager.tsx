@@ -9,7 +9,9 @@ export default function ConsentManager() {
   const [panelOpen, setPanelOpen] = useState(false);
   const [marketingChecked, setMarketingChecked] = useState(false);
   const [saving, setSaving] = useState(false);
+  const panelWasOpenRef = useRef(false);
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const bannerSettingsRef = useRef<HTMLButtonElement | null>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const savedAt = view.response?.consent.decidedAt;
@@ -29,8 +31,15 @@ export default function ConsentManager() {
   }), []);
 
   useEffect(() => {
-    if (!panelOpen) return;
-
+    if (!panelOpen) {
+      if (panelWasOpenRef.current) {
+        const opener = returnFocusRef.current?.isConnected ? returnFocusRef.current : bannerSettingsRef.current;
+        opener?.focus();
+      }
+      panelWasOpenRef.current = false;
+      return;
+    }
+    panelWasOpenRef.current = true;
     closeButtonRef.current?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -58,10 +67,7 @@ export default function ConsentManager() {
     };
 
     document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('keydown', onKeyDown);
-      if (returnFocusRef.current?.isConnected) returnFocusRef.current.focus();
-    };
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, [panelOpen]);
 
   const apply = useCallback(async (value: ConsentValue) => {
@@ -119,7 +125,7 @@ export default function ConsentManager() {
               </button>
             </div>
             <div className="mt-3 flex min-h-8 flex-wrap items-center justify-center gap-x-6 gap-y-2">
-              <button type="button" onClick={(event) => { returnFocusRef.current = event.currentTarget; setMarketingChecked(readConsent().granted); setPanelOpen(true); }} className={textLink}>
+              <button ref={bannerSettingsRef} type="button" onClick={(event) => { returnFocusRef.current = event.currentTarget; setMarketingChecked(readConsent().granted); setPanelOpen(true); }} className={textLink}>
                 Personvernvalg
               </button>
               <Link to="/personvern" className={textLink}>Les om personvern</Link>
