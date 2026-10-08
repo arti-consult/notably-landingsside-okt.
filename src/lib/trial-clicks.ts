@@ -1,7 +1,7 @@
 import { decorateSignup, signupDestination } from './marketing-attribution.ts';
 import type { Attribution } from './consent-client.ts';
 import { isProductionPage, publicPagePath, SALES_REF } from './marketing-policy.ts';
-import { hasMarketingConsent } from './consent.ts';
+import { hasMarketingConsent, hasAnalyticsConsent } from './consent.ts';
 import { trackStartTrialClick } from './analytics.ts';
 
 /** One delegated listener covers React, lazy sections, article CTAs and keyboard activation. */
@@ -27,7 +27,7 @@ export function startTrialLinks(getAttribution: () => Attribution | null): () =>
     const a = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[href]') : null;
     if (!a || !signupDestination(a.href) || !isProductionPage()) return;
     refreshLinks();
-    if (!hasMarketingConsent()) return;
+    if (!hasMarketingConsent() && !hasAnalyticsConsent()) return;
     const section = a.closest('section[id]')?.id;
     const raw = a.dataset.trialCta ?? (a.closest('nav,header') ? 'navigation' : a.closest('footer') ? 'footer' : section ?? 'content');
     const placement = /^[a-z0-9_-]{1,64}$/.test(raw) ? raw : 'content';

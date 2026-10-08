@@ -9,7 +9,7 @@ test('old local grant cannot authorize new tracking; explicit grant uses credent
   await c.refresh(); assert.equal(c.view().granted,false); assert.equal(f.values.has('notably.consent.v1'),false);
   await c.choose(true); assert.equal(c.view().granted,true);
   const post = f.calls.find(x=>x.body?.action==='grant');
-  assert.equal(post.body.expectedRevision,0); assert.equal(post.body.disclosureVersion,'trial-2026-10-08-v1');
+  assert.equal(post.body.expectedRevision,0); assert.equal(post.body.disclosureVersion,'trial-2026-10-08-v2');
   assert.equal(post.options.headers['X-Notably-Consent-CSRF'],'offline-csrf-token');
   for(const call of f.calls) assert.equal(call.options.credentials,'include');
   assert.equal(f.values.size,0); // No local grant/capability/attribution storage.
@@ -98,4 +98,57 @@ test('expired, malformed, unknown-policy and personalization-enabled grants all 
     const f=fixture('granted'),r=f.response();change(r);assert.equal(effectiveGrant(r),false);
   }
   const f=fixture();f.intercept(({json})=>json({status:'success'}));const c=createConsentClient(f.options);await assert.rejects(c.refresh(),/INVALID/);assert.equal(c.view().granted,false);
+});
+
+for (const permissions of [{analytics:true,advertising:false},{analytics:false,advertising:true},{analytics:true,advertising:true},{analytics:false,advertising:false}]) {
+  test(`server choices remain independent: ${JSON.stringify(permissions)}`, async () => {
+    const f=fixture(),c=createConsentClient(f.options);
+    await c.choose(permissions);
+    assert.deepEqual(c.view().permissions,permissions);
+    assert.deepEqual(f.response().consent.permissions,permissions);
+    const captured=await c.capture({sourceUrl:'https://notably.no/',identifiers:{gclid:'OFFLINE_MATRIX'}});
+    assert.equal(captured,permissions.advertising);
+  });
+}
+
+test('v1 combined grant never becomes purpose grants; reject-all still works against v1',async()=>{
+  const f=fixture('granted');
+  const fetch=async(url,options)=>{
+    const result=await f.fetch(url,options),r=await result.json();
+    if(r.consent){r.consent.contractVersion='1';r.consent.permissions={optionalAnalyticsAndMarketing:r.consent.state==='granted'};r.consent.disclosureVersion=r.consent.mappingVersion='trial-2026-10-08-v1';}
+    return new Response(JSON.stringify(r),{status:result.status});
+  };
+  const c=createConsentClient({...f.options,fetch});await c.refresh();
+  assert.deepEqual(c.view().permissions,{analytics:false,advertising:false});assert.equal(c.view().supportsPurposes,false);
+  await assert.rejects(c.choose(true),/POLICY_CHANGED/);
+  assert.equal(f.calls.filter(x=>x.body?.action==='grant').length,0);
+  await c.choose(false);assert.notEqual(f.response().consent.state,'granted');assert.equal(c.view().pendingDenial,false);
+});
+
+test('partial offline withdrawal is durable and cannot revoke the other server purpose',async()=>{
+  const f=fixture('granted'),c=createConsentClient(f.options);await c.refresh();
+  f.intercept(()=>{throw Error('offline');});
+  const choice=c.choose({analytics:true,advertising:false});
+  assert.deepEqual(c.view().permissions,{analytics:true,advertising:false});
+  await assert.rejects(choice);
+  const stored=JSON.parse(f.values.get(PENDING_DENIAL_KEY));
+  assert.deepEqual(stored.purposes,['advertising']);assert.equal(stored.permissions,undefined);
+  f.intercept(null);const next=createConsentClient(f.options);await next.refresh();
+  assert.deepEqual(next.view().permissions,{analytics:true,advertising:false});
+  assert.equal(f.calls.some(x=>x.body?.action==='grant'),false);
+});
+
+test('partial denial conflicts do not regrant a concurrently withdrawn other purpose',async()=>{
+  const f=fixture('granted'),c=createConsentClient(f.options);await c.refresh();
+  f.intercept(()=>{throw Error('offline');});await assert.rejects(c.choose({analytics:true,advertising:false}));
+  let first=true;f.intercept(({body})=>{if(body?.action==='withdraw'&&first){first=false;f.setPermissions({analytics:false,advertising:true});}});
+  const next=createConsentClient(f.options);await next.refresh();
+  assert.deepEqual(next.view().permissions,{analytics:false,advertising:false});
+  const posts=f.calls.filter(x=>x.body?.action==='withdraw');
+  assert.deepEqual(posts.at(-1).body.purposes,['advertising']);
+});
+
+test('wrong provider mapping cannot authorize one purpose implicitly',async()=>{
+  const f=fixture('granted');f.intercept(({response,json})=>{const r=response();r.consent.permissions.advertising=false;return json(r);});
+  const c=createConsentClient(f.options);await c.refresh();assert.deepEqual(c.view().permissions,{analytics:false,advertising:false});
 });

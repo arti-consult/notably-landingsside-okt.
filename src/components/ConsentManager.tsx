@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Cookie, X } from 'lucide-react';
+import { ALL_PURPOSES, NO_PURPOSES } from '../lib/consent-client';
 import { consentClient, onConsentChange, onOpenPrivacyChoices, readConsent, saveConsent, type ConsentValue } from '../lib/consent';
 
 /** Shared server consent; SDK lifecycle and immediate revocation live in marketing-loader. */
 export default function ConsentManager() {
   const [view, setView] = useState(readConsent);
   const [panelOpen, setPanelOpen] = useState(false);
-  const [marketingChecked, setMarketingChecked] = useState(false);
+  const [choices, setChoices] = useState({ ...NO_PURPOSES });
   const [saving, setSaving] = useState(false);
   const panelWasOpenRef = useRef(false);
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -16,17 +17,18 @@ export default function ConsentManager() {
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const savedAt = view.response?.consent.decidedAt;
   const decided = view.phase === 'ready' && !view.pendingDenial &&
-    (view.granted || ['rejected', 'withdrawn'].includes(view.response?.consent.state ?? ''));
+    (view.permissions.analytics || view.permissions.advertising || ['rejected', 'withdrawn'].includes(view.response?.consent.state ?? ''));
   const message = saving ? 'Lagrer personvernvalget …' : view.phase === 'disabled'
     ? 'Valgfrie verktøy er av i denne forhåndsvisningen.' : view.pendingDenial
     ? 'Valgfrie verktøy er av her. Vi prøver å synkronisere avslaget med webappen. Du kan prøve igjen nedenfor.'
+    : view.phase === 'ready' && !view.supportsPurposes ? 'Personvernvalgene oppdateres. Valgfrie verktøy er av inntil valget ditt kan lagres sikkert.'
     : view.phase === 'error' ? 'Vi kunne ikke hente eller lagre personvernvalget. Valgfrie verktøy er av. Prøv igjen.' : null;
 
   useEffect(() => onConsentChange(() => setView(readConsent())), []);
   useEffect(() => onOpenPrivacyChoices(() => {
     returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setView(readConsent());
-    setMarketingChecked(readConsent().granted);
+    setChoices({ ...readConsent().permissions });
     setPanelOpen(true);
   }), []);
 
@@ -74,7 +76,7 @@ export default function ConsentManager() {
     setSaving(true);
     try {
       await saveConsent(value);
-      setMarketingChecked(readConsent().granted);
+      setChoices({ ...readConsent().permissions });
       if (!readConsent().pendingDenial) setPanelOpen(false);
     } catch {
       // The shared client retains denials and leaves optional tracking off.
@@ -117,16 +119,16 @@ export default function ConsentManager() {
             </p>
             {status}
             <div className="mt-4 grid grid-cols-2 gap-3">
-              <button type="button" onClick={() => void apply('denied')} className={choiceButton}>
+              <button type="button" onClick={() => void apply(NO_PURPOSES)} className={choiceButton}>
                 Avvis alle
               </button>
-              <button type="button" disabled={saving} onClick={() => void apply('granted')} className={choiceButton}>
-                Godta alle
+              <button type="button" disabled={saving || !view.supportsPurposes} onClick={() => void apply(ALL_PURPOSES)} className={choiceButton}>
+                Aksepter alle
               </button>
             </div>
             <div className="mt-3 flex min-h-8 flex-wrap items-center justify-center gap-x-6 gap-y-2">
-              <button ref={bannerSettingsRef} type="button" onClick={(event) => { returnFocusRef.current = event.currentTarget; setMarketingChecked(readConsent().granted); setPanelOpen(true); }} className={textLink}>
-                Personvernvalg
+              <button ref={bannerSettingsRef} type="button" onClick={(event) => { returnFocusRef.current = event.currentTarget; setChoices({ ...readConsent().permissions }); setPanelOpen(true); }} className={textLink}>
+                Tilpass valg
               </button>
               <Link to="/personvern" className={textLink}>Les om personvern</Link>
             </div>
@@ -159,7 +161,7 @@ export default function ConsentManager() {
 
             <div className="min-h-0 overflow-y-auto px-5 pb-5 pt-2 sm:px-6">
               <p id="personvernvalg-beskrivelse" className="text-sm leading-relaxed text-slate-600">
-                Velg om du vil tillate analyse og markedsføring på nettsiden og i webappen. Du kan bruke Notably uansett hva du velger.
+                Velg separat om du vil tillate analyse og annonsemåling på nettsiden og i webappen. Du kan bruke Notably uansett hva du velger.
               </p>
 
               <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
@@ -172,23 +174,26 @@ export default function ConsentManager() {
                 </p>
               </div>
 
-              <label className="mt-3 block cursor-pointer rounded-xl border border-slate-200 p-4 transition-colors hover:border-blue-300">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <span className="font-semibold">Analyse og markedsføring</span>
-                    <p className="mt-1 text-sm leading-relaxed text-slate-600">
-                      Måler bruk av nettsiden og effekten av annonsene våre med Google, Meta og TikTok.
-                      Google og Meta mottar også klikk på «Start gratis» og bekreftet prøvestart.
-                    </p>
+              {([
+                ['analytics', 'Analyse', 'Hjelper oss å forstå bruk av nettsiden, blant annet sidebesøk og klikk på «Start gratis», med Google Analytics.'],
+                ['advertising', 'Annonsemåling', 'Måler hvilke annonser som fører til besøk, klikk og prøvestart. Google og Meta mottar klikk og bekreftet prøvestart; TikTok måler besøk.'],
+              ] as const).map(([purpose, label, description]) => (
+                <label key={purpose} className="mt-3 block cursor-pointer rounded-xl border border-slate-200 p-4 transition-colors hover:border-blue-300">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <span className="font-semibold">{label}</span>
+                      <p className="mt-1 text-sm leading-relaxed text-slate-600">{description}</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      aria-label={label}
+                      checked={choices[purpose]}
+                      onChange={(event) => setChoices(current => ({ ...current, [purpose]: event.target.checked }))}
+                      className="mt-1 h-5 w-5 shrink-0 accent-[#2663eb]"
+                    />
                   </div>
-                  <input
-                    type="checkbox"
-                    checked={marketingChecked}
-                    onChange={(event) => setMarketingChecked(event.target.checked)}
-                    className="mt-1 h-5 w-5 shrink-0 accent-[#2663eb]"
-                  />
-                </div>
-              </label>
+                </label>
+              ))}
 
               <details className="mt-4 rounded-xl border border-slate-200 p-4 text-sm text-slate-600">
                 <summary className="cursor-pointer font-medium text-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600">
@@ -220,8 +225,8 @@ export default function ConsentManager() {
             </div>
 
             <div className="grid shrink-0 grid-cols-2 gap-3 border-t border-slate-200 bg-white p-4 sm:px-6">
-              <button type="button" onClick={() => void apply('denied')} className={choiceButton}>Avvis alle</button>
-              <button type="button" disabled={saving} onClick={() => void apply(marketingChecked ? 'granted' : 'denied')} className={choiceButton}>Lagre valg</button>
+              <button type="button" onClick={() => void apply(NO_PURPOSES)} className={choiceButton}>Avvis alle</button>
+              <button type="button" disabled={saving || !view.supportsPurposes} onClick={() => void apply(choices)} className={choiceButton}>Lagre valg</button>
             </div>
           </div>
         </div>

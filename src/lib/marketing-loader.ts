@@ -1,6 +1,6 @@
-import { initMarketingTracking, isMarketingTrackingActive, revokeMarketingTracking } from './analytics.ts';
-import { consentClient, hasMarketingConsent } from './consent.ts';
-import type { Attribution } from './consent-client.ts';
+import { initMarketingTracking, isMarketingTrackingActive, activeTrackingPurposes, revokeMarketingTracking, suspendTrackingForReload } from './analytics.ts';
+import { consentClient, hasMarketingConsent, hasAnalyticsConsent } from './consent.ts';
+import { NO_PURPOSES, type Attribution } from './consent-client.ts';
 import { readAttribution, canCaptureSource } from './marketing-attribution.ts';
 import { isProductionPage } from './marketing-policy.ts';
 import { startTrialLinks } from './trial-clicks.ts';
@@ -13,6 +13,7 @@ export function startMarketingScriptsLoader(): () => void {
   let signature = '';
   let captured = '';
   let reloadScheduled = false;
+  let needsReload = false;
   const updateLinks = () => window.dispatchEvent(new Event('notably:refresh-trial-links'));
   const stopLinks = startTrialLinks(() => remembered);
 
@@ -21,20 +22,22 @@ export function startMarketingScriptsLoader(): () => void {
     captured = '';
     updateLinks();
     const active = isMarketingTrackingActive();
-    revokeMarketingTracking();
-    if (active && !reloadScheduled) {
+    if (active) suspendTrackingForReload();
+    revokeMarketingTracking(isProductionPage() ? consentClient.view().permissions : NO_PURPOSES);
+    needsReload ||= active;
+    if (needsReload && !reloadScheduled) {
       // A persisted denial is replayed on reload before any provider is loaded.
       const v = consentClient.view();
-      if (!v.pendingDenial || consentClient.hasDurableDenial()) {
+      if (!v.choosing && (!v.pendingDenial || consentClient.hasDurableDenial())) {
         reloadScheduled = true;
         window.location.reload();
       }
     }
   }
   async function prepare() {
-    if (stopped || !hasMarketingConsent() || !isProductionPage()) return;
+    if (stopped || needsReload || (!hasMarketingConsent() && !hasAnalyticsConsent()) || !isProductionPage()) return;
     const initial = window.location.href;
-    const input = readAttribution(new URL(initial), document.cookie);
+    const input = hasMarketingConsent() ? readAttribution(new URL(initial), document.cookie) : null;
     if (input) {
       remembered = { ...input, identifiers: { ...remembered?.identifiers, ...input.identifiers }, utm: { ...remembered?.utm, ...input.utm } };
       updateLinks();
@@ -49,23 +52,26 @@ export function startMarketingScriptsLoader(): () => void {
       // Valid campaign parameters remain on this public URL so the consented
       // provider SDKs can attribute CTA clicks. No browser storage is used here.
     }
-    if (stopped || !hasMarketingConsent()) return;
+    if (stopped || needsReload || (!hasMarketingConsent() && !hasAnalyticsConsent())) return;
     updateLinks();
     initMarketingTracking();
   }
   function schedulePrepare() {
     if (preparing || stopped) return;
     preparing = prepare().catch(() => {
-      if (!hasMarketingConsent()) stopTracking();
+      changed();
     }).finally(() => { preparing = null; });
   }
   function changed() {
     if (stopped) return;
     const v = consentClient.view();
-    const next = `${v.granted}:${v.phase}:${v.pendingDenial}:${v.response?.consent.revision}`;
+    const next = `${v.permissions.analytics}:${v.permissions.advertising}:${v.phase}:${v.pendingDenial}:${v.choosing}:${v.response?.consent.revision}`;
     if (signature === next) return;
     signature = next;
-    if (!v.granted) stopTracking();
+    if (!v.permissions.advertising) { remembered = null; captured = ''; updateLinks(); }
+    const active = activeTrackingPurposes();
+    if (needsReload || (active.analytics && !v.permissions.analytics) ||
+      (active.advertising && !v.permissions.advertising) || (!v.permissions.analytics && !v.permissions.advertising)) stopTracking();
     else schedulePrepare();
   }
   const stopConsent = consentClient.subscribe(changed);

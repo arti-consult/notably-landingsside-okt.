@@ -1,13 +1,18 @@
 import { CONSENT_API, DISCLOSURE_VERSION } from './marketing-policy.ts';
 
 export type ConsentAction = 'grant' | 'reject' | 'withdraw';
+export type ConsentPurpose = 'analytics' | 'advertising';
+export type PurposeConsent = Record<ConsentPurpose, boolean>;
+export const NO_PURPOSES: PurposeConsent = { analytics: false, advertising: false };
+export const ALL_PURPOSES: PurposeConsent = { analytics: true, advertising: true };
+const PURPOSES: ConsentPurpose[] = ['analytics', 'advertising'];
 export type ProviderPermissions = Record<'adStorage' | 'adUserData' | 'adPersonalization' | 'analyticsStorage', 'granted' | 'denied'>;
 export type ConsentResponse = {
   status: 'success'; enabled: boolean; csrfToken: string;
   consent: {
-    contractVersion: '1'; disclosureVersion: string | null; mappingVersion: string | null;
+    contractVersion: '1' | '2'; disclosureVersion: string | null; mappingVersion: string | null;
     revision: number; state: 'unset' | 'granted' | 'rejected' | 'withdrawn' | 'expired';
-    permissions: { optionalAnalyticsAndMarketing: boolean }; providerPermissions: ProviderPermissions;
+    permissions: Partial<PurposeConsent> & { optionalAnalyticsAndMarketing?: boolean }; providerPermissions: ProviderPermissions;
     decidedAt: string | null; expiresAt: string | null;
   };
 };
@@ -16,7 +21,7 @@ export type Attribution = {
   identifiers: Partial<Record<'gclid' | 'gbraid' | 'wbraid' | 'fbclid' | 'fbc' | 'fbp', string>>;
   utm?: Partial<Record<'utm_source' | 'utm_medium' | 'utm_campaign' | 'utm_id' | 'utm_content' | 'utm_term', string>>;
 };
-type Decision = { requestId: string; action: ConsentAction; expectedRevision?: number; disclosureVersion?: string };
+type Decision = { requestId: string; action: ConsentAction; expectedRevision?: number; disclosureVersion?: string; purposes?: ConsentPurpose[] };
 type Store = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
 export const PENDING_DENIAL_KEY = 'notably.marketing-consent:pending-denial:v1';
 export const PENDING_DENIAL_COOKIE = 'notably_consent_pending_denial';
@@ -28,22 +33,33 @@ function parseResponse(value: unknown): ConsentResponse {
   const r = value as ConsentResponse | undefined;
   const c = r?.consent;
   if (r?.status !== 'success' || typeof r.enabled !== 'boolean' || typeof r.csrfToken !== 'string' || !r.csrfToken || r.csrfToken.length > 4096 ||
-    !c || c.contractVersion !== '1' || !Number.isSafeInteger(c.revision) || c.revision < 0 ||
+    !c || !['1', '2'].includes(c.contractVersion) || !Number.isSafeInteger(c.revision) || c.revision < 0 ||
     !['unset', 'granted', 'rejected', 'withdrawn', 'expired'].includes(c.state) ||
-    typeof c.permissions?.optionalAnalyticsAndMarketing !== 'boolean' ||
+    (c.contractVersion === '2'
+      ? !PURPOSES.every(key => typeof c.permissions?.[key] === 'boolean')
+      : typeof c.permissions?.optionalAnalyticsAndMarketing !== 'boolean') ||
     !PERMISSIONS.every(key => ['granted', 'denied'].includes(c.providerPermissions?.[key])) ||
     ![c.disclosureVersion, c.mappingVersion, c.decidedAt, c.expiresAt].every(x => x === null || typeof x === 'string')) throw new Error('CONSENT_RESPONSE_INVALID');
   return r;
 }
 
-export function effectiveGrant(response: ConsentResponse | null, now = Date.now()): boolean {
+export function supportsPurposeConsent(response: ConsentResponse | null): boolean {
   const c = response?.consent;
-  return Boolean(response?.enabled && c?.state === 'granted' && c.permissions.optionalAnalyticsAndMarketing &&
-    c.disclosureVersion === DISCLOSURE_VERSION && c.mappingVersion === DISCLOSURE_VERSION &&
-    c.decidedAt && Date.parse(c.decidedAt) <= now && c.expiresAt && Date.parse(c.expiresAt) > now &&
-    c.providerPermissions.adStorage === 'granted' && c.providerPermissions.adUserData === 'granted' &&
-    c.providerPermissions.analyticsStorage === 'granted' && c.providerPermissions.adPersonalization === 'denied');
+  return Boolean(response?.enabled && c?.contractVersion === '2' &&
+    c.disclosureVersion === DISCLOSURE_VERSION && c.mappingVersion === DISCLOSURE_VERSION);
 }
+
+export function effectivePermissions(response: ConsentResponse | null, now = Date.now()): PurposeConsent {
+  const c = response?.consent;
+  const valid = supportsPurposeConsent(response) && c?.state === 'granted' &&
+    c.decidedAt && Date.parse(c.decidedAt) <= now && c.expiresAt && Date.parse(c.expiresAt) > now &&
+    c.providerPermissions.adPersonalization === 'denied' &&
+    (c.providerPermissions.analyticsStorage === 'granted') === c.permissions.analytics &&
+    (c.providerPermissions.adStorage === 'granted') === c.permissions.advertising &&
+    (c.providerPermissions.adUserData === 'granted') === c.permissions.advertising;
+  return valid ? { analytics: c.permissions.analytics === true, advertising: c.permissions.advertising === true } : { ...NO_PURPOSES };
+}
+export const effectiveGrant = (response: ConsentResponse | null, now = Date.now()) => effectivePermissions(response, now).advertising;
 
 export function createConsentClient(options: {
   fetch: typeof fetch; storage: () => Store | null; document: () => Pick<Document, 'cookie'> | null;
@@ -56,6 +72,7 @@ export function createConsentClient(options: {
   let pending: Decision | null = null;
   let migrated = false;
   let choiceRevision = 0;
+  let choosing = 0;
   let queue: Promise<unknown> = Promise.resolve();
   const listeners = new Set<() => void>();
   const notify = () => listeners.forEach(fn => fn());
@@ -65,7 +82,8 @@ export function createConsentClient(options: {
       const d = JSON.parse(raw ?? 'null') as Decision | null;
       return d && UUID.test(d.requestId) && ['reject', 'withdraw'].includes(d.action) &&
         (d.expectedRevision === undefined || (Number.isSafeInteger(d.expectedRevision) && d.expectedRevision >= 0))
-        ? { requestId: d.requestId, action: d.action, ...(d.expectedRevision === undefined ? {} : { expectedRevision: d.expectedRevision }) } : null;
+        && (d.purposes === undefined || (Array.isArray(d.purposes) && d.purposes.length > 0 && d.purposes.every(p => PURPOSES.includes(p))))
+        ? { requestId: d.requestId, action: d.action, ...(d.expectedRevision === undefined ? {} : { expectedRevision: d.expectedRevision }), ...(d.purposes ? { purposes: [...new Set(d.purposes)] } : {}) } : null;
     } catch { return null; }
   }
   function durableDenial(): Decision | null {
@@ -122,6 +140,7 @@ export function createConsentClient(options: {
   async function syncDenial() {
     let d = denial();
     if (!d || !response) return;
+    if (d.purposes && response.consent.contractVersion !== '2') throw new Error('CONSENT_PURPOSES_UNAVAILABLE');
     d = { ...d, expectedRevision: d.expectedRevision ?? response.consent.revision };
     persist(d);
     try { response = parseResponse(await post('', d)); } catch (error) {
@@ -129,11 +148,14 @@ export function createConsentClient(options: {
       // Denial may move to the current revision. A grant is never automatically replayed over a newer choice.
       await readServer();
       if (denial()?.requestId !== d.requestId) return;
-      d = { requestId: id(), action: d.action, expectedRevision: response!.consent.revision };
+      d = { requestId: id(), action: d.action, expectedRevision: response!.consent.revision, ...(d.purposes ? { purposes: d.purposes } : {}) };
       persist(d);
       response = parseResponse(await post('', d));
     }
-    if (response.consent.state === 'granted' || response.consent.permissions.optionalAnalyticsAndMarketing) throw new Error('CONSENT_DENIAL_NOT_CONFIRMED');
+    const denied = d.purposes ?? PURPOSES;
+    if (response.consent.contractVersion === '2'
+      ? denied.some(p => response!.consent.permissions[p] !== false)
+      : response.consent.state === 'granted' || response.consent.permissions.optionalAnalyticsAndMarketing) throw new Error('CONSENT_DENIAL_NOT_CONFIRMED');
     clear(d);
   }
   async function refreshCurrent() {
@@ -157,34 +179,47 @@ export function createConsentClient(options: {
     return run;
   }
   return {
-    view: () => ({ response, phase, pendingDenial: denial() !== null, granted: phase === 'ready' && !denial() && effectiveGrant(response, now()) }),
+    view: () => {
+      const permissions = phase === 'ready' ? effectivePermissions(response, now()) : { ...NO_PURPOSES };
+      const d = denial();
+      if (d) for (const purpose of d.purposes ?? PURPOSES) permissions[purpose] = false;
+      return { response, phase, pendingDenial: d !== null, permissions, granted: permissions.advertising,
+        supportsPurposes: supportsPurposeConsent(response), choosing: choosing > 0 };
+    },
     externalChange() { if (denial()) { ++choiceRevision; notify(); } },
     hasDurableDenial: () => durableDenial() !== null,
     subscribe(fn: () => void) { listeners.add(fn); return () => { listeners.delete(fn); }; },
     refresh: () => serial(refreshCurrent),
-    choose(grant: boolean) {
+    choose(selection: boolean | PurposeConsent) {
+      const permissions = typeof selection === 'boolean' ? { ...(selection ? ALL_PURPOSES : NO_PURPOSES) } : { ...selection };
+      const grant = permissions.analytics || permissions.advertising;
       const choice = ++choiceRevision;
+      ++choosing;
       migrateLegacy();
-      if (!grant) {
-        persist({ requestId: id(), action: response?.consent.state === 'granted' ? 'withdraw' : 'reject' });
+      const denied = PURPOSES.filter(p => !permissions[p]);
+      if (denied.length) {
+        const previous = denial();
+        const purposes = [...new Set([...(previous ? previous.purposes ?? PURPOSES : []), ...denied])];
+        persist({ requestId: id(), action: grant || response?.consent.state === 'granted' ? 'withdraw' : 'reject', ...(purposes.length < 2 ? { purposes } : {}) });
         notify(); // Suppress tags and pending capture before any outstanding request can finish.
       }
       return serial(async () => {
         await refreshCurrent();
         if (!grant || choice !== choiceRevision) return response!;
-        if (!response?.enabled || response.consent.disclosureVersion !== DISCLOSURE_VERSION || response.consent.mappingVersion !== DISCLOSURE_VERSION) throw new Error('CONSENT_POLICY_CHANGED');
-        const body = { requestId: id(), action: 'grant', expectedRevision: response.consent.revision, disclosureVersion: DISCLOSURE_VERSION };
+        if (!supportsPurposeConsent(response)) throw new Error('CONSENT_POLICY_CHANGED');
+        const body = { requestId: id(), action: 'grant', expectedRevision: response!.consent.revision, disclosureVersion: DISCLOSURE_VERSION, permissions };
         try { response = parseResponse(await post('', body)); } catch (error) {
           if (error instanceof Error && error.message === 'CONSENT_HTTP_409') await readServer();
           throw error;
         }
+        if (PURPOSES.some(p => effectivePermissions(response, now())[p] !== permissions[p]) || !supportsPurposeConsent(response)) throw new Error('CONSENT_CHOICE_NOT_CONFIRMED');
         phase = 'ready'; notify(); return response;
-      });
+      }).finally(() => { --choosing; notify(); });
     },
     capture(input: Attribution) {
       return serial(async () => {
         await refreshCurrent();
-        if (denial() || !effectiveGrant(response, now())) return false;
+        if ((denial() && (!denial()?.purposes || denial()?.purposes?.includes('advertising'))) || !effectiveGrant(response, now())) return false;
         const body = { ...input, requestId: id(), expectedRevision: response!.consent.revision };
         const result = await post('/attribution', body) as { status?: string; captured?: number };
         if (result.status !== 'success' || !Number.isSafeInteger(result.captured) || result.captured! < 0) throw new Error('ATTRIBUTION_RESPONSE_INVALID');

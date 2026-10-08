@@ -1,6 +1,6 @@
-import { createConsentClient } from './consent-client.ts';
+import { createConsentClient, type PurposeConsent } from './consent-client.ts';
 import { isProductionPage } from './marketing-policy.ts';
-export type ConsentValue = 'granted' | 'denied';
+export type ConsentValue = PurposeConsent;
 
 // Only server-confirmed state in memory can authorize optional tools. Browser storage
 // is used solely to retain an unsynchronized rejection/withdrawal across reloads.
@@ -12,7 +12,8 @@ export const consentClient = createConsentClient({
 });
 export const readConsent = () => consentClient.view();
 export const hasMarketingConsent = () => consentClient.view().granted;
-export const saveConsent = (value: ConsentValue) => consentClient.choose(value === 'granted');
+export const hasAnalyticsConsent = () => consentClient.view().permissions.analytics;
+export const saveConsent = (value: ConsentValue) => consentClient.choose(value);
 export const onConsentChange = (listener: () => void) => consentClient.subscribe(listener);
 const OPEN_EVENT = 'notably:open-privacy-choices';
 export const openPrivacyChoices = () => window.dispatchEvent(new Event(OPEN_EVENT));

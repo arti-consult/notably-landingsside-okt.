@@ -1,7 +1,12 @@
 /** Public constants only. Provider credentials belong exclusively in the app worker. */
 export const CONSENT_API = 'https://api.notably.no';
-export const DISCLOSURE_VERSION = 'trial-2026-10-08-v1';
+// Proposed v2 contract: coordinate with the app owner before production release.
+// Unknown/legacy contracts cannot authorize optional SDKs.
+export const DISCLOSURE_VERSION = 'trial-2026-10-08-v2';
 export const GA_MEASUREMENT_ID = 'G-NJRML2BKQP';
+// Existing secondary website-click action 7609535917, verified in Google Ads.
+export const GOOGLE_ADS_TAG_ID = 'AW-17626822366';
+export const GOOGLE_ADS_CTA_DESTINATION = 'AW-17626822366/I0M7CK2bwawcEN7tj9VB';
 export const FB_PIXEL_ID = '1783628368949768';
 export const PRODUCTION_ORIGINS = new Set(['https://notably.no', 'https://www.notably.no']);
 export const ACQUISITION_PATHS = new Set(['/', '/advokat', '/regnskapsforer', '/bygg-og-anlegg']);

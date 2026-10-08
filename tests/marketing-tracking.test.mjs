@@ -37,10 +37,10 @@ test('consented capture precedes one SDK initialization and preserves genuine ca
   assert.equal(e.f.calls.find(c=>c.url.endsWith('/attribution')).body.sourceUrl,'https://www.notably.no/');
   const link=new URL(e.document.querySelector('#cta').href);
   assert.equal(link.searchParams.get('gclid'),'OFFLINE_CLICK');assert.equal(link.searchParams.get('ref'),'sales_1');
-  assert.equal(e.document.querySelectorAll('#notably-ga-script').length,1);assert.equal(e.document.querySelectorAll('#notably-fb-script').length,1);
+  assert.equal(e.document.querySelectorAll('#notably-google-script').length,1);assert.equal(e.document.querySelectorAll('#notably-fb-script').length,1);
   assert.equal(e.document.querySelectorAll('script[src*="gtm.js"]').length,0); // One Meta pixel owner.
   initMarketingTracking();e.window.dispatchEvent(new Event('focus'));await settle();
-  assert.equal(e.document.querySelectorAll('#notably-ga-script').length,1);
+  assert.equal(e.document.querySelectorAll('#notably-google-script').length,1);
   assert.equal(e.f.calls.filter(c=>c.url.endsWith('/attribution')).length,1); // Do not refresh ad click timestamps on focus.
   const config=e.window.dataLayer.find(x=>x[0]==='config');assert.match(config[2].page_location,/gclid=OFFLINE_CLICK/);
   assert.equal(config[2].allow_ad_personalization_signals,false);
@@ -60,9 +60,10 @@ test('late-rendered CTAs receive attribution; denial removes it and suppresses o
 test('CTA emits one distinct event per provider with shared ID, never a trial-start conversion',async()=>{
   const e=browser('https://www.notably.no/advokat','granted');await consentClient.refresh();
   trackStartTrialClick({button_id:'hero',page_path:'/advokat'});
-  const google=e.window.dataLayer.filter(x=>x[0]==='event');const meta=e.window.fbq.queue.filter(x=>x[0]==='trackSingleCustom');
+  const google=e.window.dataLayer.filter(x=>x[0]==='event'&&x[1]==='start_trial_click');const meta=e.window.fbq.queue.filter(x=>x[0]==='trackSingleCustom');
   assert.equal(google.length,1);assert.equal(google[0][1],'start_trial_click');assert.equal(meta.length,1);assert.equal(meta[0][2],'StartTrialClick');
-  assert.equal(google[0][2].event_id,meta[0][4].eventID);assert.deepEqual(meta[0][3],{button_id:'hero',page_path:'/advokat'});
+  assert.equal(google[0][2].event_id,meta[0][4].eventID);
+  const ads=e.window.dataLayer.filter(x=>x[0]==='event'&&x[1]==='conversion');assert.equal(ads.length,1);assert.equal(ads[0][2].send_to,'AW-17626822366/I0M7CK2bwawcEN7tj9VB');assert.equal(ads[0][2].transaction_id,google[0][2].event_id);assert.deepEqual(meta[0][3],{button_id:'hero',page_path:'/advokat'});
   assert.equal(e.window.fbq.queue.some(x=>x.includes('StartTrial')),false);
 });
 
@@ -77,6 +78,14 @@ test('unknown query content cannot be inspected by provider SDKs',async()=>{
   const e=browser('https://www.notably.no/?email=private%40example.test','granted');cleanup=startMarketingScriptsLoader();await settle();
   assert.equal(e.document.querySelectorAll('script[src]').length,0);trackStartTrialClick({button_id:'hero',page_path:'/'});
   assert.equal(e.window.dataLayer?.some(x=>x[0]==='event')??false,false);
+});
+
+test('leaving a public route revokes both provider purposes even when server consent remains granted',async()=>{
+  const e=browser('https://www.notably.no/','granted');cleanup=startMarketingScriptsLoader();await settle();
+  e.window.history.pushState({},'', '/admin');e.window.dispatchEvent(new Event('focus'));await settle();
+  const consent=e.window.dataLayer.filter(x=>x[0]==='consent').at(-1)[2];
+  assert.equal(consent.analytics_storage,'denied');assert.equal(consent.ad_storage,'denied');assert.equal(consent.ad_user_data,'denied');
+  assert.deepEqual(e.window.fbq.queue.at(-1),['consent','revoke']);assert.equal(e.window['ga-disable-G-NJRML2BKQP'],true);
 });
 
 test('Google auxiliary URL fields and valid campaign fields are accepted without admitting arbitrary query data',()=>{
@@ -117,4 +126,44 @@ test('delegation counts left, keyboard and middle activations once, ignores prev
   assert.equal(e.window.dataLayer.filter(x=>x[0]==='event'&&x[1]==='start_trial_click').length,2);
   assert.equal(e.window.fbq.queue.filter(x=>x[0]==='trackSingleCustom').length,2);
   await settle();
+});
+
+for (const permissions of [{analytics:true,advertising:false},{analytics:false,advertising:true},{analytics:true,advertising:true},{analytics:false,advertising:false}]) {
+  test(`SDK and CTA destinations follow each purpose: ${JSON.stringify(permissions)}`,async()=>{
+    const e=browser('https://www.notably.no/?gclid=OFFLINE_PURPOSE&ref=sales_1');e.f.setPermissions(permissions);
+    cleanup=startMarketingScriptsLoader();await settle();
+    assert.equal(e.window.dataLayer?.some(x=>x[0]==='config'&&x[1]==='G-NJRML2BKQP')??false,permissions.analytics);
+    assert.equal(e.window.dataLayer?.some(x=>x[0]==='config'&&x[1]==='AW-17626822366')??false,permissions.advertising);
+    assert.equal(e.document.querySelectorAll('#notably-google-script').length,permissions.analytics||permissions.advertising?1:0);
+    assert.equal(!!e.document.querySelector('#notably-fb-script'),permissions.advertising);
+    assert.equal(!!e.window.ttq,permissions.advertising);
+    assert.equal(e.f.calls.some(x=>x.url.endsWith('/attribution')),permissions.advertising);
+    assert.equal(new URL(e.document.querySelector('#cta').href).searchParams.has('gclid'),permissions.advertising);
+    assert.equal(new URL(e.document.querySelector('#cta').href).searchParams.get('ref'),'sales_1');
+    trackStartTrialClick({button_id:'hero',page_path:'/'});
+    assert.equal(e.window.dataLayer?.some(x=>x[0]==='event'&&x[1]==='start_trial_click')??false,permissions.analytics);
+    assert.equal(e.window.fbq?.queue.some(x=>x[0]==='trackSingleCustom')??false,permissions.advertising);
+    assert.equal(e.window.dataLayer?.some(x=>x[0]==='event'&&x[1]==='conversion')??false,permissions.advertising);
+    if(permissions.analytics&&!permissions.advertising){
+      assert.equal(e.window.location.search,'');
+      const config=e.window.dataLayer.find(x=>x[0]==='config');assert.equal(config[2].page_location,'https://www.notably.no/');
+      const consent=e.window.dataLayer.filter(x=>x[0]==='consent').at(-1)[2];assert.equal(consent.ad_user_data,'denied');assert.equal(consent.analytics_storage,'granted');
+    }
+  });
+}
+
+test('analytics-only consent still measures trusted CTA activations without ad events',async()=>{
+  const e=browser();e.f.setPermissions({analytics:true,advertising:false});let click;
+  const add=e.document.addEventListener.bind(e.document);e.document.addEventListener=(type,fn,...args)=>{if(type==='click')click=fn;return add(type,fn,...args);};
+  cleanup=startMarketingScriptsLoader();await settle();
+  click({isTrusted:true,defaultPrevented:false,target:e.document.querySelector('#cta span'),button:0,type:'click'});
+  assert.equal(e.window.dataLayer.filter(x=>x[0]==='event'&&x[1]==='start_trial_click').length,1);assert.equal(e.window.fbq,undefined);
+});
+
+test('partial revocation keeps cookies for the permission that remains granted',async()=>{
+  const e=browser('https://www.notably.no/','granted');cleanup=startMarketingScriptsLoader();await settle();
+  e.document.cookie='_ga=analytics-client; Path=/';e.document.cookie='_fbp=fb.1.1700000000000.123; Path=/';
+  await consentClient.choose({analytics:true,advertising:false});
+  assert.match(e.document.cookie,/_ga=analytics-client/);assert.doesNotMatch(e.document.cookie,/_fbp=/);
+  const before=e.window.fbq.queue.length;trackStartTrialClick({button_id:'hero',page_path:'/'});assert.equal(e.window.fbq.queue.length,before);
 });

@@ -7,9 +7,10 @@
  * de markedsføringskapslene vi selv har tilgang til når det trekkes tilbake.
  */
 
-import { hasMarketingConsent } from './consent.ts';
+import { hasMarketingConsent, hasAnalyticsConsent } from './consent.ts';
+import { NO_PURPOSES, type PurposeConsent } from './consent-client.ts';
 
-import { FB_PIXEL_ID, GA_MEASUREMENT_ID, isSafeProviderPage, publicPagePath, CAMPAIGN_KEYS } from './marketing-policy.ts';
+import { FB_PIXEL_ID, GA_MEASUREMENT_ID, GOOGLE_ADS_TAG_ID, GOOGLE_ADS_CTA_DESTINATION, isSafeProviderPage, publicPagePath, CAMPAIGN_KEYS } from './marketing-policy.ts';
 const TIKTOK_PIXEL_ID = 'D81GS73C77U5V9M1RKG0';
 
 declare global {
@@ -30,6 +31,10 @@ declare global {
 }
 
 let marketingInitialized = false;
+let analyticsInitialized = false;
+let googleInitialized = false;
+const unloadingWindows = new WeakSet<Window>();
+export const suspendTrackingForReload = () => unloadingWindows.add(window);
 
 const appendScript = (id: string, src: string) => {
   if (document.getElementById(id)) {
@@ -56,10 +61,10 @@ const ensureGtag = () => {
 const grantConsentMode = () => {
   ensureGtag();
   window.gtag?.('consent', 'update', {
-    ad_storage: 'granted',
-    ad_user_data: 'granted',
+    ad_storage: hasMarketingConsent() ? 'granted' : 'denied',
+    ad_user_data: hasMarketingConsent() ? 'granted' : 'denied',
     ad_personalization: 'denied',
-    analytics_storage: 'granted',
+    analytics_storage: hasAnalyticsConsent() ? 'granted' : 'denied',
   });
 };
 
@@ -70,7 +75,7 @@ const cleanPageLocation = () => {
   const actual = new URL(window.location.href);
   const clean = new URL(publicPagePath(actual) ?? '/', actual.origin);
   // Preserve genuine campaign attribution in GA's page URL, without arbitrary parameters.
-  for (const key of CAMPAIGN_KEYS) {
+  for (const key of hasMarketingConsent() ? CAMPAIGN_KEYS : []) {
     const value = actual.searchParams.get(key);
     if (value) clean.searchParams.set(key, value);
   }
@@ -81,23 +86,29 @@ const cleanReferrer = () => {
 };
 /** A click is intent only. StartTrial is exclusively the app's Stripe-confirmed event. */
 export function trackStartTrialClick(params: { button_id: string; page_path: string }) {
-  if (!hasMarketingConsent() || !isSafeProviderPage()) return;
+  if (unloadingWindows.has(window) || (!hasMarketingConsent() && !hasAnalyticsConsent()) || !isSafeProviderPage()) return;
   initMarketingTracking();
-  if (!marketingInitialized) return;
   const eventId = crypto.randomUUID();
-  window.gtag?.('event', 'start_trial_click', {
+  if (hasAnalyticsConsent() && analyticsInitialized) window.gtag?.('event', 'start_trial_click', {
     ...params, event_id: eventId, send_to: GA_MEASUREMENT_ID,
     page_location: cleanPageLocation(), page_referrer: cleanReferrer(), transport_type: 'beacon',
   });
-  window.fbq?.('trackSingleCustom', FB_PIXEL_ID, 'StartTrialClick', params, { eventID: eventId });
+  if (hasMarketingConsent() && marketingInitialized) window.fbq?.('trackSingleCustom', FB_PIXEL_ID, 'StartTrialClick', params, { eventID: eventId });
+  if (hasMarketingConsent() && marketingInitialized) window.gtag?.('event', 'conversion', {
+    send_to: GOOGLE_ADS_CTA_DESTINATION, transaction_id: eventId,
+    page_location: cleanPageLocation(), page_referrer: cleanReferrer(), transport_type: 'beacon',
+  });
 }
 
-const initGoogleAnalytics = () => {
+const loadGoogleTag = (tagId: string) => {
   ensureGtag();
-
-  appendScript('notably-ga-script', `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`);
-
+  if (googleInitialized) return;
+  googleInitialized = true;
+  appendScript('notably-google-script', `https://www.googletagmanager.com/gtag/js?id=${tagId}`);
   window.gtag?.('js', new Date());
+};
+const initGoogleAnalytics = () => {
+  loadGoogleTag(GA_MEASUREMENT_ID);
   window.gtag?.('config', GA_MEASUREMENT_ID, {
     send_page_view: true,
     allow_google_signals: false,
@@ -185,24 +196,35 @@ const initTikTokPixel = () => {
 };
 
 export const initMarketingTracking = () => {
-  if (
-    marketingInitialized ||
-    typeof window === 'undefined' ||
-    !isSafeProviderPage() ||
-    !hasMarketingConsent()
-  ) {
-    return;
+  if (typeof window === 'undefined' || unloadingWindows.has(window) || !isSafeProviderPage()) return;
+  const analytics = hasAnalyticsConsent();
+  const advertising = hasMarketingConsent();
+  if (!analytics && !advertising) return;
+  // Avoid automatic GA measurements reading ad IDs from the browser URL when
+  // only analytics was accepted. Sales referral was already copied to CTA links.
+  if (analytics && !advertising && window.location.search) {
+    window.history.replaceState(window.history.state, '', window.location.pathname + window.location.hash);
   }
-
-  marketingInitialized = true;
-  Object.assign(window, { [`ga-disable-${GA_MEASUREMENT_ID}`]: false });
   grantConsentMode();
-  initGoogleAnalytics();
-  initMetaPixel();
-  initTikTokPixel();
+  if (analytics && !analyticsInitialized) {
+    analyticsInitialized = true;
+    Object.assign(window, { [`ga-disable-${GA_MEASUREMENT_ID}`]: false });
+    initGoogleAnalytics();
+  }
+  if (advertising && !marketingInitialized) {
+    marketingInitialized = true;
+    loadGoogleTag(GOOGLE_ADS_TAG_ID);
+    window.gtag?.('config', GOOGLE_ADS_TAG_ID, {
+      send_page_view: false, allow_ad_personalization_signals: false,
+      page_location: cleanPageLocation(), page_referrer: cleanReferrer(),
+    });
+    initMetaPixel();
+    initTikTokPixel();
+  }
 };
 
-export const isMarketingTrackingActive = () => marketingInitialized;
+export const isMarketingTrackingActive = () => marketingInitialized || analyticsInitialized;
+export const activeTrackingPurposes = () => ({ analytics: analyticsInitialized, advertising: marketingInitialized });
 
 /**
  * Kapsler verktøyene setter på notably.no. Vi kan bare slette kapsler på vårt
@@ -226,7 +248,7 @@ const cookieDomains = (): string[] => {
   return Array.from(domains);
 };
 
-const clearMarketingCookies = () => {
+const clearMarketingCookies = (preserve: PurposeConsent) => {
   if (typeof document === 'undefined') return;
 
   const present = document.cookie
@@ -238,7 +260,10 @@ const clearMarketingCookies = () => {
     (name) =>
       MARKETING_COOKIE_NAMES.includes(name) ||
       MARKETING_COOKIE_PREFIXES.some((prefix) => name.startsWith(prefix)),
-  );
+  ).filter(name => {
+    const analyticsCookie = name === '_gid' || name === '_ga' || name.startsWith('_ga_');
+    return !(analyticsCookie ? preserve.analytics : preserve.advertising);
+  });
 
   for (const name of targets) {
     for (const domain of cookieDomains()) {
@@ -253,25 +278,29 @@ const clearMarketingCookies = () => {
  * er lastet, og sletter kjente markedsføringskapsler. Selve skriptene fjernes
  * først ved neste sidelasting, så kalleren laster siden på nytt etterpå.
  */
-export const revokeMarketingTracking = () => {
+export const revokeMarketingTracking = (preserve: PurposeConsent = NO_PURPOSES) => {
   if (typeof window === 'undefined') return;
 
   Object.assign(window, { [`ga-disable-${GA_MEASUREMENT_ID}`]: true });
   try {
     window.gtag?.('consent', 'update', {
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
+      ad_storage: preserve.advertising ? 'granted' : 'denied',
+      ad_user_data: preserve.advertising ? 'granted' : 'denied',
       ad_personalization: 'denied',
-      analytics_storage: 'denied',
+      analytics_storage: preserve.analytics ? 'granted' : 'denied',
     });
-    window.fbq?.('consent', 'revoke');
-    window.ttq?.revokeConsent?.();
+    if (!preserve.advertising) {
+      window.fbq?.('consent', 'revoke');
+      window.ttq?.revokeConsent?.();
+    }
   } catch {
     // Et verktøy som ikke er lastet skal ikke stoppe resten av tilbaketrekkingen.
   }
 
-  clearMarketingCookies();
+  clearMarketingCookies(preserve);
   marketingInitialized = false;
+  analyticsInitialized = false;
+  googleInitialized = false;
 };
 
 const readCookie = (name: string): string | undefined => {
