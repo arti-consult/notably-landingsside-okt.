@@ -6,9 +6,11 @@ Kjøring
 - Bygg: `npm run build`
 
 Kontroll av sporingslastingen
-- Kjør `npm run test:tracking` med Node 22.6 eller nyere.
+- Kjør `npm run test:tracking` med Node 24.
 - Testene bruker en simulert nettleser og sender ingen hendelser til leverandører.
-- Produksjonstagger lastes bare på HTTPS for notably.no og www.notably.no, med lagret samtykke. Nye lastinger på /admin er sperret.
+- Produksjonstagger lastes bare på HTTPS for notably.no og www.notably.no, etter bekreftet samtykke fra API-et. Nye lastinger på /admin er sperret.
+
+Detaljer om delt samtykke, klikkmåling og akseptanse finnes i [docs/conversion-tracking.md](docs/conversion-tracking.md).
 
 Miljøvariabler
 - Bruk `.env` lokalt (ikke committed). Se `.env.example` for mal.

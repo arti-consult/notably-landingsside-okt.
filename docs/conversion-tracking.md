@@ -42,6 +42,8 @@ Run `npm run test:tracking` with Node 24 and `npx vite build`. Tests use injecte
 
 At implementation: 28 tracking checks and the production build passed. Targeted lint of the new consent/attribution/loader/UI modules passed. Repository-wide TypeScript checking reports seven pre-existing errors in AuthContext, ArticleList, ArticleManagement and BlogListing; no tracking-file errors.
 
+Release status: the Vercel preview is deployed. Production publication is pending the repository’s existing requirement for one approving PR review; do not bypass this rule.
+
 After deployment, check server-confirmed consent in a real browser, signup links and SDK presence before/after consent and withdrawal. No synthetic production trial is needed for these checks.
 
 GA4 receiving a custom event does not automatically create a Google Ads conversion action. Expose `start_trial_click` as a secondary reporting action if required, without changing bidding goals. Meta `StartTrialClick` should likewise remain a reporting signal. Trial starts are the intended optimization outcome, subject to actual provider acceptance and attribution evidence. Do not sum CTA clicks and trials into one conversion count or claim that platform-attributed totals equal every Stripe trial.
