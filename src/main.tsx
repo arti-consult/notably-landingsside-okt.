@@ -1,6 +1,6 @@
 import { StrictMode, Suspense, lazy, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useParams, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
 import { AuthProvider } from './contexts/AuthContext.tsx';
@@ -25,22 +25,21 @@ const ConsentManager = lazy(() => import('./components/ConsentManager.tsx'));
 
 function BlogSlugRedirect() {
   const { slug = '' } = useParams<{ slug: string }>();
-  return <Navigate to={`/artikler/${slug}`} replace />;
+  const location = useLocation();
+  return <Navigate to={`/artikler/${slug}${location.search}${location.hash}`} replace />;
 }
 
-/**
- * Laster de valgfrie sporingsverktøyene – men bare hvis besøkende allerede har
- * sagt ja i Personvernvalg. Uten et lagret samtykke skjer ingenting her, og
- * ConsentManager tar seg av å starte dem i det øyeblikket samtykket gis.
- */
-function MarketingScriptsLoader() {
-  useEffect(() => {
-    if (!import.meta.env.PROD) {
-      return;
-    }
+function PublicRedirect({ to }: { to: string }) {
+  const location = useLocation();
+  return <Navigate to={`${to}${location.search}${location.hash}`} replace />;
+}
 
+/** Rechecks shared server consent when entering a public page. */
+function MarketingScriptsLoader() {
+  const location = useLocation();
+  useEffect(() => {
     return startMarketingScriptsLoader();
-  }, []);
+  }, [location.pathname]);
 
   return null;
 }
@@ -58,19 +57,19 @@ createRoot(document.getElementById('root')!).render(
               <Route path="/vilkar" element={<TermsOfUse />} />
               <Route path="/om-oss" element={<AboutPage />} />
               <Route path="/advokat" element={<AdvokatPage />} />
-              <Route path="/advokater" element={<Navigate to="/advokat" replace />} />
+              <Route path="/advokater" element={<PublicRedirect to="/advokat" />} />
               <Route path="/regnskapsforer" element={<RegnskapPage />} />
-              <Route path="/regnskapsforere" element={<Navigate to="/regnskapsforer" replace />} />
-              <Route path="/regnskapsbyra" element={<Navigate to="/regnskapsforer" replace />} />
+              <Route path="/regnskapsforere" element={<PublicRedirect to="/regnskapsforer" />} />
+              <Route path="/regnskapsbyra" element={<PublicRedirect to="/regnskapsforer" />} />
               <Route path="/bygg-og-anlegg" element={<ByggPage />} />
-              <Route path="/bygg" element={<Navigate to="/bygg-og-anlegg" replace />} />
-              <Route path="/entreprenor" element={<Navigate to="/bygg-og-anlegg" replace />} />
-              <Route path="/byggebransjen" element={<Navigate to="/bygg-og-anlegg" replace />} />
+              <Route path="/bygg" element={<PublicRedirect to="/bygg-og-anlegg" />} />
+              <Route path="/entreprenor" element={<PublicRedirect to="/bygg-og-anlegg" />} />
+              <Route path="/byggebransjen" element={<PublicRedirect to="/bygg-og-anlegg" />} />
               <Route path="/artikler" element={<BlogListing />} />
               <Route path="/artikler/:slug" element={<ArticlePage />} />
-              <Route path="/blog" element={<Navigate to="/artikler" replace />} />
+              <Route path="/blog" element={<PublicRedirect to="/artikler" />} />
               <Route path="/blog/:slug" element={<BlogSlugRedirect />} />
-              <Route path="/blogg" element={<Navigate to="/artikler" replace />} />
+              <Route path="/blogg" element={<PublicRedirect to="/artikler" />} />
               <Route path="/blogg/:slug" element={<BlogSlugRedirect />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route

@@ -9,9 +9,7 @@
 
 import { hasMarketingConsent } from './consent.ts';
 
-const GTM_CONTAINER_ID = 'GTM-NLPB8M3S';
-const GA_MEASUREMENT_ID = 'G-NJRML2BKQP';
-const FB_PIXEL_ID = '1783628368949768';
+import { FB_PIXEL_ID, GA_MEASUREMENT_ID, isSafeProviderPage, publicPagePath, CAMPAIGN_KEYS } from './marketing-policy.ts';
 const TIKTOK_PIXEL_ID = 'D81GS73C77U5V9M1RKG0';
 
 declare global {
@@ -54,27 +52,45 @@ const ensureGtag = () => {
     };
 };
 
-/**
- * Oppdaterer Consent Mode til «granted». Standardtilstanden settes til denied av
- * stubben i index.html, før noe lastes, så dette må kjøres før containeren og
- * gtag.js hentes – da arver alle tagger i Tag Manager riktig samtykke.
- */
+/** Only server-confirmed consent enables storage; ad personalization stays denied. */
 const grantConsentMode = () => {
   ensureGtag();
   window.gtag?.('consent', 'update', {
     ad_storage: 'granted',
     ad_user_data: 'granted',
-    ad_personalization: 'granted',
+    ad_personalization: 'denied',
     analytics_storage: 'granted',
   });
 };
 
-/** Tag Manager-containeren. Lastes kun etter samtykke – ikke fra index.html. */
-const initTagManager = () => {
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-  appendScript('notably-gtm-script', `https://www.googletagmanager.com/gtm.js?id=${GTM_CONTAINER_ID}`);
+/** Landing SDKs have one owner here. The app keeps GTM; on the landing its
+ * remaining Meta PageView would duplicate this page's direct pixel. Attribution
+ * is sent to the shared API and explicitly forwarded to signup, without _gl. */
+const cleanPageLocation = () => {
+  const actual = new URL(window.location.href);
+  const clean = new URL(publicPagePath(actual) ?? '/', actual.origin);
+  // Preserve genuine campaign attribution in GA's page URL, without arbitrary parameters.
+  for (const key of CAMPAIGN_KEYS) {
+    const value = actual.searchParams.get(key);
+    if (value) clean.searchParams.set(key, value);
+  }
+  return clean.href;
 };
+const cleanReferrer = () => {
+  try { return document.referrer ? new URL(document.referrer).origin : ''; } catch { return ''; }
+};
+/** A click is intent only. StartTrial is exclusively the app's Stripe-confirmed event. */
+export function trackStartTrialClick(params: { button_id: string; page_path: string }) {
+  if (!hasMarketingConsent() || !isSafeProviderPage()) return;
+  initMarketingTracking();
+  if (!marketingInitialized) return;
+  const eventId = crypto.randomUUID();
+  window.gtag?.('event', 'start_trial_click', {
+    ...params, event_id: eventId, send_to: GA_MEASUREMENT_ID,
+    page_location: cleanPageLocation(), page_referrer: cleanReferrer(), transport_type: 'beacon',
+  });
+  window.fbq?.('trackSingleCustom', FB_PIXEL_ID, 'StartTrialClick', params, { eventID: eventId });
+}
 
 const initGoogleAnalytics = () => {
   ensureGtag();
@@ -82,7 +98,13 @@ const initGoogleAnalytics = () => {
   appendScript('notably-ga-script', `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`);
 
   window.gtag?.('js', new Date());
-  window.gtag?.('config', GA_MEASUREMENT_ID);
+  window.gtag?.('config', GA_MEASUREMENT_ID, {
+    send_page_view: true,
+    allow_google_signals: false,
+    allow_ad_personalization_signals: false,
+    page_location: cleanPageLocation(),
+    page_referrer: cleanReferrer(),
+  });
 };
 
 const initMetaPixel = () => {
@@ -166,17 +188,15 @@ export const initMarketingTracking = () => {
   if (
     marketingInitialized ||
     typeof window === 'undefined' ||
-    window.location.protocol !== 'https:' ||
-    !['notably.no', 'www.notably.no'].includes(window.location.hostname) ||
-    /^\/admin(?:\/|$)/.test(window.location.pathname) ||
+    !isSafeProviderPage() ||
     !hasMarketingConsent()
   ) {
     return;
   }
 
   marketingInitialized = true;
+  Object.assign(window, { [`ga-disable-${GA_MEASUREMENT_ID}`]: false });
   grantConsentMode();
-  initTagManager();
   initGoogleAnalytics();
   initMetaPixel();
   initTikTokPixel();
@@ -236,6 +256,7 @@ const clearMarketingCookies = () => {
 export const revokeMarketingTracking = () => {
   if (typeof window === 'undefined') return;
 
+  Object.assign(window, { [`ga-disable-${GA_MEASUREMENT_ID}`]: true });
   try {
     window.gtag?.('consent', 'update', {
       ad_storage: 'denied',
@@ -276,10 +297,10 @@ export const buildTikTokContext = (): TikTokTrackingContext => ({
   event_id: typeof crypto !== 'undefined' && 'randomUUID' in crypto
     ? crypto.randomUUID()
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-  ttp: readCookie('_ttp'),
-  ttclid: readQueryParam('ttclid') || readCookie('ttclid'),
-  url: typeof window !== 'undefined' ? window.location.href : undefined,
-  user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+  ttp: hasMarketingConsent() ? readCookie('_ttp') : undefined,
+  ttclid: hasMarketingConsent() ? readQueryParam('ttclid') || readCookie('ttclid') : undefined,
+  url: typeof window !== 'undefined' && hasMarketingConsent() ? cleanPageLocation() : undefined,
+  user_agent: hasMarketingConsent() && typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
 });
 
 export const trackTikTokEvent = (
@@ -287,6 +308,6 @@ export const trackTikTokEvent = (
   params: Record<string, unknown>,
   ctx: TikTokTrackingContext,
 ) => {
-  if (typeof window === 'undefined' || !window.ttq) return;
+  if (typeof window === 'undefined' || !hasMarketingConsent() || !isSafeProviderPage() || !window.ttq) return;
   window.ttq.track(eventName, params, { event_id: ctx.event_id });
 };

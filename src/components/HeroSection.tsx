@@ -229,6 +229,7 @@ export default function HeroSection() {
               className="mt-11 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
             >
               <a
+                data-trial-cta="hero"
                 href="https://app.notably.no/no/sign-up"
                 target="_blank"
                 rel="noopener noreferrer"

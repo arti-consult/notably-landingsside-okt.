@@ -6,9 +6,9 @@
       Google Consent Mode v2 – standardtilstand.
 
       Alt lagringssamtykke står som «denied» før noe som helst lastes, slik
-      personvernerklæringen lover. Selve Tag Manager-containeren lastes ikke
-      herfra: den startes av src/lib/analytics.ts først når besøkende har sagt
-      ja i Personvernvalg, og samtykket oppdateres til «granted» i samme kø.
+      personvernerklæringen lover. Google Analytics, Meta og TikTok lastes av
+      src/lib/analytics.ts først etter serverbekreftet samtykke.
+      Annonsepersonalisering forblir avslått.
     -->
     <script>
       window.dataLayer = window.dataLayer || [];

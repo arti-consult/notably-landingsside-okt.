@@ -47,7 +47,7 @@ export default function PrivacyPolicy() {
           <h1 className="text-4xl md:text-5xl font-bold mb-8">Personvernerklæring</h1>
 
           <div className="prose prose-invert max-w-none">
-            <p className="text-gray-400 mb-8">Sist oppdatert: 03.10.2026</p>
+            <p className="text-gray-400 mb-8">Sist oppdatert: 08.10.2026</p>
 
             <section className="mb-12">
               <p className="text-gray-300">
@@ -323,13 +323,21 @@ export default function PrivacyPolicy() {
                 personvernvalget ditt. Mobilappen lagrer økter i beskyttet native lagring. Valgfrie analyse- og
                 markedsføringsverktøy forblir avslått til du tillater dem gjennom Personvernvalg. Hvis du tillater dem,
                 kan det offentlige nettstedet laste Google Analytics med konverteringsmåling, Meta Pixel og TikTok
-                Pixel, og Google Tag Manager kan laste Meta Pixel, Google-konverteringsmåling og attribusjon for
-                registrering eller prøveperiode bare på et begrenset sett offentlige sider uten spørringsparametere
-                eller fragmenter.
+                Pixel. På landingssiden måler vi blant annet klikk på «Start gratis». Når Stripe bekrefter en ny
+                selvbetjent prøveperiode, kan Notablys server sende én prøvestarthendelse til Google og Meta.
+                Denne målingen inneholder ikke navn, e-postadresse, møteinnhold eller betalingsbeløp.
+                Annonseidentifikatorer og kampanjeopplysninger behandles bare etter samtykke.
                 Verktøyene kan motta nettidentifikatorer og begrensede opplysninger om side, henviser, nettleser, enhet
                 og samhandling. Du kan trekke tilbake valget når som helst. Notably sender da signaler om
                 tilbaketrekking, sletter kjente markedsføringskapsler vi har tilgang til og slutter å laste verktøyene,
                 men leverandørene kan beholde opplysninger de mottok før tilbaketrekkingen etter sine egne vilkår.
+              </p>
+              <p className="text-gray-300 mt-4">
+                Personvernvalget deles mellom nettsiden og webappen gjennom en nødvendig, sikker informasjonskapsel
+                på Notablys API. Valget gjelder i opptil 180 dager. Annonseopplysninger lagres i opptil 90 dager,
+                begrenset av samtykkets varighet. Ved tilbaketrekking stoppes sendinger som ikke allerede er sendt,
+                og rå annonseopplysninger fjernes fra samtykkeregistreringen. Hvis forbindelsen er brutt, husker vi
+                avslaget lokalt og forsøker å synkronisere det når forbindelsen kommer tilbake.
               </p>
             </section>
 

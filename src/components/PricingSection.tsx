@@ -151,6 +151,7 @@ const PricingSection = () => {
                     </button>
                   ) : (
                     <a
+                      data-trial-cta="pricing"
                       href="https://app.notably.no/no/sign-up"
                       target="_blank"
                       rel="noopener noreferrer"

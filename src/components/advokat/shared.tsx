@@ -35,15 +35,18 @@ export const SectionHeading = ({
 );
 
 export const PrimaryCta = ({
+  placement,
   children = 'Start gratis',
   light = false,
   className = '',
 }: {
+  placement?: string;
   children?: ReactNode;
   light?: boolean;
   className?: string;
 }) => (
   <a
+    data-trial-cta={placement}
     href={SIGNUP_URL}
     target="_blank"
     rel="noopener noreferrer"

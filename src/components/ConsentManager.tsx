@@ -1,47 +1,30 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
-import { onOpenPrivacyChoices, readConsent, saveConsent, type ConsentValue } from '../lib/consent';
-import { isMarketingTrackingActive, revokeMarketingTracking } from '../lib/analytics';
+import { consentClient, onConsentChange, onOpenPrivacyChoices, readConsent, saveConsent, type ConsentValue } from '../lib/consent';
 
-/**
- * Banner + Personvernvalg-panel.
- *
- * Banneret vises til brukeren har tatt et valg. Panelet kan åpnes igjen når som
- * helst fra footeren eller personvernerklæringen, slik erklæringen lover.
- *
- * Selve lastingen av sporingsskriptene eies av MarketingScriptsLoader i
- * `main.tsx`, som lytter på samtykkeendringene herfra – slik finnes det bare ett
- * sted som starter verktøyene. Her håndteres tilbaketrekkingen: revoke-signaler,
- * sletting av kapsler og en ny sidelasting som fjerner skriptene fra DOM-en.
- */
+/** Shared server consent; SDK lifecycle and immediate revocation live in marketing-loader. */
 export default function ConsentManager() {
-  const [decided, setDecided] = useState(true);
+  const [view, setView] = useState(readConsent);
   const [panelOpen, setPanelOpen] = useState(false);
   const [marketingChecked, setMarketingChecked] = useState(false);
-  const [savedAt, setSavedAt] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const savedAt = view.response?.consent.decidedAt;
+  const decided = view.phase === 'ready' && !view.pendingDenial &&
+    (view.granted || ['rejected', 'withdrawn'].includes(view.response?.consent.state ?? ''));
+  const message = saving ? 'Lagrer personvernvalget …' : view.pendingDenial
+    ? 'Valgfrie verktøy er av her. Vi prøver å synkronisere avslaget med webappen. Du kan prøve igjen nedenfor.'
+    : view.phase === 'disabled' ? 'Valgfrie verktøy er av i denne forhåndsvisningen.'
+    : view.phase === 'error' ? 'Vi kunne ikke hente eller lagre personvernvalget. Valgfrie verktøy er av. Prøv igjen.' : null;
 
-  const syncFromStorage = useCallback(() => {
-    const stored = readConsent();
-    setDecided(stored !== null);
-    setMarketingChecked(stored?.marketing === 'granted');
-    setSavedAt(stored?.updatedAt ?? null);
-  }, []);
-
-  useEffect(() => {
-    syncFromStorage();
-  }, [syncFromStorage]);
-
-  useEffect(
-    () =>
-      onOpenPrivacyChoices(() => {
-        syncFromStorage();
-        setPanelOpen(true);
-      }),
-    [syncFromStorage],
-  );
+  useEffect(() => onConsentChange(() => setView(readConsent())), []);
+  useEffect(() => onOpenPrivacyChoices(() => {
+    setView(readConsent());
+    setMarketingChecked(readConsent().granted);
+    setPanelOpen(true);
+  }), []);
 
   useEffect(() => {
     if (!panelOpen) return;
@@ -76,28 +59,27 @@ export default function ConsentManager() {
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [panelOpen]);
 
-  const apply = useCallback((value: ConsentValue) => {
-    const wasActive = isMarketingTrackingActive();
-    saveConsent(value);
-    setDecided(true);
-    setMarketingChecked(value === 'granted');
-    setPanelOpen(false);
-
-    if (value === 'granted') {
-      // MarketingScriptsLoader starter verktøyene på samtykkehendelsen.
-      return;
-    }
-
-    revokeMarketingTracking();
-    if (wasActive) {
-      // Skriptene ligger fortsatt i DOM-en; en ny lasting fjerner dem helt.
-      window.location.reload();
-    }
+  const apply = useCallback(async (value: ConsentValue) => {
+    setSaving(true);
+    try {
+      await saveConsent(value);
+      setMarketingChecked(readConsent().granted);
+      if (!readConsent().pendingDenial) setPanelOpen(false);
+    } catch {
+      // The shared client retains denials and leaves optional tracking off.
+    } finally { setSaving(false); setView(readConsent()); }
   }, []);
+  const retry = async () => {
+    setSaving(true);
+    try { await consentClient.refresh(); } catch { /* Status below explains the failure. */ }
+    finally { setSaving(false); setView(readConsent()); }
+  };
+  const status = message && <div role="status" aria-live="polite" className="mt-3 text-sm text-amber-200">
+    {message}
+    {!saving && <button type="button" onClick={() => void retry()} className="ml-2 underline">Prøv igjen</button>}
+  </div>;
 
-  if (decided && !panelOpen) {
-    return null;
-  }
+  if ((decided || view.phase === 'loading') && !panelOpen && !view.pendingDenial) return null;
 
   return (
     <>
@@ -109,14 +91,17 @@ export default function ConsentManager() {
         >
           <div className="mx-auto max-w-3xl rounded-2xl border border-gray-800 bg-black/95 p-5 text-white shadow-2xl backdrop-blur sm:p-6">
             <p className="text-sm leading-relaxed text-gray-300">
-              Vi bruker nødvendige informasjonskapsler for at nettstedet skal fungere. Valgfrie analyse- og
-              markedsføringsverktøy er avslått til du tillater dem. Les mer i{' '}
+              Vi bruker nødvendige informasjonskapsler for at nettstedet skal fungere. Med ditt samtykke bruker vi
+              Google, Meta og TikTok til analyse og måling. Google og Meta kan få beskjed når du klikker «Start gratis»
+              og starter en prøveperiode, slik at vi kan måle annonsene våre. Valget gjelder nettsiden og webappen.
+              Valgfrie verktøy er av til du godtar. Les mer i{' '}
               <Link to="/personvern" className="text-blue-400 underline underline-offset-2 hover:text-blue-300">
                 personvernerklæringen
               </Link>
               .
             </p>
 
+            {status}
             <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-end">
               <button
                 type="button"
@@ -127,14 +112,15 @@ export default function ConsentManager() {
               </button>
               <button
                 type="button"
-                onClick={() => apply('denied')}
+                onClick={() => void apply('denied')}
                 className="rounded-full border border-gray-700 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-gray-500"
               >
                 Bare nødvendige
               </button>
               <button
                 type="button"
-                onClick={() => apply('granted')}
+                disabled={saving}
+                onClick={() => void apply('granted')}
                 className="rounded-full bg-[#2663eb] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
               >
                 Godta alle
@@ -169,7 +155,7 @@ export default function ConsentManager() {
             </div>
 
             <p className="mt-3 text-sm leading-relaxed text-gray-400">
-              Her styrer du valgfrie analyse- og markedsføringsverktøy på notably.no. Du kan endre valget når som helst.
+              Her styrer du valgfrie analyse- og markedsføringsverktøy på nettsiden og i webappen. Du kan endre valget når som helst.
             </p>
 
             <div className="mt-6 space-y-4">
@@ -191,7 +177,9 @@ export default function ConsentManager() {
                     <h3 className="font-medium">Analyse og markedsføring</h3>
                     <p className="mt-1 text-sm text-gray-400">
                       Google Analytics og konverteringsmåling, Meta Pixel og TikTok Pixel. Verktøyene kan motta
-                      nettidentifikatorer og begrensede opplysninger om side, henviser, nettleser, enhet og samhandling.
+                      nettidentifikatorer og begrensede opplysninger om offentlige sider, henviser, nettleser, enhet og samhandling.
+                      Google og Meta kan knytte klikk på «Start gratis» og bekreftet prøvestart til annonsene våre.
+                      Møteinnhold, navn, e-post og betalingsbeløp inngår ikke i denne prøvestartmålingen.
                     </p>
                   </div>
                   <input
@@ -204,6 +192,7 @@ export default function ConsentManager() {
               </label>
             </div>
 
+            {status}
             {savedAt && (
               <p className="mt-4 text-xs text-gray-500">
                 Valget ditt ble sist lagret {new Date(savedAt).toLocaleDateString('nb-NO')}.
@@ -219,14 +208,15 @@ export default function ConsentManager() {
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
               <button
                 type="button"
-                onClick={() => apply('denied')}
+                onClick={() => void apply('denied')}
                 className="rounded-full border border-gray-700 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-gray-500"
               >
                 Bare nødvendige
               </button>
               <button
                 type="button"
-                onClick={() => apply(marketingChecked ? 'granted' : 'denied')}
+                disabled={saving}
+                onClick={() => void apply(marketingChecked ? 'granted' : 'denied')}
                 className="rounded-full bg-[#2663eb] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
               >
                 Lagre valg
