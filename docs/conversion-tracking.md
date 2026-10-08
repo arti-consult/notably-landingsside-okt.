@@ -42,6 +42,14 @@ Run `npm run test:tracking` with Node 24 and `npx vite build`. Tests use injecte
 
 At implementation: 28 tracking checks and the production build passed. Targeted lint of the new consent/attribution/loader/UI modules passed. Repository-wide TypeScript checking reports seven pre-existing errors in AuthContext, ArticleList, ArticleManagement and BlogListing; no tracking-file errors.
 
+## Consent presentation and remaining purpose separation
+
+The banner now uses a compact light card, plain-language explanation and equal-sized, equal-colour `Avvis alle` / `Godta alle` actions at the first layer. Details are progressively disclosed; the settings dialog keeps actions visible on small screens, preserves keyboard focus and never preselects a new grant. This improves readability; an increase in opt-in rate is not measured or promised.
+
+Review basis: Datatilsynet’s guidance on [clear first-layer information](https://www.datatilsynet.no/personvern-pa-ulike-omrader/internett-og-apper/bruk-av-informasjonskapsler-og-andre-sporingsteknologier/1-gi-klar-og-forstaelig-informasjon-i-samtykkeboksen/), [equally prominent choices](https://www.datatilsynet.no/personvern-pa-ulike-omrader/internett-og-apper/bruk-av-informasjonskapsler-og-andre-sporingsteknologier/7.-ikke-skjul-alternativet-for-a-avvise-samtykke-eller-gi-det-lavere-oppmerksomhetsverdi), and [separate purposes](https://www.datatilsynet.no/personvern-pa-ulike-omrader/internett-og-apper/bruk-av-informasjonskapsler-og-andre-sporingsteknologier/4.-la-brukeren-velge-hvilke-formal-de-vil-samtykke-til-eller-ikke).
+
+**Unresolved before production release:** the deployed API currently records one combined `optionalAnalyticsAndMarketing` permission. The implemented use includes website analytics and advertising measurement. The UI review exposed the need for purpose-level choice; this PR must not be represented as fully satisfying that requirement. Coordinate separate analytics/advertising choices with the app owner, then wire the landing to the verified revised contract. Do not add cosmetic independent toggles backed by the same grant. The app owner should support current state and revisions, grant/withdrawal per purpose, updated disclosure/mapping version, and ensure trial senders require the advertising permission. Existing bundled grants must not silently become new granular grants. The landing owner then maps GA analytics and ad SDKs/capture/CTA signals to their respective permissions and verifies analytics-only, ads-only, both, and neither. This UI-only follow-up does not change the live app or its sender switches.
+
 Release status: the Vercel preview is deployed. Production publication is pending the repository’s existing requirement for one approving PR review; do not bypass this rule.
 
 After deployment, check server-confirmed consent in a real browser, signup links and SDK presence before/after consent and withdrawal. No synthetic production trial is needed for these checks.
