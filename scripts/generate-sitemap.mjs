@@ -141,6 +141,7 @@ async function generate() {
     '/',
     '/advokat',
     '/regnskapsforer',
+    '/bygg-og-anlegg',
     '/om-oss',
     '/artikler',
     '/personvern',
