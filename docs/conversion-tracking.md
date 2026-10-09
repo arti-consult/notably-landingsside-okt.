@@ -1,6 +1,6 @@
 # Landing conversion tracking
 
-Prepared 2026-10-08. App integration and release are owned separately by Slawomir. The purpose-separated landing now targets the **proposed v2 contract** in [the app handoff](consent-v2-handoff.md). Production publication requires confirming that contract with the app owner and an approving PR review.
+Updated 2026-10-09. App integration and release are owned separately by Slawomir. The purpose-separated landing matches the deployed v2 contract in [the app handoff](consent-v2-handoff.md); the actual landing client passed the production API checks described below. Landing publication still requires an approving PR review, followed by browser acceptance on the published site.
 
 ## What this repository sends
 
@@ -20,7 +20,7 @@ A delegated handler covers desktop/mobile navigation, heroes, pricing, industry 
 The API is `https://api.notably.no`. Every request uses `credentials: include`. The API owns its Secure/HttpOnly/host-only `__Host-notably_consent` cookie. The website never reads this capability or moves it into a URL.
 
 - GET `/v1/consent` supplies current revision, CSRF token and permissions.
-- POST `/v1/consent` uses `X-Notably-Consent-CSRF`, fresh UUID, actual revision and proposed policy `trial-2026-10-08-v2` plus explicit `permissions.analytics`/`permissions.advertising` for grants. Purpose-only withdrawal uses `purposes`; see the handoff for exact payloads.
+- POST `/v1/consent` uses `X-Notably-Consent-CSRF`, fresh UUID, actual revision and policy `trial-2026-10-08-v2` plus explicit `permissions.analytics`/`permissions.advertising` for grants. Purpose-only withdrawal uses `purposes`; see the handoff for exact payloads.
 - Identical network retries reuse the UUID/payload. A conflicting grant is not replayed over a newer decision. Denials may be safely rebased.
 - Only current server-confirmed v2 purpose grants with the known policy, valid expiry and matching provider permissions enable the corresponding optional SDKs. Legacy v1 grants cannot authorize either purpose; reject-all remains supported. Google ad personalization remains denied.
 - Legacy local grants are discarded. Legacy denials are synchronized. Unsent rejection/withdrawal is persisted locally, with an essential cookie fallback, and immediately suppresses capture and tags. Loaded SDKs are revoked; Google is also explicitly disabled; the page reloads to unload SDKs once denial is durable. The API is rechecked on route entry, focus, online, visibility and each visible minute. This is periodic reconciliation, not instant cross-domain push notification.
@@ -41,7 +41,11 @@ GA4 owns the initial pageview and its configured enhanced history measurement. D
 
 Run `npm run test:tracking` with Node 24 and `npx vite build`. Tests use injected HTTP fixtures and jsdom without resource loading: synthetic identifiers never reach production. Browser visual checks cover the privacy dialog and mobile layout; local/preview hosts cannot contact the production consent API or load production SDKs. `npm run build` additionally runs existing sitemap/indexing hooks, so use the direct Vite command for a local verification build.
 
-At implementation: 43 tracking checks and the production build passed. Targeted lint of the purpose client/loader/policy/CTA/UI modules passed. The unchanged TikTok vendor snippet in analytics.ts still has five existing lint findings (any/arguments). Repository-wide TypeScript checking reports seven pre-existing errors in AuthContext, ArticleList, ArticleManagement and BlogListing; no tracking-file errors.
+On 2026-10-09: 48 tracking tests and the Vite production build passed. The five added regressions cover an immediately saved grant 60 ms ahead of the browser, the inclusive 1,000 ms decision-time limit, rejection beyond that limit, and strict expiry/withdrawal. Targeted lint of the changed consent client/UI passed; earlier client/loader/policy/CTA lint also passed. The unchanged TikTok vendor snippet in analytics.ts has five previously recorded lint findings (any/arguments). Repository-wide TypeScript checking previously reported seven errors in untouched AuthContext, ArticleList, ArticleManagement and BlogListing; no tracking-file errors.
+
+The actual landing consent client also passed 30 checks over 43 HTTP requests against the production v2 API, using a fresh process-local anonymous cookie jar. These covered credentialed origin/preflight responses, all four choices and provider mappings, shared app-origin reads, both partial withdrawals and retained expiry, identical retries, stale-grant rejection, and empty attribution eligibility on the four approved acquisition paths. Cleanup withdrew both purposes. No ad identifiers, browser SDKs, checkout, trial or provider conversions were used. This verifies HTTP/client interoperability, not actual browser cross-origin cookie behavior or provider receipt.
+
+Chrome desktop/mobile checks used the real consent component/client with an isolated API fixture that returns grant timestamps 60 ms ahead. Immediate saving/reopening, all four choices and an offline advertising withdrawal followed by successful retry passed. The pending message correctly refers to declined purposes; the retained analytics choice survives synchronization. Live browser/SDK acceptance remains a separate post-publication check.
 
 ## Consent presentation and release coordination
 
@@ -49,7 +53,7 @@ The banner has equal-sized, equal-colour `Avvis alle` / `Aksepter alle` buttons 
 
 Datatilsynet's guidance covers [separate purposes](https://www.datatilsynet.no/personvern-pa-ulike-omrader/internett-og-apper/bruk-av-informasjonskapsler-og-andre-sporingsteknologier/4.-la-brukeren-velge-hvilke-formal-de-vil-samtykke-til-eller-ikke) and [active consent](https://www.datatilsynet.no/personvern-pa-ulike-omrader/internett-og-apper/bruk-av-informasjonskapsler-og-andre-sporingsteknologier/5.-ikke-bruk-forhandsavkryssede-bokser-eller-aksept-ved-passivitet).
 
-**Before production release:** Slawomir must confirm/deploy the v2 semantics in [the focused handoff](consent-v2-handoff.md), including purpose-specific eligibility/withdrawal in the app. These are proposed names/versions, not a verified deployed contract. Align the adapter if his final contract differs, then test the actual API and browser flow. This code deliberately keeps optional SDKs off against the old combined grant. The app's existing live sender switches are not changed by this PR.
+**Before production release:** obtain the required approving review of the updated landing head. The app owner's [production release evidence](https://github.com/arti-consult/notably-app-v2/pull/554#issuecomment-6066458938) confirms the v2 rollout, and the landing owner independently verified the current API as described above. No further app implementation is requested by this correction. This code deliberately keeps optional SDKs off against old combined grants. The app's existing live sender switches are not changed by this PR.
 
 The repository requires one approving review. Do not merge this prepared integration until API acceptance and review are complete; no administrative bypass is part of this release.
 

@@ -28,6 +28,9 @@ export const PENDING_DENIAL_COOKIE = 'notably_consent_pending_denial';
 const LEGACY_KEY = 'notably.consent.v1';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const PERMISSIONS = ['adStorage', 'adUserData', 'adPersonalization', 'analyticsStorage'] as const;
+// Match the app client: tolerate a small server/browser clock difference only
+// for the decision timestamp. Expiry and withdrawn/rejected states stay strict.
+const DECISION_CLOCK_SKEW_MS = 1000;
 
 function parseResponse(value: unknown): ConsentResponse {
   const r = value as ConsentResponse | undefined;
@@ -52,7 +55,7 @@ export function supportsPurposeConsent(response: ConsentResponse | null): boolea
 export function effectivePermissions(response: ConsentResponse | null, now = Date.now()): PurposeConsent {
   const c = response?.consent;
   const valid = supportsPurposeConsent(response) && c?.state === 'granted' &&
-    c.decidedAt && Date.parse(c.decidedAt) <= now && c.expiresAt && Date.parse(c.expiresAt) > now &&
+    c.decidedAt && Date.parse(c.decidedAt) <= now + DECISION_CLOCK_SKEW_MS && c.expiresAt && Date.parse(c.expiresAt) > now &&
     c.providerPermissions.adPersonalization === 'denied' &&
     (c.providerPermissions.analyticsStorage === 'granted') === c.permissions.analytics &&
     (c.providerPermissions.adStorage === 'granted') === c.permissions.advertising &&

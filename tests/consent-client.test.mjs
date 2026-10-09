@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { createConsentClient, effectiveGrant, PENDING_DENIAL_KEY } from '../src/lib/consent-client.ts';
+import { createConsentClient, effectiveGrant, effectivePermissions, PENDING_DENIAL_KEY } from '../src/lib/consent-client.ts';
 import { fixture, deferred } from './helpers/consent-fixture.mjs';
 
 test('old local grant cannot authorize new tracking; explicit grant uses credentialed server CSRF/revision', async () => {
@@ -98,6 +98,47 @@ test('expired, malformed, unknown-policy and personalization-enabled grants all 
     const f=fixture('granted'),r=f.response();change(r);assert.equal(effectiveGrant(r),false);
   }
   const f=fixture();f.intercept(({json})=>json({status:'success'}));const c=createConsentClient(f.options);await assert.rejects(c.refresh(),/INVALID/);assert.equal(c.view().granted,false);
+});
+
+test('a freshly saved grant stays selected immediately with 60 ms server clock skew', async () => {
+  const now = Date.now(), f = fixture();
+  const fetch = async (url, options) => {
+    const result = await f.fetch(url, options), body = await result.json();
+    if (body.consent?.state === 'granted') body.consent.decidedAt = new Date(now + 60).toISOString();
+    return new Response(JSON.stringify(body), { status: result.status });
+  };
+  const c = createConsentClient({ ...f.options, fetch, now: () => now });
+  await c.choose(true);
+  assert.equal(c.view().phase, 'ready');
+  assert.deepEqual(c.view().permissions, { analytics: true, advertising: true });
+  await c.refresh();
+  assert.deepEqual(c.view().permissions, { analytics: true, advertising: true });
+});
+
+for (const [offset, granted] of [[1000, true], [1001, false]]) {
+  test(`decision-time clock tolerance is bounded: ${offset} ms ahead`, () => {
+    const now = Date.now(), response = fixture('granted').response();
+    response.consent.decidedAt = new Date(now + offset).toISOString();
+    assert.deepEqual(effectivePermissions(response, now), { analytics: granted, advertising: granted });
+  });
+}
+
+test('decision-time tolerance never extends consent expiry', () => {
+  const now = Date.now(), response = fixture('granted').response();
+  response.consent.decidedAt = new Date(now + 60).toISOString();
+  for (const offset of [0, -1]) {
+    response.consent.expiresAt = new Date(now + offset).toISOString();
+    assert.deepEqual(effectivePermissions(response, now), { analytics: false, advertising: false });
+  }
+});
+
+test('decision-time tolerance never overrides withdrawal or rejection', () => {
+  const now = Date.now(), response = fixture('granted').response();
+  response.consent.decidedAt = new Date(now + 60).toISOString();
+  for (const state of ['withdrawn', 'rejected', 'expired']) {
+    response.consent.state = state;
+    assert.deepEqual(effectivePermissions(response, now), { analytics: false, advertising: false });
+  }
 });
 
 for (const permissions of [{analytics:true,advertising:false},{analytics:false,advertising:true},{analytics:true,advertising:true},{analytics:false,advertising:false}]) {

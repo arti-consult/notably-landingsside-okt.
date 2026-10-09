@@ -1,6 +1,6 @@
 # Separate consent purposes — app handoff
 
-Status: landing implementation prepared in PR #6 on 8 October 2026. **This is a proposed interface, not evidence that the app has implemented or deployed it.** Confirm/adapt with Slawomir before merge. No production app changes are made by this PR.
+Status updated 9 October 2026: the app owner has [released v2 to production](https://github.com/arti-consult/notably-app-v2/pull/554#issuecomment-6066458938), with [the exact contract documented here](https://github.com/arti-consult/notably-app-v2/blob/c3253e5e9196ce2b04cb946a3540224a74989ed3/docs/operations/consent-purpose-v2-2026-10-08.md). The landing client independently passed production API checks against that contract. PR #6 now includes the requested bounded clock-skew and partial-withdrawal copy corrections. Required rereview, landing publication and actual production browser acceptance remain. No production app changes are made by this PR.
 
 ## Scope and ownership
 
@@ -10,11 +10,11 @@ Landing owner: consent presentation, browser SDK gating, attribution forwarding,
 
 First layer on both surfaces: `Aksepter alle`, `Avvis alle`, `Tilpass valg`. Accept-all is one action for both purposes; no preliminary checkbox. Customize exposes `Analyse` and `Annonsemåling`, off for a new choice. Reopening displays only confirmed current choices. No default advertising grant or advertising personalization.
 
-## Proposed wire contract
+## Deployed wire contract
 
 Reuse `GET/POST /v1/consent` and `POST /v1/consent/attribution`, `credentials: include`, host-only API cookie, exact-origin CORS, CSRF, revisions and idempotency. Keep both `https://notably.no` and `https://www.notably.no` allowed, plus the app origin. Existing acquisition paths and OAuth/Stripe continuity remain supported.
 
-Version markers used by the prepared landing:
+Version markers verified against the production API:
 
 - `consent.contractVersion`: `"2"`
 - `consent.disclosureVersion` and `consent.mappingVersion`: `"trial-2026-10-08-v2"`
@@ -67,7 +67,7 @@ Purpose-only withdrawal (must never grant or change the other purpose):
 
 Omitting `purposes` from reject/withdraw means revoke both, including for legacy clients. `purposes` is a nonempty validated subset of `analytics`, `advertising`. Support withdrawal without app login using the existing API consent cookie/CSRF protections. The landing durably stores **denials only**, synchronizes a restricted-purpose withdrawal before any new explicit partial grant, retries lost responses with identical IDs/payloads, and rebases only denials after 409. A 409 on a grant requires a fresh explicit choice; no silent overwrite.
 
-If you prefer different wire names or versions, send the exact deployed examples before landing release. The adapter/constants can be changed; do not implement a second consent system.
+The landing uses these deployed names and versions. Any later contract change must preserve compatibility or be coordinated before release; do not introduce a second consent system.
 
 ## Purpose mapping
 
@@ -80,7 +80,7 @@ If you prefer different wire names or versions, send the exact deployed examples
 
 `analyticsStorage` follows analytics; `adStorage` and `adUserData` follow advertising; `adPersonalization` remains denied. Trial senders must **not** require analytics permission. Analytics-only withdrawal must not cancel an otherwise eligible advertising delivery or erase its identifiers. Advertising withdrawal must cancel unsent delivery and clear raw ad attribution as today. Eligibility needs valid advertising consent at capture/checkout and again at send time; later re-consent must not resurrect previously cancelled trials or backfill earlier non-consented trials.
 
-Existing combined v1 grants are not silently interpreted as v2 purpose choices. Agree a safe rollout/migration: show a fresh explicit choice for the new policy, retain/replay old denials, and handle stale v1 grants without bypassing the new semantics. The prepared landing accepts v1 responses only to support rejection; it cannot enable tracking or submit a v2 grant against v1. Deploy API/app support first and verify it before landing merge; return to this step if the final contract differs.
+Existing combined v1 grants are not silently interpreted as v2 purpose choices. The app owner's release confirms that old combined grants require a fresh choice and denials remain. The landing discards old local grants, retains/replays old denials and accepts v1 responses only to support rejection; it cannot enable tracking or submit a v2 grant against v1. API/app support is now deployed. Return to contract acceptance if that interface changes.
 
 ## Signals and platform setup
 
@@ -88,15 +88,15 @@ Existing combined v1 grants are not silently interpreted as v2 purpose choices. 
 - CTA: GA4 `start_trial_click` under analytics permission; Meta `StartTrialClick` and native Google Ads click event under advertising permission. Shared fresh click event ID; never the Stripe trial ID.
 - Reused Google Ads website action `7609535917`, renamed `Start gratis - klikk på landingssiden`, Secondary, One per ad click, no value. Public destination `AW-17626822366/I0M7CK2bwawcEN7tj9VB`. No extra GA4 import of this same click into Ads. GA4 counts deliberate activations; Ads' One-per-click count is not the total number of button presses.
 - Trial action remains Secondary / Every pending genuine delivery/processing evidence and deliberate campaign-goal selection. Existing campaign budgets/goals are not changed by this follow-up.
-- GTM version 8 already pauses the legacy signup/dashboard trial tags; landing does not load GTM. App owner must apply the correct purpose gating to any remaining app GTM tags. `StartTrial` must remain worker-owned.
+- GTM version 8 already pauses the legacy signup/dashboard trial tags; landing does not load GTM. App-side purpose gating is included in the app owner's v2 release. `StartTrial` must remain worker-owned.
 - Synthetic QA only in isolated Meta dataset `1108306031635601` / `TEST30220` and test Stripe. Production workspace exclusions remain `[]`; add verified IDs before any internal production trial. No new keys needed and no keys in this document.
 
-## Acceptance and requested return
+## Acceptance status and remaining release steps
 
-1. Verify neither/analytics-only/advertising-only/both on API and app, plus each partial withdrawal, expiry, stale revisions, offline withdrawal and legacy migration. Repeat existing webhook/dedup tests where consent checks changed.
-2. Verify advertising attribution capture and checkout/worker eligibility for advertising-only and both; analytics-only cannot deliver. Preserve current identifiers, source URLs, timestamps and anonymous-to-authenticated/OAuth/Stripe continuity. Do not reject an advertising-valid checkout solely because analytics changed.
-3. Send exact final GET/POST examples, policy versions, tested/deployed commit and any migration/variable changes. No credential rotation or new secret handoff is expected.
-4. Landing owner aligns/tests the adapter, checks the four public landing pages and production browser/network behavior, then publishes after required PR approval. Verify GA4 and Ads destination routing as well as consent flags, not just the presence of the Google library.
-5. Observe a genuine eligible consented trial: app owner supplies redacted event ID/time and Meta receipt, Google validateOnly/import result and subsequent processing. Landing owner checks platform reporting/attribution. Do not fabricate ad IDs or production conversions. This observation follows publication; it is not proof supplied by the offline tests.
+1. App v2 implementation and release evidence were supplied by the app owner: exact interface, four combinations, partial withdrawals, app browser checks and worker eligibility. No new app implementation or credential handoff is requested by the landing review correction.
+2. Landing owner independently verified all four choices and provider mappings through the actual client against the current API, shared app-origin reads, retained expiry after both partial withdrawals, duplicate retry and stale-grant behavior, attribution eligibility and credentialed CORS/preflight. This HTTP verification does not establish browser cookie acceptance or end-to-end checkout/provider delivery.
+3. Obtain the required approving review of the updated PR #6, then publish through the normal merge/deployment flow. Do not bypass the outstanding review.
+4. Immediately verify actual production browser/API behavior on the four acquisition pages, signup forwarding, consent changes and withdrawal. Verify GA4 and Ads destination routing as well as consent flags, not just the presence of the Google library. Local/preview SDK isolation remains enabled.
+5. Observe a genuine eligible consented trial: app owner supplies redacted event ID/time and Meta receipt, Google validateOnly/import result and subsequent processing. Landing owner checks platform reporting/attribution. Do not fabricate ad IDs or production conversions. This observation follows publication; it is not proof supplied by the isolated tests.
 
-Prepared landing evidence: 43 isolated tracking tests and Vite build passed; four choices verified with offline UI fixtures in desktop/mobile Chrome. Production v2 browser/API acceptance is still pending. Existing unrelated TypeScript errors and the pre-existing TikTok vendor-snippet lint findings are documented separately; they are not new v2 errors.
+Landing evidence on 9 October: 48 tracking tests, Vite build and targeted changed-file lint passed. Thirty checks using the actual client against production v2 passed, with both purposes withdrawn during cleanup and no advertising identifiers or trial events sent. Chrome desktop/mobile checks covered the real component/client with a fixture 60 ms ahead, plus offline partial withdrawal and retry. Decision-time tolerance is bounded at 1,000 ms; expiry and denials remain strict. Production browser/SDK acceptance and genuine provider receipts are still pending. Existing unrelated TypeScript errors and the TikTok vendor-snippet lint findings are documented separately; they are not new v2 errors.

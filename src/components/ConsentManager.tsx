@@ -20,9 +20,9 @@ export default function ConsentManager() {
     (view.permissions.analytics || view.permissions.advertising || ['rejected', 'withdrawn'].includes(view.response?.consent.state ?? ''));
   const message = saving ? 'Lagrer personvernvalget …' : view.phase === 'disabled'
     ? 'Valgfrie verktøy er av i denne forhåndsvisningen.' : view.pendingDenial
-    ? 'Valgfrie verktøy er av her. Vi prøver å synkronisere avslaget med webappen. Du kan prøve igjen nedenfor.'
+    ? 'Sporing for formål du har avslått, er av her. Vi prøver å synkronisere avslaget med webappen. Du kan prøve igjen nedenfor.'
     : view.phase === 'ready' && !view.supportsPurposes ? 'Personvernvalgene oppdateres. Valgfrie verktøy er av inntil valget ditt kan lagres sikkert.'
-    : view.phase === 'error' ? 'Vi kunne ikke hente eller lagre personvernvalget. Valgfrie verktøy er av. Prøv igjen.' : null;
+    : view.phase === 'error' ? 'Vi kunne ikke hente eller lagre personvernvalget. Sporing krever et bekreftet samtykke. Prøv igjen.' : null;
 
   useEffect(() => onConsentChange(() => setView(readConsent())), []);
   useEffect(() => onOpenPrivacyChoices(() => {
