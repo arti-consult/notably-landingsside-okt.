@@ -1,51 +1,47 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { X } from 'lucide-react';
-import { onOpenPrivacyChoices, readConsent, saveConsent, type ConsentValue } from '../lib/consent';
-import { isMarketingTrackingActive, revokeMarketingTracking } from '../lib/analytics';
+import { Cookie, X } from 'lucide-react';
+import { ALL_PURPOSES, NO_PURPOSES } from '../lib/consent-client';
+import { consentClient, onConsentChange, onOpenPrivacyChoices, readConsent, saveConsent, type ConsentValue } from '../lib/consent';
 
-/**
- * Banner + Personvernvalg-panel.
- *
- * Banneret vises til brukeren har tatt et valg. Panelet kan åpnes igjen når som
- * helst fra footeren eller personvernerklæringen, slik erklæringen lover.
- *
- * Selve lastingen av sporingsskriptene eies av MarketingScriptsLoader i
- * `main.tsx`, som lytter på samtykkeendringene herfra – slik finnes det bare ett
- * sted som starter verktøyene. Her håndteres tilbaketrekkingen: revoke-signaler,
- * sletting av kapsler og en ny sidelasting som fjerner skriptene fra DOM-en.
- */
+/** Shared server consent; SDK lifecycle and immediate revocation live in marketing-loader. */
 export default function ConsentManager() {
-  const [decided, setDecided] = useState(true);
+  const [view, setView] = useState(readConsent);
   const [panelOpen, setPanelOpen] = useState(false);
-  const [marketingChecked, setMarketingChecked] = useState(false);
-  const [savedAt, setSavedAt] = useState<string | null>(null);
+  const [choices, setChoices] = useState({ ...NO_PURPOSES });
+  const [saving, setSaving] = useState(false);
+  const panelWasOpenRef = useRef(false);
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const bannerSettingsRef = useRef<HTMLButtonElement | null>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const savedAt = view.response?.consent.decidedAt;
+  const decided = view.phase === 'ready' && !view.pendingDenial &&
+    (view.permissions.analytics || view.permissions.advertising || ['rejected', 'withdrawn'].includes(view.response?.consent.state ?? ''));
+  const message = saving ? 'Lagrer personvernvalget …' : view.phase === 'disabled'
+    ? 'Valgfrie verktøy er av i denne forhåndsvisningen.' : view.pendingDenial
+    ? 'Sporing for formål du har avslått, er av her. Vi prøver å synkronisere avslaget med webappen. Du kan prøve igjen nedenfor.'
+    : view.phase === 'ready' && !view.supportsPurposes ? 'Personvernvalgene oppdateres. Valgfrie verktøy er av inntil valget ditt kan lagres sikkert.'
+    : view.phase === 'error' ? 'Vi kunne ikke hente eller lagre personvernvalget. Sporing krever et bekreftet samtykke. Prøv igjen.' : null;
 
-  const syncFromStorage = useCallback(() => {
-    const stored = readConsent();
-    setDecided(stored !== null);
-    setMarketingChecked(stored?.marketing === 'granted');
-    setSavedAt(stored?.updatedAt ?? null);
-  }, []);
-
-  useEffect(() => {
-    syncFromStorage();
-  }, [syncFromStorage]);
-
-  useEffect(
-    () =>
-      onOpenPrivacyChoices(() => {
-        syncFromStorage();
-        setPanelOpen(true);
-      }),
-    [syncFromStorage],
-  );
+  useEffect(() => onConsentChange(() => setView(readConsent())), []);
+  useEffect(() => onOpenPrivacyChoices(() => {
+    returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setView(readConsent());
+    setChoices({ ...readConsent().permissions });
+    setPanelOpen(true);
+  }), []);
 
   useEffect(() => {
-    if (!panelOpen) return;
-
+    if (!panelOpen) {
+      if (panelWasOpenRef.current) {
+        const opener = returnFocusRef.current?.isConnected ? returnFocusRef.current : bannerSettingsRef.current;
+        opener?.focus();
+      }
+      panelWasOpenRef.current = false;
+      return;
+    }
+    panelWasOpenRef.current = true;
     closeButtonRef.current?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -57,7 +53,7 @@ export default function ConsentManager() {
       if (event.key !== 'Tab' || !panelRef.current) return;
 
       const focusable = panelRef.current.querySelectorAll<HTMLElement>(
-        'button, a[href], input, [tabindex]:not([tabindex="-1"])',
+        'button:not(:disabled), a[href], input:not(:disabled), summary, [tabindex]:not([tabindex="-1"])',
       );
       if (focusable.length === 0) return;
 
@@ -76,161 +72,161 @@ export default function ConsentManager() {
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [panelOpen]);
 
-  const apply = useCallback((value: ConsentValue) => {
-    const wasActive = isMarketingTrackingActive();
-    saveConsent(value);
-    setDecided(true);
-    setMarketingChecked(value === 'granted');
-    setPanelOpen(false);
-
-    if (value === 'granted') {
-      // MarketingScriptsLoader starter verktøyene på samtykkehendelsen.
-      return;
-    }
-
-    revokeMarketingTracking();
-    if (wasActive) {
-      // Skriptene ligger fortsatt i DOM-en; en ny lasting fjerner dem helt.
-      window.location.reload();
-    }
+  const apply = useCallback(async (value: ConsentValue) => {
+    setSaving(true);
+    try {
+      await saveConsent(value);
+      setChoices({ ...readConsent().permissions });
+      if (!readConsent().pendingDenial) setPanelOpen(false);
+    } catch {
+      // The shared client retains denials and leaves optional tracking off.
+    } finally { setSaving(false); setView(readConsent()); }
   }, []);
+  const retry = async () => {
+    setSaving(true);
+    try { await consentClient.refresh(); } catch { /* Status below explains the failure. */ }
+    finally { setSaving(false); setView(readConsent()); }
+  };
+  const choiceButton = 'min-h-11 w-full rounded-xl bg-[#2663eb] px-3 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-wait disabled:opacity-60';
+  const textLink = 'rounded text-sm font-medium text-slate-700 underline decoration-slate-300 underline-offset-4 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600';
+  const status = message && <div role="status" aria-live="polite" className="mt-3 rounded-xl bg-amber-50 p-3 text-sm text-amber-900">
+    {message}
+    {!saving && view.phase !== 'disabled' && <button type="button" onClick={() => void retry()} className="ml-2 underline">Prøv igjen</button>}
+  </div>;
 
-  if (decided && !panelOpen) {
-    return null;
-  }
+  if ((decided || view.phase === 'loading') && !panelOpen && !view.pendingDenial) return null;
 
   return (
     <>
       {!decided && !panelOpen && (
-        <div
-          role="region"
-          aria-label="Personvernvalg"
-          className="fixed inset-x-0 bottom-0 z-[60] p-4 sm:p-6"
+        <section
+          aria-labelledby="cookie-banner-title"
+          className="fixed inset-x-0 bottom-0 z-[60] p-3 sm:left-auto sm:right-6 sm:bottom-6 sm:w-[min(36rem,calc(100vw-3rem))] sm:p-0"
         >
-          <div className="mx-auto max-w-3xl rounded-2xl border border-gray-800 bg-black/95 p-5 text-white shadow-2xl backdrop-blur sm:p-6">
-            <p className="text-sm leading-relaxed text-gray-300">
-              Vi bruker nødvendige informasjonskapsler for at nettstedet skal fungere. Valgfrie analyse- og
-              markedsføringsverktøy er avslått til du tillater dem. Les mer i{' '}
-              <Link to="/personvern" className="text-blue-400 underline underline-offset-2 hover:text-blue-300">
-                personvernerklæringen
-              </Link>
-              .
+          <div className="max-h-[calc(100dvh-1.5rem)] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-5 text-slate-900 shadow-[0_8px_40px_rgba(15,23,42,0.16)] sm:p-6">
+            <div className="mb-3 flex items-center gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600" aria-hidden="true">
+                <Cookie className="h-5 w-5" />
+              </span>
+              <h2 id="cookie-banner-title" className="text-lg font-semibold tracking-tight">Informasjonskapsler hos Notably</h2>
+            </div>
+            <p className="text-sm leading-relaxed text-slate-600">
+              Vi bruker informasjonskapsler og lignende teknologi for å forstå hvordan nettsiden brukes og hvilke annonser som virker.
+              Med ditt samtykke deler vi nettidentifikatorer, besøk og klikk med Google, Meta og TikTok, og prøvestart med Google og Meta.
             </p>
-
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                onClick={() => setPanelOpen(true)}
-                className="rounded-full px-5 py-2.5 text-sm font-medium text-gray-300 transition-colors hover:text-white"
-              >
-                Personvernvalg
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              Valget gjelder nettsiden og webappen. Du kan endre det når som helst i Personvernvalg.
+            </p>
+            {status}
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <button type="button" onClick={() => void apply(NO_PURPOSES)} className={choiceButton}>
+                Avvis alle
               </button>
-              <button
-                type="button"
-                onClick={() => apply('denied')}
-                className="rounded-full border border-gray-700 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-gray-500"
-              >
-                Bare nødvendige
-              </button>
-              <button
-                type="button"
-                onClick={() => apply('granted')}
-                className="rounded-full bg-[#2663eb] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-              >
-                Godta alle
+              <button type="button" disabled={saving || !view.supportsPurposes} onClick={() => void apply(ALL_PURPOSES)} className={choiceButton}>
+                Aksepter alle
               </button>
             </div>
+            <div className="mt-3 flex min-h-8 flex-wrap items-center justify-center gap-x-6 gap-y-2">
+              <button ref={bannerSettingsRef} type="button" onClick={(event) => { returnFocusRef.current = event.currentTarget; setChoices({ ...readConsent().permissions }); setPanelOpen(true); }} className={textLink}>
+                Tilpass valg
+              </button>
+              <Link to="/personvern" className={textLink}>Les om personvern</Link>
+            </div>
           </div>
-        </div>
+        </section>
       )}
 
       {panelOpen && (
-        <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/60 p-4 sm:items-center sm:p-6">
+        <div className="fixed inset-0 z-[70] flex items-end justify-center bg-slate-950/40 p-3 sm:items-center sm:p-6">
           <div
             ref={panelRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="personvernvalg-tittel"
-            className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-gray-800 bg-black p-6 text-white shadow-2xl"
+            aria-describedby="personvernvalg-beskrivelse"
+            className="flex max-h-[calc(100dvh-1.5rem)] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-2xl sm:max-h-[85dvh]"
           >
-            <div className="flex items-start justify-between gap-4">
-              <h2 id="personvernvalg-tittel" className="text-xl font-semibold">
-                Personvernvalg
-              </h2>
+            <div className="flex shrink-0 items-center justify-between gap-4 px-5 pt-4 sm:px-6">
+              <h2 id="personvernvalg-tittel" className="text-xl font-semibold tracking-tight">Personvernvalg</h2>
               <button
                 ref={closeButtonRef}
                 type="button"
                 onClick={() => setPanelOpen(false)}
                 aria-label="Lukk personvernvalg"
-                className="rounded-full p-1 text-gray-400 transition-colors hover:text-white"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <p className="mt-3 text-sm leading-relaxed text-gray-400">
-              Her styrer du valgfrie analyse- og markedsføringsverktøy på notably.no. Du kan endre valget når som helst.
-            </p>
+            <div className="min-h-0 overflow-y-auto px-5 pb-5 pt-2 sm:px-6">
+              <p id="personvernvalg-beskrivelse" className="text-sm leading-relaxed text-slate-600">
+                Velg separat om du vil tillate analyse og annonsemåling på nettsiden og i webappen. Du kan bruke Notably uansett hva du velger.
+              </p>
 
-            <div className="mt-6 space-y-4">
-              <div className="rounded-xl border border-gray-800 p-4">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h3 className="font-medium">Nødvendige</h3>
-                    <p className="mt-1 text-sm text-gray-400">
-                      Kreves for sikkerhet, innloggingsøkter og for å huske personvernvalget ditt. Kan ikke slås av.
-                    </p>
-                  </div>
-                  <span className="mt-1 shrink-0 text-sm text-gray-500">Alltid på</span>
+              <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="flex items-center justify-between gap-4">
+                  <h3 className="text-sm font-semibold">Nødvendige informasjonskapsler</h3>
+                  <span className="shrink-0 text-xs font-medium text-slate-500">Alltid på</span>
                 </div>
+                <p className="mt-1 text-sm leading-relaxed text-slate-600">
+                  Sørger for sikkerhet, innlogging og at personvernvalget ditt blir husket.
+                </p>
               </div>
 
-              <label className="block cursor-pointer rounded-xl border border-gray-800 p-4 transition-colors hover:border-gray-700">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h3 className="font-medium">Analyse og markedsføring</h3>
-                    <p className="mt-1 text-sm text-gray-400">
-                      Google Analytics og konverteringsmåling, Meta Pixel og TikTok Pixel. Verktøyene kan motta
-                      nettidentifikatorer og begrensede opplysninger om side, henviser, nettleser, enhet og samhandling.
-                    </p>
+              {([
+                ['analytics', 'Analyse', 'Hjelper oss å forstå bruk av nettsiden, blant annet sidebesøk og klikk på «Start gratis», med Google Analytics.'],
+                ['advertising', 'Annonsemåling', 'Måler hvilke annonser som fører til besøk, klikk og prøvestart. Google og Meta mottar klikk og bekreftet prøvestart; TikTok måler besøk.'],
+              ] as const).map(([purpose, label, description]) => (
+                <label key={purpose} className="mt-3 block cursor-pointer rounded-xl border border-slate-200 p-4 transition-colors hover:border-blue-300">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <span className="font-semibold">{label}</span>
+                      <p className="mt-1 text-sm leading-relaxed text-slate-600">{description}</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      aria-label={label}
+                      checked={choices[purpose]}
+                      onChange={(event) => setChoices(current => ({ ...current, [purpose]: event.target.checked }))}
+                      className="mt-1 h-5 w-5 shrink-0 accent-[#2663eb]"
+                    />
                   </div>
-                  <input
-                    type="checkbox"
-                    checked={marketingChecked}
-                    onChange={(event) => setMarketingChecked(event.target.checked)}
-                    className="mt-1 h-5 w-5 shrink-0 accent-[#2663eb]"
-                  />
+                </label>
+              ))}
+
+              <details className="mt-4 rounded-xl border border-slate-200 p-4 text-sm text-slate-600">
+                <summary className="cursor-pointer font-medium text-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600">
+                  Hva deles, og hvor lenge?
+                </summary>
+                <div className="mt-3 space-y-3 leading-relaxed">
+                  <p>
+                    Verktøyene mottar nettidentifikatorer og opplysninger om offentlige sider, henviser, nettleser,
+                    enhet og samhandling. Prøvestartmålingen inneholder ikke møteinnhold, navn, e-post eller betalingsbeløp.
+                  </p>
+                  <p>
+                    Valget lagres i opptil 180 dager. Notably lagrer annonseopplysninger i opptil 90 dager,
+                    begrenset av samtykkets varighet. Leverandørene har egne lagringstider.
+                  </p>
+                  <p>
+                    Ved tilbaketrekking stopper ny sporing og sendinger som ikke allerede er sendt.
+                    Vi sletter kjente markedsføringskapsler vi har tilgang til. Leverandørene kan beholde
+                    tidligere mottatte opplysninger etter sine vilkår.
+                  </p>
                 </div>
-              </label>
+              </details>
+
+              {status}
+              {savedAt && <p className="mt-3 text-xs text-slate-500">Sist lagret {new Date(savedAt).toLocaleDateString('nb-NO')}.</p>}
+              <p className="mt-4 text-sm text-slate-600">
+                Du kan endre valget når som helst via Personvernvalg.{' '}
+                <Link to="/personvern" onClick={() => setPanelOpen(false)} className={textLink}>Les mer</Link>
+              </p>
             </div>
 
-            {savedAt && (
-              <p className="mt-4 text-xs text-gray-500">
-                Valget ditt ble sist lagret {new Date(savedAt).toLocaleDateString('nb-NO')}.
-              </p>
-            )}
-
-            <p className="mt-4 text-xs leading-relaxed text-gray-500">
-              Trekker du tilbake samtykket, sender vi signaler om tilbaketrekking, sletter kjente markedsføringskapsler
-              vi har tilgang til og slutter å laste verktøyene. Leverandørene kan beholde opplysninger de mottok før
-              tilbaketrekkingen etter sine egne vilkår.
-            </p>
-
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                onClick={() => apply('denied')}
-                className="rounded-full border border-gray-700 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-gray-500"
-              >
-                Bare nødvendige
-              </button>
-              <button
-                type="button"
-                onClick={() => apply(marketingChecked ? 'granted' : 'denied')}
-                className="rounded-full bg-[#2663eb] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-              >
-                Lagre valg
-              </button>
+            <div className="grid shrink-0 grid-cols-2 gap-3 border-t border-slate-200 bg-white p-4 sm:px-6">
+              <button type="button" onClick={() => void apply(NO_PURPOSES)} className={choiceButton}>Avvis alle</button>
+              <button type="button" disabled={saving || !view.supportsPurposes} onClick={() => void apply(choices)} className={choiceButton}>Lagre valg</button>
             </div>
           </div>
         </div>

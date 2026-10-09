@@ -63,6 +63,7 @@ export default function RegnskapPricingSection() {
               <FeatureList items={soloFeatures} />
             </div>
             <a
+              data-trial-cta="pricing"
               href={SIGNUP_URL}
               target="_blank"
               rel="noopener noreferrer"

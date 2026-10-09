@@ -142,7 +142,7 @@ export default function ByggPage() {
                 parter samme dag.
               </p>
               <div className="relative mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-                <PrimaryCta light>Start gratis</PrimaryCta>
+                <PrimaryCta light placement="bottom">Start gratis</PrimaryCta>
                 <SecondaryCta dark>Book demo for firmaet</SecondaryCta>
               </div>
             </div>

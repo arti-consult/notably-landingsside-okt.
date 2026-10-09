@@ -69,7 +69,7 @@ export default function Navigation({ pricingTarget }: NavigationProps = {}) {
               <Link to="/om-oss" className="text-gray-700 hover:text-black transition-colors">Om oss</Link>
               <a href={pricingTarget ? `#${pricingTarget}` : '/#pricing'} onClick={handlePricingClick} className="text-gray-700 hover:text-black transition-colors">Priser</a>
               <a href="https://app.notably.no" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-black transition-colors">Logg inn</a>
-              <a href="https://app.notably.no/no/sign-up" target="_blank" rel="noopener noreferrer">
+              <a data-trial-cta="navigation-desktop" href="https://app.notably.no/no/sign-up" target="_blank" rel="noopener noreferrer">
                 <ShimmerButton background="#2663eb" className="px-6 py-2 font-medium">
                   <span className="whitespace-pre-wrap text-center font-medium leading-none tracking-tight text-white">
                     Start gratis
@@ -101,7 +101,7 @@ export default function Navigation({ pricingTarget }: NavigationProps = {}) {
                   <Link to="/om-oss" className="text-gray-700 hover:text-black transition-colors">Om oss</Link>
                   <a href={pricingTarget ? `#${pricingTarget}` : '/#pricing'} onClick={handlePricingClick} className="text-gray-700 hover:text-black transition-colors">Priser</a>
                   <a href="https://app.notably.no" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-black transition-colors">Logg inn</a>
-                  <a href="https://app.notably.no/no/sign-up" target="_blank" rel="noopener noreferrer">
+                  <a data-trial-cta="navigation-mobile" href="https://app.notably.no/no/sign-up" target="_blank" rel="noopener noreferrer">
                     <ShimmerButton background="#2663eb" className="px-6 py-2 font-medium">
                       <span className="whitespace-pre-wrap text-center font-medium leading-none tracking-tight text-white">
                         Start gratis

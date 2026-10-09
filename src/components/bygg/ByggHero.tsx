@@ -108,7 +108,7 @@ export default function ByggHero() {
             </motion.p>
 
             <motion.div variants={item} className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              <PrimaryCta>Prøv gratis i 14 dager</PrimaryCta>
+              <PrimaryCta placement="hero">Prøv gratis i 14 dager</PrimaryCta>
               <SecondaryCta>Book en demo</SecondaryCta>
             </motion.div>
 
