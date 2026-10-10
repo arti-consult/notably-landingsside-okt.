@@ -43,8 +43,10 @@ export default function Navigation({ pricingTarget }: NavigationProps = {}) {
     navigate('/', { state: { scrollTo: 'pricing' } });
   };
 
+  // Uskarp bakgrunn bare fra md. På mobil må den samples på nytt for hver
+  // scrollframe, så der brukes en nesten opak flate i stedet.
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 bg-white/95 md:bg-white/80 md:backdrop-blur-md">
       <div className="page-container py-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between">

@@ -94,11 +94,11 @@ export default function ByggSecuritySection() {
       <div className="relative overflow-hidden bg-slate-950 px-6 py-16 sm:rounded-[2.5rem] sm:px-10 sm:py-20 lg:px-16">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 -top-40 h-[28rem] w-[28rem] rounded-full bg-blue-500/20 blur-[120px]"
+          className="pointer-events-none absolute -right-32 -top-40 h-[28rem] w-[28rem] rounded-full bg-blue-500/20 glow scale-[1.8]"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -bottom-40 -left-32 h-[24rem] w-[24rem] rounded-full bg-indigo-500/15 blur-[120px]"
+          className="pointer-events-none absolute -bottom-40 -left-32 h-[24rem] w-[24rem] rounded-full bg-indigo-500/15 glow scale-[1.94]"
         />
 
         <div className="relative mx-auto max-w-5xl">

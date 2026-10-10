@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { lazy } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Navigation from '../components/Navigation';
 import DeferredRender from '../components/DeferredRender';
@@ -111,45 +111,43 @@ export default function ByggPage() {
       </div>
       <ByggCustomers />
       <ByggPainSection />
-      <DeferredRender rootMargin="300px 0px">
-        <Suspense fallback={null}>
-          <ByggMeetingTypesSection />
-          <ByggChangeSection />
-          <ByggShareSection />
-          <ByggChannelsSection />
-          <ByggSecuritySection />
-          <AIAnswersSection
-            examples={constructionExamples}
-            heading="Hva sa byggherren om sjakten?"
-            intro="Spør på tvers av alle møtene i prosjektmappen, og få svaret med kilde. Også når det var en kollega som satt i møtet."
-          />
-          <ByggRoiSection />
-          <ByggObjectionsSection />
-          <ByggPricingSection />
-          <FaqSection faqs={byggFaqs} muted="før første byggemøte." background="bg-gray-50" />
+      <DeferredRender>
+        <ByggMeetingTypesSection />
+        <ByggChangeSection />
+        <ByggShareSection />
+        <ByggChannelsSection />
+        <ByggSecuritySection />
+        <AIAnswersSection
+          examples={constructionExamples}
+          heading="Hva sa byggherren om sjakten?"
+          intro="Spør på tvers av alle møtene i prosjektmappen, og få svaret med kilde. Også når det var en kollega som satt i møtet."
+        />
+        <ByggRoiSection />
+        <ByggObjectionsSection />
+        <ByggPricingSection />
+        <FaqSection faqs={byggFaqs} muted="før første byggemøte." background="bg-gray-50" />
 
-          <section className="page-container bg-white pb-24 pt-20 sm:pb-28 sm:pt-24">
-            <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-indigo-700 px-6 py-16 text-center sm:px-12 sm:py-20">
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/15 blur-[90px]"
-              />
-              <h2 className="relative text-balance text-[2rem] font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl">
-                Neste byggemøte er skrevet før du går ut av brakka.
-              </h2>
-              <p className="relative mx-auto mt-5 max-w-lg text-balance text-lg leading-relaxed text-blue-100">
-                Prøv Notably gratis i 14 dager. Last ned appen på iPhone eller Android, og send referatet til alle
-                parter samme dag.
-              </p>
-              <div className="relative mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-                <PrimaryCta light placement="bottom">Start gratis</PrimaryCta>
-                <SecondaryCta dark>Book demo for firmaet</SecondaryCta>
-              </div>
+        <section className="page-container bg-white pb-24 pt-20 sm:pb-28 sm:pt-24">
+          <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-indigo-700 px-6 py-16 text-center sm:px-12 sm:py-20">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/15 glow scale-[1.94]"
+            />
+            <h2 className="relative text-balance text-[2rem] font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl">
+              Neste byggemøte er skrevet før du går ut av brakka.
+            </h2>
+            <p className="relative mx-auto mt-5 max-w-lg text-balance text-lg leading-relaxed text-blue-100">
+              Prøv Notably gratis i 14 dager. Last ned appen på iPhone eller Android, og send referatet til alle
+              parter samme dag.
+            </p>
+            <div className="relative mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+              <PrimaryCta light placement="bottom">Start gratis</PrimaryCta>
+              <SecondaryCta dark>Book demo for firmaet</SecondaryCta>
             </div>
-          </section>
+          </div>
+        </section>
 
-          <Footer />
-        </Suspense>
+        <Footer />
       </DeferredRender>
     </div>
   );

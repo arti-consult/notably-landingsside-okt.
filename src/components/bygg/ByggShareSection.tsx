@@ -88,7 +88,7 @@ export default function ByggShareSection() {
         >
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 m-auto h-[22rem] w-[22rem] rounded-full bg-blue-300/20 blur-[100px]"
+            className="pointer-events-none absolute inset-0 m-auto h-[22rem] w-[22rem] rounded-full bg-blue-300/20 glow scale-[1.85]"
           />
           <div className="relative overflow-hidden rounded-[26px] border border-slate-200/90 bg-white shadow-[0_36px_80px_-48px_rgba(15,23,42,0.45)]">
             <div className="space-y-1.5 border-b border-slate-100 bg-slate-50/70 px-6 py-5 sm:px-8">

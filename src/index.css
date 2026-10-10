@@ -596,3 +596,16 @@
     justify-content: flex-end;
   }
 }
+
+@layer utilities {
+  /*
+   * Myk glød uten filter. En stor blur() må regnes ut på nytt når laget
+   * rastreres, og på mobil ga det hakking under scroll. Masken gir samme
+   * fall-off og tegnes som en vanlig gradient. Elementet skaleres opp med
+   * scale-[…] for å dekke flaten blur-en spredte seg over.
+   */
+  .glow {
+    -webkit-mask-image: radial-gradient(closest-side, rgb(0 0 0 / 0.8), rgb(0 0 0 / 0.45) 45%, rgb(0 0 0 / 0.14) 75%, transparent);
+    mask-image: radial-gradient(closest-side, rgb(0 0 0 / 0.8), rgb(0 0 0 / 0.45) 45%, rgb(0 0 0 / 0.14) 75%, transparent);
+  }
+}

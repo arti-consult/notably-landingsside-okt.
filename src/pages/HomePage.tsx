@@ -6,7 +6,7 @@ import DeferredRender from '../components/DeferredRender';
 import { Helmet } from 'react-helmet-async';
 import { SCROLL_TO_SECTION_EVENT, scrollToSectionWhenReady } from '../lib/scrollToSection';
 import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL, SITE_URL } from '../lib/seo';
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const MobileAppSection = lazy(() => import('../components/MobileAppSection'));
@@ -115,18 +115,16 @@ export default function HomePage() {
       </div>
       <TrustSection />
       <ProblemSection />
-      <DeferredRender rootMargin="300px 0px" forceRender={scrollTarget !== null}>
-        <Suspense fallback={null}>
-          <CapabilitiesSection />
-          <MobileAppSection />
-          <SecuritySection />
-          <TestimonialSection />
-          <AIAnswersSection />
-          <IntegrationsSection />
-          <UseCasesSection />
-          <PricingSection />
-          <Footer />
-        </Suspense>
+      <DeferredRender forceRender={scrollTarget !== null}>
+        <CapabilitiesSection />
+        <MobileAppSection />
+        <SecuritySection />
+        <TestimonialSection />
+        <AIAnswersSection />
+        <IntegrationsSection />
+        <UseCasesSection />
+        <PricingSection />
+        <Footer />
       </DeferredRender>
     </div>
   );

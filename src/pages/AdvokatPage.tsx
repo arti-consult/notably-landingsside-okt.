@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { lazy } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Navigation from '../components/Navigation';
 import TrustSection from '../components/TrustSection';
@@ -108,42 +108,40 @@ export default function AdvokatPage() {
       </div>
       <TrustSection />
       <AdvokatPainSection />
-      <DeferredRender rootMargin="300px 0px">
-        <Suspense fallback={null}>
-          <AdvokatMeetingTypesSection />
-          <AdvokatSecuritySection />
-          <AdvokatChannelsSection />
-          <AIAnswersSection
-            examples={legalExamples}
-            heading="Hva sa motparten egentlig?"
-            intro="Spør på tvers av alle møtene i saken – og få svaret med kilde, enten møtet var i går eller for et år siden."
-          />
-          <AdvokatRoiSection />
-          <AdvokatPricingSection />
-          <AdvokatFaqSection />
+      <DeferredRender>
+        <AdvokatMeetingTypesSection />
+        <AdvokatSecuritySection />
+        <AdvokatChannelsSection />
+        <AIAnswersSection
+          examples={legalExamples}
+          heading="Hva sa motparten egentlig?"
+          intro="Spør på tvers av alle møtene i saken – og få svaret med kilde, enten møtet var i går eller for et år siden."
+        />
+        <AdvokatRoiSection />
+        <AdvokatPricingSection />
+        <AdvokatFaqSection />
 
-          <section className="page-container bg-white pb-24 pt-4 sm:pb-28">
-            <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-indigo-700 px-6 py-16 text-center sm:px-12 sm:py-20">
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/15 blur-[90px]"
-              />
-              <h2 className="relative text-balance text-[2rem] font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl">
-                Bruk neste klientmøte på klienten.
-              </h2>
-              <p className="relative mx-auto mt-5 max-w-lg text-balance text-lg leading-relaxed text-blue-100">
-                Prøv Notably gratis i 14 dager. Du er i gang på få minutter – og første notat er klart før klienten
-                har gått.
-              </p>
-              <div className="relative mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-                <PrimaryCta light placement="bottom">Start gratis</PrimaryCta>
-                <SecondaryCta dark>Book demo for firmaet</SecondaryCta>
-              </div>
+        <section className="page-container bg-white pb-24 pt-4 sm:pb-28">
+          <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-indigo-700 px-6 py-16 text-center sm:px-12 sm:py-20">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/15 glow scale-[1.94]"
+            />
+            <h2 className="relative text-balance text-[2rem] font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl">
+              Bruk neste klientmøte på klienten.
+            </h2>
+            <p className="relative mx-auto mt-5 max-w-lg text-balance text-lg leading-relaxed text-blue-100">
+              Prøv Notably gratis i 14 dager. Du er i gang på få minutter – og første notat er klart før klienten
+              har gått.
+            </p>
+            <div className="relative mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+              <PrimaryCta light placement="bottom">Start gratis</PrimaryCta>
+              <SecondaryCta dark>Book demo for firmaet</SecondaryCta>
             </div>
-          </section>
+          </div>
+        </section>
 
-          <Footer />
-        </Suspense>
+        <Footer />
       </DeferredRender>
     </div>
   );

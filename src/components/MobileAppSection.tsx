@@ -270,11 +270,11 @@ export default function MobileAppSection() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-0 h-[30rem] w-[30rem] rounded-full bg-blue-600/25 blur-[120px] lg:right-0"
+            className="pointer-events-none absolute -right-32 top-0 h-[30rem] w-[30rem] rounded-full bg-blue-600/25 glow scale-[1.75] lg:right-0"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-24 bottom-[-6rem] h-[24rem] w-[24rem] rounded-full bg-indigo-500/20 blur-[110px]"
+            className="pointer-events-none absolute -left-24 bottom-[-6rem] h-[24rem] w-[24rem] rounded-full bg-indigo-500/20 glow scale-[1.86]"
           />
 
           <div className="relative grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
@@ -334,7 +334,7 @@ export default function MobileAppSection() {
             <div className="relative flex justify-center lg:justify-end">
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 m-auto h-[22rem] w-[22rem] rounded-full bg-blue-500/20 blur-[90px]"
+                className="pointer-events-none absolute inset-0 m-auto h-[22rem] w-[22rem] rounded-full bg-blue-500/20 glow scale-[1.77]"
               />
 
               <motion.div

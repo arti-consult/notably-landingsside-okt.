@@ -60,11 +60,11 @@ export default function RegnskapHero() {
     <section className="relative overflow-hidden px-6 pb-16 pt-32 sm:px-10 sm:pt-36 md:px-[12%] lg:pb-20 xl:pl-[19%] xl:pr-[12%]">
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-40 -top-48 h-[24rem] w-[24rem] rounded-full bg-sky-300/20 blur-[110px] lg:-top-40 lg:right-[-10%] lg:h-[38rem] lg:w-[38rem] lg:bg-blue-400/20 lg:blur-[130px]"
+        className="pointer-events-none absolute -right-40 -top-48 h-[24rem] w-[24rem] rounded-full bg-sky-300/20 glow scale-[1.86] lg:-top-40 lg:right-[-10%] lg:h-[38rem] lg:w-[38rem] lg:bg-blue-400/20 lg:scale-[1.64]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-48 top-[55%] h-[20rem] w-[20rem] rounded-full bg-indigo-300/15 blur-[110px] lg:-left-[12%] lg:top-16 lg:h-[26rem] lg:w-[26rem] lg:bg-indigo-400/15 lg:blur-[120px]"
+        className="pointer-events-none absolute -left-48 top-[55%] h-[20rem] w-[20rem] rounded-full bg-indigo-300/15 glow scale-[2.03] lg:-left-[12%] lg:top-16 lg:h-[26rem] lg:w-[26rem] lg:bg-indigo-400/15 lg:scale-[1.87]"
       />
 
       <div className="relative mx-auto max-w-6xl">
@@ -122,7 +122,7 @@ export default function RegnskapHero() {
           <div className="relative flex justify-center lg:justify-end">
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 m-auto h-[24rem] w-[24rem] rounded-full bg-blue-300/15 blur-[100px] lg:bg-blue-400/20"
+              className="pointer-events-none absolute inset-0 m-auto h-[24rem] w-[24rem] rounded-full bg-blue-300/15 glow scale-[1.78] lg:bg-blue-400/20"
             />
             <motion.div
               className="relative w-full max-w-[26rem] lg:max-w-[27rem]"
