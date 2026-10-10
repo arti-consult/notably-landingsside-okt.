@@ -11,7 +11,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const MobileAppSection = lazy(() => import('../components/MobileAppSection'));
 const TestimonialSection = lazy(() => import('../components/TestimonialSection'));
-const DesktopFeatureTabsSection = lazy(() => import('../components/DesktopFeatureTabsSection'));
 const CapabilitiesSection = lazy(() => import('../components/CapabilitiesSection'));
 const AIAnswersSection = lazy(() => import('../components/AIAnswersSection'));
 const IntegrationsSection = lazy(() => import('../components/IntegrationsSection'));
@@ -122,7 +121,6 @@ export default function HomePage() {
           <MobileAppSection />
           <SecuritySection />
           <TestimonialSection />
-          <DesktopFeatureTabsSection />
           <AIAnswersSection />
           <IntegrationsSection />
           <UseCasesSection />
