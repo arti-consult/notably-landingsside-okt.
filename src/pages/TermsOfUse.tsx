@@ -1,184 +1,148 @@
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import { Helmet } from 'react-helmet-async';
-import termsText from '../content/terms-of-use.txt?raw';
-import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL } from '../lib/seo';
+import legalCopy from '../content/legal.no.json';
+import { LegalShell } from '../components/LegalShell';
 
 export default function TermsOfUse() {
-  const headings = new Set([
-    'Vilkår for bruk',
-    'Tjenestebeskrivelse',
-    'Akseptabel bruk',
-    'Konto og tilgang',
-    'Datasenter og etterlevelse',
-    'Databehandleravtale',
-    'Bruk av Google API-er',
-    'Fakturering',
-    'Sletting av konto',
-    'Ansvarsbegrensning',
-    'Kontakt',
-  ]);
-
-  const lines = termsText.split(/\r?\n/);
-
-  type Block =
-    | { type: 'meta'; text: string }
-    | { type: 'heading'; text: string }
-    | { type: 'paragraph'; text: string }
-    | { type: 'list'; items: string[] };
-
-  const blocks: Block[] = [];
-  let buffer: string[] = [];
-  let listBuffer: string[] | null = null;
-
-  const flushParagraph = () => {
-    const text = buffer.join(' ').trim();
-    if (text) blocks.push({ type: 'paragraph', text });
-    buffer = [];
-  };
-
-  const flushList = () => {
-    if (listBuffer && listBuffer.length) {
-      blocks.push({ type: 'list', items: listBuffer });
-    }
-    listBuffer = null;
-  };
-
-  for (const rawLine of lines) {
-    const line = rawLine.replace(/\u00A0/g, ' ').trim();
-    if (!line) {
-      // Blank line: end current paragraph or list
-      flushParagraph();
-      flushList();
-      continue;
-    }
-
-    if (/^Sist oppdatert:/i.test(line) && blocks.findIndex(b => b.type === 'meta') === -1) {
-      // First "Sist oppdatert" becomes meta line
-      flushParagraph();
-      flushList();
-      blocks.push({ type: 'meta', text: line });
-      continue;
-    }
-
-    if (headings.has(line)) {
-      flushParagraph();
-      flushList();
-      blocks.push({ type: 'heading', text: line });
-      continue;
-    }
-
-    // Bullet item (e.g., "• text" possibly with tabs)
-    if (/^[•\-]/.test(line) || /^•/.test(line) || /^•/.test(line.replace(/^\s+/, ''))) {
-      const item = line.replace(/^[-•]\s*/, '').replace(/^•?\s*/, '').trim();
-      if (!listBuffer) listBuffer = [];
-      if (item) listBuffer.push(item);
-      continue;
-    }
-
-    // Word export sometimes prefixes bullets with tabs and a bullet between
-    if (/^•/.test(rawLine.replace(/[\t ]+/g, '').trim())) {
-      const item = rawLine.replace(/[\t ]+/g, ' ').replace(/^\s*•\s*/, '').trim();
-      if (!listBuffer) listBuffer = [];
-      if (item) listBuffer.push(item);
-      continue;
-    }
-
-    // Default: paragraph text, accumulate sentences on same block
-    buffer.push(line);
-  }
-
-  // Flush tail buffers
-  flushParagraph();
-  flushList();
-
-  // Gjør https-adresser i teksten klikkbare (f.eks. databehandleravtalen på os.notably.no).
-  const linkify = (text: string) =>
-    text.split(/(https:\/\/[^\s)]+)/g).map((part, k) =>
-      /^https:\/\//.test(part) ? (
-        <a key={k} href={part} target="_blank" rel="noopener noreferrer" className="text-white underline underline-offset-2 break-words">
-          {part}
-        </a>
-      ) : (
-        part
-      ),
-    );
+  const { common, terms: copy } = legalCopy;
+  const lastUpdatedLabel = common.lastUpdated.replace('{{date}}', copy.updated);
+  const legalEmail = common.legalEmail;
+  const acceptableUseItems = Object.values(copy.sections.acceptableUse.items);
+  const connectedServiceItems = Object.values(copy.sections.connectedServices.items);
 
   return (
-    <>
-      <Helmet>
-        <title>Vilkår for bruk - Notably</title>
-        <meta name="description" content="Les våre vilkår for bruk for Notably. Denne siden beskriver rammer for bruk av tjenesten og ansvar mellom partene." />
-        <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://notably.no/vilkar" />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Notably" />
-        <meta property="og:locale" content="nb_NO" />
-        <meta property="og:url" content="https://notably.no/vilkar" />
-        <meta property="og:title" content="Vilkår for bruk - Notably" />
-        <meta
-          property="og:description"
-          content="Les våre vilkår for bruk for Notably. Denne siden beskriver rammer for bruk av tjenesten og ansvar mellom partene."
-        />
-        <meta property="og:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
-        <meta property="og:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://notably.no/vilkar" />
-        <meta name="twitter:title" content="Vilkår for bruk - Notably" />
-        <meta
-          name="twitter:description"
-          content="Les våre vilkår for bruk for Notably. Denne siden beskriver rammer for bruk av tjenesten og ansvar mellom partene."
-        />
-        <meta name="twitter:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
-        <meta name="twitter:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
-      </Helmet>
+    <LegalShell
+      path="/vilkar"
+      description="Les våre vilkår for bruk for Notably. Denne siden beskriver rammer for bruk av tjenesten og ansvar mellom partene."
+      lastUpdatedLabel={lastUpdatedLabel}
+      title={copy.title}
+      intro={copy.intro}
+    >
+      <section>
+        <h2>{copy.sections.agreement.title}</h2>
+        <p>{copy.sections.agreement.body1}</p>
+        <p>{copy.sections.agreement.body2}</p>
+      </section>
 
-      <div className="min-h-screen bg-black text-white">
-        <div className="max-w-4xl mx-auto px-6 py-12">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Tilbake til forsiden
+      <section>
+        <h2>{copy.sections.dataProcessingAgreement.title}</h2>
+        <p>{copy.sections.dataProcessingAgreement.body1}</p>
+        <p>{copy.sections.dataProcessingAgreement.body2}</p>
+        <ul>
+          <li>
+            <a href="https://os.notably.no/vilkar/databehandleravtale">
+              {copy.sections.dataProcessingAgreement.agreementLinkLabel}
+            </a>
+          </li>
+          <li>
+            <a href="https://os.notably.no/vilkar/underdatabehandlere">
+              {copy.sections.dataProcessingAgreement.subprocessorsLinkLabel}
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>{copy.sections.service.title}</h2>
+        <p>{copy.sections.service.body}</p>
+      </section>
+
+      <section>
+        <h2>{copy.sections.accounts.title}</h2>
+        <p>{copy.sections.accounts.body1}</p>
+        <p>{copy.sections.accounts.body2}</p>
+      </section>
+
+      <section>
+        <h2>{copy.sections.recording.title}</h2>
+        <p>{copy.sections.recording.body1}</p>
+        <p>{copy.sections.recording.body2}</p>
+      </section>
+
+      <section>
+        <h2>{copy.sections.content.title}</h2>
+        <p>{copy.sections.content.body1}</p>
+        <p>{copy.sections.content.body2}</p>
+      </section>
+
+      <section>
+        <h2>{copy.sections.ai.title}</h2>
+        <p>{copy.sections.ai.body1}</p>
+        <p>{copy.sections.ai.body2}</p>
+      </section>
+
+      <section>
+        <h2>{copy.sections.acceptableUse.title}</h2>
+        <p>{copy.sections.acceptableUse.intro}</p>
+        <ul>
+          {acceptableUseItems.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>{copy.sections.dataResidency.title}</h2>
+        <p>{copy.sections.dataResidency.body1}</p>
+        <p>{copy.sections.dataResidency.body2}</p>
+        <p>
+          {copy.sections.dataResidency.linkPrefix}{' '}
+          <Link to="/personvern">
+            {copy.sections.dataResidency.linkLabel}
           </Link>
+          {copy.sections.dataResidency.linkSuffix}
+        </p>
+      </section>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-8">Vilkår for bruk</h1>
+      <section>
+        <h2>{copy.sections.connectedServices.title}</h2>
+        <p>{copy.sections.connectedServices.intro}</p>
+        <ul>
+          {connectedServiceItems.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+        <p>{copy.sections.connectedServices.outro}</p>
+      </section>
 
-          <div className="prose prose-invert max-w-none">
-            {blocks.map((b, i) => {
-              if (b.type === 'meta') {
-                return (
-                  <p key={`meta-${i}`} className="text-gray-400 mb-8">
-                    {b.text}
-                  </p>
-                );
-              }
-              if (b.type === 'heading') {
-                return (
-                  <h2 key={`h-${i}`} className="text-2xl font-semibold mb-4">
-                    {b.text}
-                  </h2>
-                );
-              }
-              if (b.type === 'list') {
-                return (
-                  <ul key={`ul-${i}`} className="list-disc pl-6 space-y-2 text-gray-300 mb-6">
-                    {b.items.map((it, j) => (
-                      <li key={`li-${i}-${j}`}>{linkify(it)}</li>
-                    ))}
-                  </ul>
-                );
-              }
-              return (
-                <p key={`p-${i}`} className="text-gray-300 mb-6">
-                  {linkify(b.text)}
-                </p>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </>
+      <section>
+        <h2>{copy.sections.billing.title}</h2>
+        <p>{copy.sections.billing.body1}</p>
+        <p>{copy.sections.billing.body2}</p>
+        <p>{copy.sections.billing.body3}</p>
+      </section>
+
+      <section>
+        <h2>{copy.sections.termination.title}</h2>
+        <p>{copy.sections.termination.body1}</p>
+        <p>{copy.sections.termination.body2}</p>
+        <p>{copy.sections.termination.body3}</p>
+      </section>
+
+      <section>
+        <h2>{copy.sections.availability.title}</h2>
+        <p>{copy.sections.availability.body1}</p>
+        <p>{copy.sections.availability.body2}</p>
+      </section>
+
+      <section>
+        <h2>{copy.sections.liability.title}</h2>
+        <p>{copy.sections.liability.body1}</p>
+        <p>{copy.sections.liability.body2}</p>
+      </section>
+
+      <section>
+        <h2>{copy.sections.general.title}</h2>
+        <p>{copy.sections.general.body1}</p>
+        <p>{copy.sections.general.body2}</p>
+      </section>
+
+      <section>
+        <h2>{copy.sections.contact.title}</h2>
+        <p>
+          {copy.sections.contact.bodyPrefix} <Link to={`mailto:${legalEmail}`}>{legalEmail}</Link>
+          {copy.sections.contact.bodySuffix}
+        </p>
+      </section>
+    </LegalShell>
   );
 }

@@ -1,0 +1,335 @@
+{
+  "common": {
+    "lastUpdated": "Sist oppdatert: {{date}}",
+    "privacyEmail": "support@notably.no",
+    "legalEmail": "support@notably.no",
+    "backLink": "Tilbake til forrige side"
+  },
+  "privacy": {
+    "meta": {
+      "title": "Personvernerklæring | Notably AI",
+      "description": "Les hvordan Notably AI samler inn, bruker, deler, beskytter og sletter personopplysninger når du bruker Notably-appen og tjenestene."
+    },
+    "title": "Personvernerklæring",
+    "updated": "13.10.2026",
+    "intro": "Denne erklæringen forklarer hvilke personopplysninger Notably samler inn, hvorfor vi bruker dem, hvem som mottar dem, og hvordan du kan bruke rettighetene dine. Den samme erklæringen gjelder notably.no og app.notably.no, mobilappen, møteopptak, AI-funksjoner, støtte, abonnementer, salgskontakt og tilkoblede tjenester.",
+    "sections": {
+      "controller": {
+        "title": "Hvem er ansvarlig for opplysningene dine",
+        "body1": "ARTI CONSULT AS, organisasjonsnummer 929 098 609 MVA, registrert i Foretaksregisteret med adresse C. Sundts gate 55, 5004 Bergen, Norge («Notably», «vi», «oss»), er behandlingsansvarlig for konto- og kundeadministrasjon, fakturering, sikkerhet, støtte, salgskontakt og drift og forbedring av nettsiden og tjenesten.",
+        "body2": "Når organisasjonen din bruker Notably til å behandle møteinnhold, bestemmer den normalt hvorfor og hvordan innholdet brukes, og er behandlingsansvarlig. Notably behandler innholdet på dens vegne etter dens instrukser og den aktuelle databehandleravtalen."
+      },
+      "dataResidency": {
+        "title": "Hvor vi lagrer og beskytter dataene dine",
+        "body1": "Hovedsystemene i appen og private møteopptak driftes av Hetzner i Tyskland. Den offentlige nettsiden bruker separate tjenester for drift og offentlig innhold. Leverandørlisten og avsnittet Internasjonale overføringer forklarer hvor annen behandling kan skje.",
+        "body2": "Vi bruker kryptering under overføring og tilgangskontroller for å beskytte personopplysninger. Tilgangen begrenses til autoriserte personer og tjenester som trenger den for å levere, støtte eller sikre Notably."
+      },
+      "personalData": {
+        "title": "Hvilke personopplysninger vi samler inn",
+        "intro": "Avhengig av hvilke funksjoner du bruker, behandler vi disse kategoriene:",
+        "items": {
+          "account": {
+            "label": "Konto- og organisasjonsopplysninger",
+            "description": "Navn, e-postadresse, eventuelt profilbilde, innloggingsopplysninger, medlemskap i arbeidsområder og organisasjoner, roller og invitasjoner. Vi registrerer også kontoaktivitet, henvisningsopplysninger, tilkoblingsstatus og bruk av tjenesten for kundeadministrasjon."
+          },
+          "meeting": {
+            "label": "Møte- og kalenderopplysninger",
+            "description": "Møtetitler, beskrivelser, tidspunkt, arrangører, deltakere, møtelenker, opptaksstatus og opptaksinnstillinger."
+          },
+          "content": {
+            "label": "Innholdet ditt og AI-resultater",
+            "description": "Lydopptak og opplastinger, transkripsjoner, oversettelser, notater, oppsummeringer, maler, spørsmål, assistentsamtaler og opplysninger utledet fra innholdet for søk og andre funksjoner."
+          },
+          "billing": {
+            "label": "Betalings- og abonnementsopplysninger",
+            "description": "Abonnementet ditt, kontaktopplysninger for fakturering og betalings- eller kjøpsreferanser. Stripe, Apple og Google behandler betalingsopplysninger. Notably mottar ikke fullstendige kortnumre."
+          },
+          "connections": {
+            "label": "Tilkoblede tjenester",
+            "description": "Opplysninger og tillatelser som trengs for tilkoblinger du eller organisasjonen din godkjenner, og opplysninger om datautvekslingen som følger."
+          },
+          "notifications": {
+            "label": "Mobilvarsler",
+            "description": "Hvis du aktiverer varsler, behandler vi en enhetsidentifikator, push-token, enhetsplattform og appversjon. Varsler kan inneholde møtetittel, varseltekst og møte- eller arbeidsområdereferanser."
+          },
+          "support": {
+            "label": "Kundestøtte og tekniske opplysninger",
+            "description": "Meldinger og vedlegg du sender til kundestøtte, IP-adresser, enhets- og nettleseropplysninger, tjenesteaktivitet og feil- eller sikkerhetsopplysninger."
+          }
+        },
+        "outro": "Vi mottar opplysningene fra deg, organisasjonen din og arbeidsområdeadministratorer, møtedeltakere og opptak, enhetene dine og tjenester du kobler til. Konto- og betalingsopplysninger er nødvendige for å levere de aktuelle tjenestene. Du velger om du vil koble til en kalender, aktivere varsler, tillate valgfri analyse eller legge inn innhold. Hvis du avslår en valgfri funksjon, kan den være utilgjengelig."
+      },
+      "purposes": {
+        "title": "Hvorfor vi bruker dataene og behandlingsgrunnlagene våre",
+        "intro": "For aktiviteter der Notably er behandlingsansvarlig, bruker vi behandlingsgrunnlagene nedenfor. Behandling av møteinnhold for organisasjonen din følger dens instrukser og den aktuelle databehandleravtalen.",
+        "items": {
+          "contract": {
+            "label": "Oppfyllelse av avtale",
+            "description": "Levere kontoen, abonnementet, kundestøtten og opptaks-, transkripsjons-, AI-, søke-, delings- og tilkoblingsfunksjonene du ber om, når det er nødvendig for å oppfylle en avtale med deg."
+          },
+          "legitimate": {
+            "label": "Berettigede interesser",
+            "description": "Administrere kundeforhold, beskytte tjenesten, forebygge misbruk, feilsøke, håndtere tvister og forbedre Notably. Vi bruker dette grunnlaget bare når interessene ikke veier tyngre enn dine rettigheter og interesser."
+          },
+          "choice": {
+            "label": "Samtykke",
+            "description": "For valgfrie analyse- og markedsføringsverktøy og annen behandling der vi ber om samtykke. Du kan trekke tilbake samtykket når som helst."
+          },
+          "legal": {
+            "label": "Rettslige plikter",
+            "description": "Overholde gjeldende lov, blant annet skatte- og regnskapskrav."
+          }
+        },
+        "outro": "Organisasjonen din er ansvarlig for å fastsette et lovlig behandlingsgrunnlag for møteinnhold den kontrollerer, og informere deltakerne om behandlingen."
+      },
+      "connectedApps": {
+        "title": "Deling og tilkoblede tjenester",
+        "body1": "Innhold i et delt arbeidsområde er tilgjengelig for autoriserte medlemmer etter tillatelsene deres. Eiere og administratorer administrerer medlemskap, innstillinger og tilkoblinger innenfor tillatelsene sine. Personer som mottar en delt lenke eller eksport, får tilgang til opplysningene du velger å dele.",
+        "body2": "Du eller organisasjonen din kan koble til andre apper, innloggingstjenester, AI-verktøy eller eksportmål. Godkjenningsskjermen beskriver tilgangen som kreves. Tjenestene mottar opplysningene du godkjenner, og kan beholde kopier etter sine egne vilkår når du kobler fra."
+      },
+      "cookies": {
+        "title": "Informasjonskapsler og lagring på enheten",
+        "body": "Vi bruker nødvendig nettleser- eller enhetslagring for å holde deg innlogget, beskytte tjenesten, huske innstillinger og lagre personvernvalgene dine. Mobilappen lagrer innloggingsøkter i beskyttet lagring på enheten.",
+        "optionalTools": "Valgfrie analyse- og annonseverktøy forblir avslått med mindre du tillater det aktuelle formålet i Personvernvalg. Analyse og annonsemåling kan velges hver for seg. Google Analytics måler utvalgte offentlige sider. Annonsemåling bruker Google Ads og Meta Pixel, og TikTok Pixel på notably.no. Appen kan laste tillatte verktøy gjennom Google Tag Manager. Disse tredjepartsverktøyene mottar nettidentifikatorer og begrensede opplysninger om side, henviser, nettleser, enhet og samhandling. De kjører ikke på konto- eller møtesider.",
+        "withdrawal": "Du kan endre eller trekke tilbake hvert valg når som helst gjennom Personvernvalg. Tilbaketrekking stopper videre innsamling for formålet, sender tilbaketrekkingssignaler til innlastede verktøy, fjerner kjente annonsekapsler vi har tilgang til, og avbryter annonsehendelser som ikke er sendt. Rå annonseopplysninger fjernes fra samtykkeregistreringen. Hvis forbindelsen er utilgjengelig, lagres avslaget lokalt og synkronisering forsøkes på nytt. Opplysninger en leverandør allerede har mottatt, følger leverandørens lagringsregler.",
+        "measurement": "Med analysesamtykke registrerer Notably også visning av priser og klikk på kontakt med salg. Hendelser fra den offentlige nettsiden inneholder ingen konto- eller organisasjonsidentifikatorer. I appen knyttes disse hendelsene til organisasjonen og arbeidsområdet ditt for salgsoppfølging når du samtykker til denne bruken; de inneholder ikke møteinnhold og sendes ikke til Google, Meta eller TikTok. Med samtykke til annonsemåling kan klikk på Start gratis og bekreftede selvbetjente prøvestarter måles. Når Stripe bekrefter en ny prøveperiode, kan serveren vår sende én prøvestarthendelse til Google og Meta, uten navn, e-postadresser, møteinnhold eller betalingsbeløp.",
+        "choices": "En nødvendig, sikker informasjonskapsel på Notablys API deler personvernvalgene dine mellom notably.no og app.notably.no i opptil 180 dager. Annonseidentifikatorer og kampanjeopplysninger lagres i opptil 90 dager, begrenset av samtykkets varighet. Organisasjonsknyttede apphendelser lagres i opptil 90 dager."
+      },
+      "recording": {
+        "title": "Opptak og opplastinger",
+        "body1": "Notably tar opp nettmøter med en opptaksassistent, støtter opptak på enheten din og behandler lyd du laster opp.",
+        "body2": "Opptak som venter på opplasting, kan bli liggende på enheten til de lastes opp eller fjernes. Opptak Notably mottar, behandles for å levere transkripsjoner, oppsummeringer, søk og andre funksjoner du ber om.",
+        "body3": "Du eller organisasjonen din må sikre at opptak og bruk av møteinnhold er lovlig. Gi deltakerne den påkrevde informasjonen og innhent nødvendig tillatelse eller samtykke før du tar opp, laster opp eller deler en samtale."
+      },
+      "processors": {
+        "title": "Tjenesteleverandører og andre mottakere",
+        "intro": "Vi bruker leverandørene nedenfor for å levere funksjonene du bruker. Databehandlere behandler data etter våre instrukser. Betalings-, innloggings- og andre uavhengige tjenester kan også bruke data til egne formål etter sine personvernvilkår.",
+        "items": {
+          "infrastructure": {
+            "name": "Hetzner (drift og opptakslagring)",
+            "purpose": "Drifter kjernesystemene våre og lagrer møteopptak i Tyskland."
+          },
+          "calendarCapture": {
+            "name": "Recall.ai (kalendere og møteopptak)",
+            "purpose": "Synkroniserer kalendere og tar opp nettmøter gjennom sin region i Tyskland. Drifts- og støttebehandling kan skje andre steder."
+          },
+          "speech": {
+            "name": "ElevenLabs (transkripsjon)",
+            "purpose": "Gjør lyd om til tekst og skiller mellom talere. Vi bruker tjenesten med datalagring i EU. Støtte eller moderering kan innebære behandling utenfor EU."
+          },
+          "ai": {
+            "name": "Requesty og Microsoft Azure OpenAI (AI-funksjoner)",
+            "purpose": "Requesty støtter AI-funksjonene våre gjennom sin EU-tjeneste. Microsoft Azure OpenAI behandler oppsummeringer, oversettelser, assistentsvar og uthenting av informasjon i Sverige, og søkedata i Frankrike. Enkelte drifts- eller støtteopplysninger kan behandles andre steder."
+          },
+          "notifications": {
+            "name": "Expo, Apple og Google (pushvarsler)",
+            "purpose": "Leverer varsler gjennom Apple Push Notification service og Google Firebase Cloud Messaging. Leveringen omfatter et varslingstoken, meldingsinnhold og møte- eller arbeidsområdereferanser og kan innebære internasjonal behandling."
+          },
+          "communications": {
+            "name": "Resend (e-post fra appen)",
+            "purpose": "Sender e-post om innlogging, invitasjoner, konto, abonnement, oppsummeringer og kundestøtte. Kunde- og meldingsdata lagres i USA."
+          },
+          "support": {
+            "name": "Chatbase (støttechat)",
+            "purpose": "Leverer støttechat, primært i USA. Åpning av støttesiden sender grunnleggende tekniske opplysninger til Chatbase. Meldinger du sender, sendes også dit."
+          },
+          "billingIdentity": {
+            "name": "Stripe, Apple App Store og Google Play (betaling)",
+            "purpose": "Behandler betalinger, abonnement og kjøpsbekreftelse. De kan behandle data internasjonalt og opptre selvstendig for enkelte aktiviteter."
+          },
+          "identity": {
+            "name": "Google, Apple og Microsoft (innlogging)",
+            "purpose": "Leverer valgfri innlogging og identitetstjenester som organisasjonen styrer. De kan behandle identitetsopplysninger internasjonalt."
+          },
+          "analytics": {
+            "name": "Google, Meta og TikTok (valgfri analyse og annonsering)",
+            "purpose": "Med samtykke måler Google Analytics offentlige sider; Google Ads og Meta Pixel måler annonsering og prøvestartattribusjon, og TikTok Pixel måler annonsering på notably.no. Appen kan bruke Google Tag Manager til å laste tillatte verktøy. Behandling kan skje internasjonalt. Notablys organisasjonsknyttede apphendelser holdes separat og sendes ikke til disse leverandørene."
+          },
+          "publicWebsite": {
+            "name": "Vercel og Supabase (offentlig nettside)",
+            "purpose": "Vercel drifter notably.no, og hostet Supabase leverer offentlig innhold og bilder til nettsiden. Disse tjenestene mottar tekniske forespørselsopplysninger som IP-adresser og nettleserinformasjon og kan behandle dem internasjonalt. De drifter ikke Notablys kjernedatabase, autentiseringstjeneste eller private møteopptak."
+          }
+        },
+        "outro": "Vi selger ikke personopplysninger. Opplysninger kan også utleveres når loven krever det, eller når det er nødvendig for å fastsette, gjøre gjeldende eller forsvare rettskrav. Mottakere du eller organisasjonen din velger, er beskrevet under Deling og tilkoblede tjenester."
+      },
+      "retention": {
+        "title": "Lagringstid og sletting",
+        "intro": "Lagringstiden avhenger av typen opplysninger, funksjonene du bruker, instruksene dine og eventuelle rettslige plikter:",
+        "items": {
+          "account": "Konto- og arbeidsområdeinnhold beholdes mens kontoen eller arbeidsområdet finnes, med mindre en autorisert person sletter det eller en avtalt lagringstid gjelder. Kansellering av abonnement sletter ikke dataene dine.",
+          "deletion": "Sletting av et møte fjerner møtet og tilknyttede transkripsjoner, oppsummeringer, notater, møtechat og søkedata. Opptakskopier slettes separat og kan ta lengre tid. Et delt opptak beholdes mens et annet møte bruker det. Lagrede assistentsamtaler, opplysninger lagret separat i et arbeidsområde og delte eller eksporterte kopier kan kreve en egen sletteforespørsel.",
+          "captureMedia": "De midlertidige opptaksmediene hos Recall.ai er konfigurert til å utløpe 165 timer etter at opptaket er fullført. Dette sletter ikke opptaket som er lagret i Notably. Recall.ai kan beholde andre tjenesteopplysninger etter sine egne lagringsregler.",
+          "backups": "Sletting fra appen fjerner ikke sikkerhetskopier eller driftskopier umiddelbart. Disse kopiene har begrenset tilgang. Lagringstiden avhenger av behov for gjenoppretting, feilsøking og sikkerhet og eventuelle rettslige plikter.",
+          "records": "Begrensede organisasjons-, kontakt-, abonnements-, betalings-, støtte- og sikkerhetsopplysninger kan bestå etter sletting for kundeadministrasjon, avstemming, rettslige plikter eller rettskrav. Lagringstiden avhenger av formålet med opplysningene og gjeldende lovkrav.",
+          "shared": "Sletting av en medlemskonto sletter ikke innhold som styres av et delt arbeidsområde. Kopier en annen person eller tilkoblet tjeneste allerede har mottatt, følger mottakerens egne lagringsregler."
+        }
+      },
+      "transfers": {
+        "title": "Internasjonale overføringer",
+        "body1": "Kjernesystemene våre og opptakslagringen er i Tyskland. E-postdata hos Resend og støttechatdata hos Chatbase lagres eller behandles i USA. Varsler, innlogging, betaling, valgfri analyse og enkelte leverandøroperasjoner kan også innebære behandling utenfor EØS.",
+        "body2": "Overføringer utenfor EØS krever et lovlig overføringsgrunnlag, som en beslutning om tilstrekkelig beskyttelsesnivå eller EUs standard personvernbestemmelser. En kvalifisert, sertifisert mottaker i USA kan være omfattet av EU–US Data Privacy Framework. Du kan kontakte oss for informasjon om garantiene som gjelder for en leverandør, og en kopi av de relevante garantiene. Tjenester du velger å koble til, kan gjøre overføringer etter sine egne personvernvilkår."
+      },
+      "rights": {
+        "title": "Personvernrettighetene dine",
+        "body1": "Avhengig av gjeldende lov kan du:",
+        "items": {
+          "access": "Be om innsyn i personopplysningene dine og retting av feil.",
+          "deletion": "Be om sletting eller begrensning av behandlingen.",
+          "portability": "Motta en flyttbar kopi av data der retten til dataportabilitet gjelder.",
+          "objection": "Protestere mot behandling basert på berettigede interesser, inkludert eventuell direkte markedsføring.",
+          "consent": "Trekke tilbake samtykke når som helst uten at det påvirker behandling som skjedde før tilbaketrekkingen."
+        },
+        "organization": "Hvis organisasjonen din er behandlingsansvarlig for møteinnholdet, kontakter du den for å bruke rettighetene dine. Vi bistår med forespørsler om data vi behandler på dens vegne. Autoriserte brukere kan også eksportere eller slette innhold gjennom appen. Du trenger ikke en Notably-konto for å sende en personvernforespørsel.",
+        "complaint": "Du kan klage til din lokale personvernmyndighet, blant annet Datatilsynet i Norge.",
+        "body2Prefix": "For en personvernforespørsel, kontakt",
+        "body2Suffix": ". Vi kan be om opplysninger for å bekrefte identiteten din når det er nødvendig. Vi svarer uten ugrunnet opphold, normalt innen én måned. Ved komplekse eller mange forespørsler kan vi trenge opptil to ekstra måneder. Vi forklarer forlengelsen innen den første måneden.",
+        "complaintLinkLabel": "Slik klager du til Datatilsynet"
+      },
+      "children": {
+        "title": "Barn",
+        "body": "Notably er beregnet på profesjonell bruk og bruk i organisasjoner og er ikke rettet mot barn. Vi tilbyr ikke bevisst kontoer direkte til barn."
+      },
+      "calendars": {
+        "title": "Google- og Microsoft-kalendere",
+        "intro": "Kalendertilkobling er valgfritt. Notably ber om lesetilgang for å finne møter og holde møtedetaljene oppdatert. Appen oppretter, endrer eller sletter ikke kalenderhendelser og har ikke tilgang til innboksen din.",
+        "items": {
+          "access": {
+            "label": "Opplysninger vi får tilgang til",
+            "description": "Møtetitler, beskrivelser, tidspunkt, arrangører, deltakere, møtelenker og hendelsesendringer fra kalenderne du godkjenner."
+          },
+          "use": {
+            "label": "Hvordan vi bruker dem",
+            "description": "Vise og synkronisere møter, planlegge opptak du velger, og levere tilhørende transkripsjoner, notater og søk. Vi bruker ikke Google- eller Microsoft-kalenderdata til annonsering, profilering eller analyse uten sammenheng med disse funksjonene."
+          },
+          "sharing": {
+            "label": "Hvem som mottar dem",
+            "description": "Recall.ai leverer kalendersynkronisering og automatiske opptak. Relevante møteopplysninger kan også behandles av transkripsjons- og AI-leverandørene nedenfor for å levere funksjonene du ber om."
+          },
+          "disconnect": {
+            "label": "Frakobling",
+            "description": "Du kan koble fra i Notably og trekke tilbake tilgangen i Google- eller Microsoft-kontoen din. Frakobling stopper synkronisering i Notably og sender en forespørsel om å fjerne tilkoblingen hos leverandøren. Møteinnhold som allerede er lagret, slettes ikke av dette. Det følger reglene for lagringstid og sletting nedenfor."
+          }
+        },
+        "outro": "Vår bruk og overføring av informasjon mottatt fra Google API-er følger Google API Services User Data Policy, inkludert kravene til begrenset bruk.",
+        "policyLinkLabel": "Les Googles retningslinjer"
+      },
+      "changes": {
+        "title": "Endringer i erklæringen",
+        "body": "Vi kan oppdatere erklæringen når tjenesten, leverandørene eller loven endres. Datoen ovenfor viser siste oppdatering. Vi varsler om vesentlige endringer gjennom Notably eller en annen egnet kanal."
+      },
+      "sales": {
+        "title": "Salg og kundekontakt",
+        "body1": "Når vi kontakter bedrifter om Notably, behandler vi kontaktopplysninger i jobbsammenheng, som navn, rolle, jobb-e-post og telefonnummer, opplysninger fra offentlige kilder som Brønnøysundregistrene og bedriftens nettsider, og dialogen vår. Når du åpner tilbud, avtaledokumenter, IT-informasjon eller bookingsider gjennom lenker vi sender, registrerer vi når og hvor ofte de åpnes, for å kunne følge opp relevant. Grunnlaget er berettiget interesse i kontakt med bedriftskunder, med hensyn til rettighetene dine og eventuelle lovkrav om samtykke.",
+        "body2": "Du kan når som helst protestere mot salgskontakt ved å svare oss eller sende e-post til support@notably.no. Vi beholder opplysninger om mulige kunder så lenge de er relevante for dette formålet. Ber du oss slutte, sletter eller sperrer vi opplysningene etter behov og beholder bare det som er nødvendig for å respektere reservasjonen eller oppfylle lovkrav. Valgfri organisasjonsknyttet appbruk til salgsoppfølging er beskrevet under Informasjonskapsler og lagring på enheten og krever samtykke."
+      }
+    }
+  },
+  "terms": {
+    "meta": {
+      "title": "Vilkår for bruk | Notably AI",
+      "description": "Les vilkårene som gjelder for Notably-kontoer, møteopptak, AI-funksjoner, tilkoblede tjenester, abonnement og kundeinnhold."
+    },
+    "title": "Vilkår for bruk",
+    "updated": "13.10.2026",
+    "intro": "Disse vilkårene regulerer tilgangen til Notablys nettside, web- og mobilapp og tilhørende tjenester for deg og, der det er aktuelt, organisasjonen du representerer. De samme vilkårene publiseres på notably.no og app.notably.no. Ved å opprette en konto, godta en bestilling eller bruke Notably godtar du dem.",
+    "sections": {
+      "agreement": {
+        "title": "Avtale og fullmakt",
+        "body1": "Avtalen din er med ARTI CONSULT AS, et norsk aksjeselskap med organisasjonsnummer 929 098 609 MVA og adresse C. Sundts gate 55, 5004 Bergen, Norge (\"Notably\", \"vi\", \"oss\"). Hvis du inngår en avtale på vegne av en organisasjon, må du ha myndighet til det. Organisasjonens avtale kan også gjelde for bruken din av Notably.",
+        "body2": "Hvis et bestillingsskjema, en hovedavtale, enterprise-avtale eller databehandleravtale er i konflikt med disse vilkårene, går det særskilt avtalte dokumentet foran for den aktuelle konflikten. Du må ha rettslig handleevne til å inngå avtalen."
+      },
+      "service": {
+        "title": "Tjenestebeskrivelse",
+        "body": "Notably tar opp støttede nettmøter og fysiske møter og behandler lyd du tar opp eller laster opp. Appen lager transkripsjoner, talermerking, oppsummeringer, notater og andre AI-resultater. Du kan søke i møteinnhold du har tilgang til, bruke assistenten og maler og dele eller eksportere informasjon. Funksjoner, grenser og integrasjoner varierer med abonnement, plattform og leverandørtilgjengelighet."
+      },
+      "accounts": {
+        "title": "Kontoer, arbeidsområder og organisasjoner",
+        "body1": "Oppgi riktige kontoopplysninger, beskytt innloggingsopplysningene og enhetene dine, og ikke del kontoen med uvedkommende. Varsle oss raskt ved mistanke om uautorisert tilgang. Du er ansvarlig for aktivitet via kontoen, bortsett fra i den grad aktiviteten skyldes Notably eller gjeldende lov bestemmer noe annet.",
+        "body2": "Eiere og administratorer kan administrere medlemskap, innstillinger, betaling, tilkoblinger og delt innhold innenfor tillatelsene sine. Delt arbeidsområdeinnhold kan fortsatt være tilgjengelig for autoriserte medlemmer etter at noen forlater arbeidsområdet eller sletter kontoen sin."
+      },
+      "recording": {
+        "title": "Opptak, opplastinger og deltakerrettigheter",
+        "body1": "Du er ansvarlig for at opptak og opplastinger gjennom Notably er lovlige. Før du tar opp, laster opp, transkriberer, analyserer, lagrer eller deler en samtale, må du ha et gyldig behandlingsgrunnlag. Gi varslene og innhent samtykkene, tillatelsene og godkjenningene som kreves etter lov, avtale, arbeidsplassens regler og deltakernes rettigheter.",
+        "body2": "Du må ikke bruke Notably til skjult eller ulovlig overvåking, omgå opptaksvarsler eller indikatorer eller ta opp innhold du ikke har tillatelse til å behandle. Produktvarsler og opptaksindikatorer erstatter ikke pliktene dine."
+      },
+      "content": {
+        "title": "Kundeinnhold og immaterielle rettigheter",
+        "body1": "Opptak, opplastinger, transkripsjoner, spørsmål, meldinger, notater, maler og annen informasjon du legger inn eller oppretter, forblir ditt innhold (\"Kundeinnhold\"). Du gir Notably og avtalte databehandlere en begrenset, ikke-eksklusiv lisens til å behandle innholdet når det trengs for å levere, beskytte og støtte tjenesten, følge instruksene dine og oppfylle rettslige plikter. Dette omfatter opptak, transkripsjon, AI-behandling, søk, deling og eksport.",
+        "body2": "Du bekrefter at du har alle nødvendige rettigheter til Kundeinnhold, og at bruken gjennom Notably ikke bryter lov eller tredjepartsrettigheter. Notably beholder alle rettigheter til tjenesten, programvaren og varemerkene. Tilbakemeldinger kan brukes til å forbedre Notably uten begrensning eller betaling, forutsatt at de ikke identifiserer deg eller avslører Kundeinnhold."
+      },
+      "ai": {
+        "title": "AI-generert innhold",
+        "body1": "Transkripsjoner, talermerking, oppsummeringer, handlingspunkter, søkeresultater, assistentsvar og andre AI-resultater kan være unøyaktige, ufullstendige, forsinkede eller mangle kontekst. Kontroller viktig informasjon før du stoler på, deler eller handler etter den. Resultatene er ikke juridisk, medisinsk, finansiell, arbeidsrettslig eller annen profesjonell rådgivning.",
+        "body2": "Du er ansvarlig for hvordan du bruker AI-resultater og for handlinger du godkjenner eller utfører gjennom Notably. Kontroller foreslåtte handlinger når appen ber om godkjenning. Notably lover ikke at resultatene er unike eller kan vernes av immaterielle rettigheter."
+      },
+      "acceptableUse": {
+        "title": "Akseptabel bruk",
+        "intro": "Du må ikke bruke Notably til å:",
+        "items": {
+          "rights": "Bryte personvern-, opptaks-, databeskyttelses-, opphavsretts- eller andre lover eller rettigheter, drive skjult overvåking eller dele arbeidsområdeinnhold uten nødvendig rett eller tillatelse.",
+          "harm": "Utgi deg for andre, bedra, trakassere, utnytte, diskriminere ulovlig, spre ulovlig innhold eller bruke AI eller resultater til ulovlige formål.",
+          "security": "Introdusere skadevare eller stjålne innloggingsopplysninger, få uautorisert tilgang til en annen konto, teste eller forstyrre systemer eller omgå sikkerhets-, tilgangs-, bruks-, betalings- eller hastighetsgrenser.",
+          "misuse": "Skrape, videreselge, rekonstruere med mindre ufravikelig lov tillater det, gi tilgang til uvedkommende eller skape overdreven automatisert belastning uten skriftlig avtale."
+        }
+      },
+      "dataResidency": {
+        "title": "Personvern og datalokasjon",
+        "body1": "Kjernesystemene våre og møteopptakene lagres i Tyskland. Enkelte leverandører behandler opplysninger andre steder som beskrevet i personvernerklæringen.",
+        "body2": "Notably behandler personopplysninger etter personvernerklæringen og en eventuell databehandleravtale. Tilkoblede tjenester du godkjenner, kan også behandle data etter sine egne personvernvilkår.",
+        "linkPrefix": "Mer informasjon om personvern finner du i vår",
+        "linkLabel": "Personvernerklæring",
+        "linkSuffix": "."
+      },
+      "connectedServices": {
+        "title": "Kalendere og tilkoblede tjenester",
+        "intro": "Du kan koble til kalendere, innloggingstjenester, AI-verktøy eller eksportmål. Godkjenningsskjermen beskriver datatilgangen som kreves. Du må ha myndighet til å koble til tjenesten og dele det aktuelle innholdet.",
+        "items": {
+          "authority": "Du må ha nødvendig rett eller fullmakt til å koble til kontoen og dele berørte arbeidsområdedata. Du kan koble fra i tilgjengelige innstillinger, men en mottaker kan beholde informasjon den allerede har mottatt etter sine egne vilkår og sin personvernerklæring.",
+          "adminExport": "Hvis organisasjonen din aktiverer automatisk møteeksport, sendes møteinnhold og en midlertidig opptakslenke til det valgte målet. Organisasjonen må ha myndighet til å dele opplysningene og gi medlemmer og deltakere de påkrevde varslene.",
+          "thirdParty": "Tredjepartstjenester drives uavhengig. Tilgjengelighet, sikkerhet, vilkår, lokasjoner og behandling er utenfor Notablys kontroll, bortsett fra når tjenesten er en avtalt databehandler for Notably.",
+          "google": "Notably ber bare om Google Kalender-tilgangene som vises ved autorisasjonen, og bruker Google-data bare til kalendersynkronisering, møteopptak og tilhørende transkripsjons-, notat- og søkefunksjoner brukeren ber om. Vi bruker ikke Google-data til annonsering."
+        },
+        "outro": "Vår bruk og overføring av informasjon mottatt fra Google API-er følger Google API Services User Data Policy, inkludert kravene til begrenset bruk."
+      },
+      "billing": {
+        "title": "Abonnement, betaling og kansellering",
+        "body1": "Prisen, valutaen, skattene, faktureringsintervallet, grensene og en eventuell kvalifisert prøveperiode som vises ved kjøp eller i bestillingen din, gjelder. Betalte abonnement fornyes automatisk med valgt intervall til de kanselleres. Nye plasser og abonnementsendringer kan belastes eller forholdsberegnes som vist når du godkjenner dem. Kansellering av et webabonnement stopper fornyelsen ved slutten av gjeldende faktureringsperiode.",
+        "body2": "ARTI CONSULT AS leverer abonnement kjøpt på web, og Stripe behandler betaling og abonnementsadministrasjon. Kjøp i Apple App Store og Google Play følger butikkens regler for fakturering, kansellering og refusjon. Sletting av en Notably-konto kansellerer ikke et butikkabonnement.",
+        "body3": "Apples standard lisensavtale for sluttbrukere av lisensierte apper gjelder også for lisensen til iOS-appen. Skatter kan legges til når det kreves, og manglende betaling kan føre til stansing. Ufravikelige rettigheter til angrerett, refusjon eller andre forbrukerrettigheter påvirkes ikke."
+      },
+      "termination": {
+        "title": "Stansing, kansellering og sletting",
+        "body1": "Du kan slutte å bruke Notably, kansellere gjennom tjenesten som fakturerer deg, eller be om kontosletting. Autoriserte eiere kan slette arbeidsområder etter nødvendige eierskapsoverføringer. Sletting av en medlemskonto sletter ikke delt arbeidsområde- eller organisasjonsinnhold. Eksporter det du trenger før sletting; slettet innhold kan være umulig å gjenopprette.",
+        "body2": "Sletting av et møte fjerner det tilknyttede innholdet fra møtebiblioteket. Opptakskopier slettes separat, og et delt opptak beholdes mens et annet møte bruker det. Lagrede assistentsamtaler, opplysninger lagret separat i arbeidsområdet og delte eller eksporterte kopier kan kreve en egen sletteforespørsel. Personvernerklæringen forklarer hvilke andre opplysninger som kan bestå.",
+        "body3": "Vi kan undersøke, begrense bruk, fjerne innhold eller stanse tilgang ved vesentlig brudd, ulovlig bruk, sikkerhetsrisiko, manglende betaling eller rettslige krav. Vi varsler når det med rimelighet er mulig."
+      },
+      "availability": {
+        "title": "Tilgjengelighet og garantier",
+        "body1": "Notably leveres \"som tilgjengelig\". Vi garanterer ikke uavbrutt tjeneste, opptak av alle møter eller talere, lydkvalitet, integrasjonstilgjengelighet, transkripsjons- eller AI-nøyaktighet eller bevaring av innhold etter autorisert sletting. Behold kildekopier av innhold du må oppbevare.",
+        "body2": "Så langt loven tillater, fraskrives underforståtte garantier. Ingenting i vilkårene begrenser garantier, rettsmidler eller forbrukerrettigheter som ikke lovlig kan fravikes."
+      },
+      "liability": {
+        "title": "Ansvarsbegrensning",
+        "body1": "Så langt loven tillater, er Notably ikke ansvarlig for indirekte, tilfeldige, særlige eller avledede tap eller tap av fortjeneste, inntekter, omdømme eller data som følger av bruken av tjenesten. Vårt samlede ansvar etter vilkårene overstiger ikke beløpet som er betalt for Notably de tolv månedene før hendelsen som ga grunnlag for kravet.",
+        "body2": "Ingenting i vilkårene utelukker eller begrenser ansvar som ikke lovlig kan utelukkes eller begrenses, eller påvirker ufravikelige forbrukerrettigheter. Begrensningene gjelder bare så langt gjeldende lov tillater."
+      },
+      "general": {
+        "title": "Endringer og generelle vilkår",
+        "body1": "Vi kan oppdatere disse vilkårene når tjenesten, leverandørene, virksomheten eller loven endres. Vi varsler eksisterende kunder om vesentlige endringer gjennom Notably eller en annen egnet kanal minst 30 dager før de trer i kraft, med forbehold om særskilt avtalte vilkår. Fortsatt bruk etter ikrafttredelsen betyr at du godtar de oppdaterte vilkårene der loven tillater det; hvis loven krever nytt samtykke, ber vi om det.",
+        "body2": "Disse vilkårene, gjeldende bestillinger og andre særskilt avtalte dokumenter utgjør hele avtalen om Notably. Hvis en bestemmelse ikke kan håndheves, gjelder resten fortsatt. Manglende håndheving er ikke et avkall. Plikter om innholdsrettigheter, betaling, ansvar og bestemmelser som etter sin art skal fortsette, gjelder også etter opphør."
+      },
+      "contact": {
+        "title": "Kontakt",
+        "bodyPrefix": "ARTI CONSULT AS, organisasjonsnummer 929 098 609 MVA, registrert i Foretaksregisteret, C. Sundts gate 55, 5004 Bergen, Norge. Spørsmål om disse vilkårene kan sendes til",
+        "bodySuffix": "."
+      },
+      "dataProcessingAgreement": {
+        "title": "Databehandleravtale",
+        "body1": "Databehandleravtalen for Notably, med oversikten over underdatabehandlere, er en del av disse vilkårene for alle kunder når Notably behandler personopplysninger på deres vegne. Når du bruker Notably på vegne av en organisasjon, er organisasjonen normalt behandlingsansvarlig for møteinnholdet sitt, og Notably behandler det etter organisasjonens instrukser. Ved motstrid om denne behandlingen går databehandleravtalen foran disse vilkårene.",
+        "body2": "Versjonen som inngår i avtalen du har godtatt, gjelder. Eksisterende signerte avtaler og registrerte aksepter er fortsatt gyldige; publisering av et oppdatert dokument erstatter ikke i seg selv avtalen du har godtatt. Endringer følger gjeldende avtale og krav til varsling.",
+        "agreementLinkLabel": "Les databehandleravtalen",
+        "subprocessorsLinkLabel": "Les oversikten over underdatabehandlere"
+      }
+    }
+  }
+}
