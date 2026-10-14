@@ -1,6 +1,6 @@
-import { decorateSignup, signupDestination } from './marketing-attribution.ts';
+import { decorateDemo, decorateSignup, demoDestination, signupDestination } from './marketing-attribution.ts';
 import type { Attribution } from './consent-client.ts';
-import { isProductionPage, publicPagePath, SALES_REF } from './marketing-policy.ts';
+import { isProductionPage, normalizeRef, publicPagePath } from './marketing-policy.ts';
 import { hasMarketingConsent, hasAnalyticsConsent } from './consent.ts';
 import { trackStartTrialClick } from './analytics.ts';
 
@@ -12,12 +12,14 @@ export function startTrialLinks(getAttribution: () => Attribution | null): () =>
     const url = new URL(window.location.href);
     if (!isProductionPage(url)) return;
     const ref = url.searchParams.getAll('ref');
-    if (ref.length === 1 && SALES_REF.test(ref[0])) salesRef = ref[0];
+    if (ref.length === 1 && normalizeRef(ref[0])) salesRef = normalizeRef(ref[0]);
     for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href]')) {
-      if (!signupDestination(a.href)) continue;
+      const signup = !!signupDestination(a.href);
+      if (!signup && !demoDestination(a.href)) continue;
       const original = originals.get(a) ?? a.href;
       originals.set(a, original);
-      const next = decorateSignup(original, hasMarketingConsent() ? getAttribution() : null, salesRef);
+      const input = hasMarketingConsent() ? getAttribution() : null;
+      const next = signup ? decorateSignup(original, input, salesRef) : decorateDemo(original, input, salesRef);
       if (a.href !== next) a.href = next;
     }
     for (const a of originals.keys()) if (!a.isConnected) originals.delete(a);

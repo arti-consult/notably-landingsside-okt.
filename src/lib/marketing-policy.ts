@@ -15,6 +15,16 @@ export const CLICK_ID = /^[A-Za-z0-9._~-]{1,512}$/;
 export const validCampaignValue = (key: string, value: string): boolean => key.startsWith('utm_')
   ? value.length > 0 && value.length <= 200 && /^[\x20-\x7e]+$/.test(value) : CLICK_ID.test(value);
 export const SALES_REF = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/;
+/** Henvisningskode (partnerprogrammet): ikke en sporings-ID, sendes uten samtykke. Små bokstaver, [a-z0-9_-], maks 40 tegn. */
+export const PARTNER_REF = /^[a-z0-9_-]{1,40}$/;
+export const normalizeRef = (value: string | null | undefined): string | null => {
+  const v = (value ?? '').trim().toLowerCase();
+  return PARTNER_REF.test(v) ? v : null;
+};
+/** «Book en demo»: kunden booker selv hos neste selger i Notably OS (erstatter Calendly). */
+export const DEMO_BOOKING_URL = 'https://os.notably.no/book/demo';
+/** Leadinntak i Notably OS (venteliste → kort hos selger). */
+export const LEAD_INBOUND_URL = 'https://os.notably.no/api/leads/inbound';
 
 export function publicPagePath(url: URL): string | null {
   const path = url.pathname.replace(/\/$/, '') || '/';

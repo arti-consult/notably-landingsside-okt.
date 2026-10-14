@@ -1,5 +1,5 @@
 import type { Attribution } from './consent-client.ts';
-import { ACQUISITION_PATHS, CAMPAIGN_KEYS, CLICK_ID, SALES_REF, isProductionPage, publicPagePath, validCampaignValue } from './marketing-policy.ts';
+import { ACQUISITION_PATHS, CAMPAIGN_KEYS, CLICK_ID, isProductionPage, normalizeRef, publicPagePath, validCampaignValue } from './marketing-policy.ts';
 
 /** Call only after server-confirmed consent. No IDs are put in browser storage. */
 export function readAttribution(url: URL, cookie = ''): Attribution | null {
@@ -53,6 +53,45 @@ export function decorateSignup(href: string, input: Attribution | null, salesRef
     }
     for (const [key, value] of Object.entries(input.utm ?? {})) if ((CAMPAIGN_KEYS as readonly string[]).includes(key) && key.startsWith('utm_') && value && validCampaignValue(key, value)) url.searchParams.set(key, value);
   }
-  if (!url.searchParams.has('ref') && salesRef && SALES_REF.test(salesRef)) url.searchParams.set('ref', salesRef);
+  const ref = normalizeRef(salesRef);
+  if (!url.searchParams.has('ref') && ref) url.searchParams.set('ref', ref);
   return url.href;
+}
+
+export function demoDestination(href: string): URL | null {
+  try {
+    const url = new URL(href);
+    return url.origin === 'https://os.notably.no' && /^\/book\/demo\/?$/.test(url.pathname) && !url.username && !url.password ? url : null;
+  } catch { return null; }
+}
+
+/** «Book en demo»: samme regel som påmeldingslenkene – klikk-id-er/utm bare med samtykke, ref alltid (validert). */
+export function decorateDemo(href: string, input: Attribution | null, ref: string | null): string {
+  const url = demoDestination(href);
+  if (!url) return href;
+  for (const key of [...CAMPAIGN_KEYS, 'ref']) url.searchParams.delete(key);
+  if (input) {
+    for (const key of ['gclid', 'gbraid', 'wbraid', 'fbclid'] as const) {
+      const value = input.identifiers[key];
+      if (value && CLICK_ID.test(value)) url.searchParams.set(key, value);
+    }
+    for (const [key, value] of Object.entries(input.utm ?? {})) if ((CAMPAIGN_KEYS as readonly string[]).includes(key) && key.startsWith('utm_') && value && validCampaignValue(key, value)) url.searchParams.set(key, value);
+  }
+  const r = normalizeRef(ref);
+  if (r) url.searchParams.set('ref', r);
+  return url.href;
+}
+
+/** Attribusjon til leadinntaket (venteliste): utm/klikk-id-er bare med samtykke, ref alltid (validert). */
+export function leadAttribution(url: URL, consented: boolean): Record<string, string> {
+  const out: Record<string, string> = {};
+  const input = consented ? readAttribution(url) : null;
+  if (input) {
+    for (const key of ['gclid', 'gbraid', 'wbraid', 'fbclid'] as const) if (input.identifiers[key]) out[key] = input.identifiers[key]!;
+    for (const [key, value] of Object.entries(input.utm ?? {})) if (value) out[key] = value;
+  }
+  const refs = url.searchParams.getAll('ref');
+  const ref = refs.length === 1 ? normalizeRef(refs[0]) : null;
+  if (ref) out.ref = ref;
+  return out;
 }

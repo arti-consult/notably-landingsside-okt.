@@ -2,6 +2,7 @@ import type { MouseEvent, ReactNode } from 'react';
 import { Facebook, Instagram, Linkedin } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { openPrivacyChoices } from '../lib/consent';
+import { DEMO_BOOKING_URL } from '../lib/marketing-policy';
 import { requestScrollToSection } from '../lib/scrollToSection';
 
 const socialLinks = [
@@ -125,7 +126,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <External href="https://calendly.com/arti-jorgen/notably-demo">Book en demo</External>
+                <External href={DEMO_BOOKING_URL}>Book en demo</External>
               </li>
               <li>
                 <a href="mailto:support@notably.no" className={linkClass}>

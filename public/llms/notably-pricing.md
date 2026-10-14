@@ -16,7 +16,7 @@ Canonical URL: https://notably.no/
 
 ## Commercial links
 - Sign up: https://app.notably.no/no/sign-up
-- Book demo: https://calendly.com/arti-jorgen/notably-demo
+- Book demo: https://os.notably.no/book/demo
 
 ## Enterprise contact details shown in UI
 - Contact person: Jorgen Helmers-Olsen

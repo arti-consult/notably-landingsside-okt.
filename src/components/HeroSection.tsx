@@ -9,6 +9,7 @@ import {
 import { ArrowRight } from 'lucide-react';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 import HeroMeetingVisual from './HeroMeetingVisual';
+import { DEMO_BOOKING_URL } from '../lib/marketing-policy';
 
 const containerVariants: Variants = {
   hidden: {},
@@ -239,7 +240,7 @@ export default function HeroSection() {
                 <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5" />
               </a>
               <a
-                href="https://calendly.com/arti-jorgen/notably-demo"
+                href={DEMO_BOOKING_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex shrink-0 items-center justify-center rounded-2xl border border-slate-300 bg-white/70 px-6 py-4 text-lg font-semibold text-slate-700 backdrop-blur transition-colors hover:border-slate-400 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-500"
