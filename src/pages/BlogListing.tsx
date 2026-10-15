@@ -1,81 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { supabase } from '../lib/supabase';
+import { articles as allArticles, type ArticleSummary } from 'virtual:articles';
 import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL } from '../lib/seo';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import { Clock, Search } from 'lucide-react';
-
-interface Article {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string | null;
-  published_at: string;
-  reading_time_minutes: number;
-  author_id: string;
-  author_name: string | null;
-  author_profile_picture_url: string | null;
-  article_categories: { name: string; slug: string } | null;
-  media_library: { public_url: string; alt_text: string } | null;
-}
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-}
+import { Search } from 'lucide-react';
 
 export default function BlogListing() {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadArticles();
-    loadCategories();
-  }, [selectedCategory]);
-
-  const loadArticles = async () => {
-    setLoading(true);
-
-    let query = supabase
-      .from('articles')
-      .select(`
-        *,
-        article_categories (name, slug),
-        media_library (public_url, alt_text)
-      `)
-      .eq('status', 'published')
-      .lte('published_at', new Date().toISOString())
-      .order('published_at', { ascending: false });
-
-    if (selectedCategory) {
-      query = query.eq('category_id', selectedCategory);
+  const categories = useMemo(() => {
+    const bySlug = new Map<string, { id: string; name: string; slug: string }>();
+    for (const article of allArticles) {
+      if (article.category && !bySlug.has(article.category.slug)) {
+        bySlug.set(article.category.slug, { id: article.category.slug, ...article.category });
+      }
     }
+    return [...bySlug.values()].sort((a, b) => a.name.localeCompare(b.name, 'nb'));
+  }, []);
 
-    const { data } = await query;
-
-    if (data) {
-      setArticles(data as Article[]);
-    }
-
-    setLoading(false);
-  };
-
-  const loadCategories = async () => {
-    const { data } = await supabase
-      .from('article_categories')
-      .select('*')
-      .order('name');
-
-    if (data) {
-      setCategories(data);
-    }
-  };
+  const articles = selectedCategory
+    ? allArticles.filter((article) => article.category?.slug === selectedCategory)
+    : allArticles;
 
   const filteredArticles = articles.filter(article =>
     article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -94,7 +42,7 @@ export default function BlogListing() {
     });
   };
 
-  const getAuthorName = (article: Article) => article.author_name?.trim() || 'Notably Team';
+  const getAuthorName = (article: ArticleSummary) => article.author.name;
 
   return (
     <>
@@ -129,11 +77,7 @@ export default function BlogListing() {
 
       <div className="min-h-screen bg-gray-50 pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {loading ? (
-            <div className="text-center py-12 text-gray-600">
-              Laster artikler...
-            </div>
-          ) : filteredArticles.length === 0 ? (
+          {filteredArticles.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-600">Ingen artikler funnet</p>
             </div>
@@ -141,19 +85,19 @@ export default function BlogListing() {
             <>
               {featuredArticle && (
                 <div className="mb-12 grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200">
-                  {featuredArticle.media_library && (
+                  {featuredArticle.image && (
                     <Link to={`/artikler/${featuredArticle.slug}`} className="block">
                       <img
-                        src={featuredArticle.media_library.public_url}
-                        alt={featuredArticle.media_library.alt_text}
+                        src={featuredArticle.image.src}
+                        alt={featuredArticle.image.alt}
                         className="w-full h-full object-cover min-h-[300px] lg:min-h-[400px]"
                       />
                     </Link>
                   )}
-                  <div className={`p-8 lg:p-12 flex flex-col justify-center ${!featuredArticle.media_library ? 'lg:col-span-2' : ''}`}>
-                    {featuredArticle.article_categories && (
+                  <div className={`p-8 lg:p-12 flex flex-col justify-center ${!featuredArticle.image ? 'lg:col-span-2' : ''}`}>
+                    {featuredArticle.category && (
                       <span className="inline-block text-sm font-medium text-gray-500 mb-3">
-                        {featuredArticle.article_categories.name}
+                        {featuredArticle.category.name}
                       </span>
                     )}
 
@@ -170,19 +114,19 @@ export default function BlogListing() {
                     )}
 
                     <div className="flex items-center gap-4 text-sm text-gray-500 mb-6">
-                      <time dateTime={featuredArticle.published_at}>
-                        {formatDate(featuredArticle.published_at)}
+                      <time dateTime={featuredArticle.published}>
+                        {formatDate(featuredArticle.published)}
                       </time>
                       <span>•</span>
                       <span className="flex items-center gap-1">
-                        {featuredArticle.reading_time_minutes} min
+                        {featuredArticle.readingTime} min
                       </span>
                     </div>
 
                     <div className="flex items-center gap-3">
-                      {featuredArticle.author_profile_picture_url ? (
+                      {featuredArticle.author.image ? (
                         <img
-                          src={featuredArticle.author_profile_picture_url}
+                          src={featuredArticle.author.image}
                           alt={getAuthorName(featuredArticle)}
                           className="w-10 h-10 rounded-full object-cover border border-gray-200"
                         />
@@ -250,16 +194,16 @@ export default function BlogListing() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {otherArticles.map((article) => (
                   <Link
-                    key={article.id}
+                    key={article.slug}
                     to={`/artikler/${article.slug}`}
                     className="group block"
                   >
-                    {article.media_library && (
+                    {article.image && (
                       <div className="mb-4">
                         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
                           <img
-                            src={article.media_library.public_url}
-                            alt={article.media_library.alt_text}
+                            src={article.image.src}
+                            alt={article.image.alt}
                             className="w-full h-48 object-cover"
                           />
                         </div>
@@ -267,9 +211,9 @@ export default function BlogListing() {
                     )}
 
                     <div className="space-y-3">
-                      {article.article_categories && (
+                      {article.category && (
                         <span className="inline-block text-sm font-medium text-gray-500">
-                          {article.article_categories.name}
+                          {article.category.name}
                         </span>
                       )}
 
@@ -284,11 +228,11 @@ export default function BlogListing() {
                       )}
 
                       <div className="flex items-center gap-3 text-sm text-gray-500 pt-1">
-                        <time dateTime={article.published_at}>
-                          {formatDate(article.published_at)}
+                        <time dateTime={article.published}>
+                          {formatDate(article.published)}
                         </time>
                         <span>•</span>
-                        <span>{article.reading_time_minutes} min</span>
+                        <span>{article.readingTime} min</span>
                       </div>
 
                       <div className="text-sm text-gray-600">

@@ -31,39 +31,9 @@ For lokal utvikling er miljøvariablene allerede satt opp i `.env` filen i prosj
 
 Edge functions (som `waitlist-signup`) får automatisk tilgang til `SUPABASE_URL` og `SUPABASE_SERVICE_ROLE_KEY` fra Supabase selv - disse trenger ikke settes opp i Vercel.
 
-## OpenAI (artikkelsystem)
+## Artikler
 
-OpenAI-nøkkelen skal **ikke** ligge i frontend/Vite. Sett den som secret for Edge Functions:
-
-1. Supabase Dashboard → Project Settings → Functions → Secrets
-2. Legg til `OPENAI_API_KEY` med verdien din
-
-Alternativt via CLI:
-
-```bash
-supabase secrets set OPENAI_API_KEY=din_nokkel
-```
-
-## Automatisk sitemap ved publisering av artikler
-
-For at nye publiserte artikler automatisk skal komme med i sitemap uten manuell push:
-
-1. Opprett en Deploy Hook i Vercel:
-   - Project → Settings → Git → Deploy Hooks
-2. Kopier hook-URLen
-3. Legg hook-URLen inn som Supabase Function secret:
-
-```bash
-supabase secrets set VERCEL_DEPLOY_HOOK_URL=https://api.vercel.com/v1/integrations/deploy/...
-```
-
-4. Deploy Edge Function:
-
-```bash
-supabase functions deploy trigger-site-rebuild
-```
-
-Når en artikkel lagres/publiseres i admin, trigges denne funksjonen og starter en ny deploy. Under deploy kjøres sitemap-generatoren automatisk.
+Artiklene ligger som filer i repoet (`content/artikler/`) og publiseres via PR. Det trengs ingen OpenAI-nøkkel, Deploy Hook eller Edge Function for artikler. Se `content/artikler/README.md`.
 
 ---
 

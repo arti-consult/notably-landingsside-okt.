@@ -14,22 +14,22 @@ Detaljer om delt samtykke, klikkmåling og akseptanse finnes i [docs/conversion-
 
 Miljøvariabler
 - Bruk `.env` lokalt (ikke committed). Se `.env.example` for mal.
-- Vercel: Sett `VITE_SUPABASE_URL` og `VITE_SUPABASE_ANON_KEY` i Project → Settings → Environment Variables. Se `VERCEL_SETUP.md`.
-- OpenAI for artikkelsystemet kjører via Edge Function `openai-generate` og trenger `OPENAI_API_KEY` som Supabase-secret (ikke i frontend).
+- Vercel: `VITE_SUPABASE_URL` og `VITE_SUPABASE_ANON_KEY` brukes bare av ventelisteskjemaet (`waitlist-signup`). Se `VERCEL_SETUP.md`.
 - For automatisk indekseringsping etter deploy:
   - `SITEMAP_BASE_URL` (f.eks. `https://notably.no`)
   - `INDEXNOW_KEY` (valgfri, men anbefalt)
   - `INDEXNOW_HOST` (f.eks. `notably.no`)
   - `INDEXNOW_ENDPOINT` (standard: `https://api.indexnow.org/indexnow`)
-- For automatisk deploy ved publisering av artikler:
-  - Opprett en Vercel Deploy Hook URL
-  - Legg den som Supabase Function secret: `VERCEL_DEPLOY_HOOK_URL`
-  - Deploy Supabase Edge Function: `trigger-site-rebuild`
 
-Supabase
-- Frontend leser artikler fra `articles` og relaterte tabeller via Supabase.
-- Venteliste kaller Edge Function `waitlist-signup` (krever `VITE_SUPABASE_URL` og `VITE_SUPABASE_ANON_KEY`).
-- AI-generering kaller Edge Function `openai-generate` (krever `OPENAI_API_KEY` som secret i Supabase).
+Artikler
+- Artiklene ligger som filer i `content/artikler/<slug>.md` med bilder i `public/artikler/<slug>/`. Ny artikkel = én fil + bilder i en PR. Format og mal: [content/artikler/README.md](content/artikler/README.md).
+- Ved bygg skrives ferdig HTML (title, meta, canonical, Open Graph, JSON-LD) for `/artikler` og hver artikkel. Det finnes ingen admin-side og ingen artikkeldatabase.
+- Test: `npm run test:artikler`.
+
+Supabase (gammelt Bolt-prosjekt)
+- Nettsiden leser ikke lenger artikler fra Supabase.
+- `src/components/WaitlistSection.tsx` kaller Edge Function `waitlist-signup` (krever `VITE_SUPABASE_URL` og `VITE_SUPABASE_ANON_KEY`).
+- En del bilder (logo, favicon, delingsbilde, integrasjonslogoer) hentes fortsatt fra Supabase Storage-bøtta `admin-images`.
 
 Sikkerhet og beste praksis
 - Ikke commit `.env` (ignorert i `.gitignore`).
@@ -38,7 +38,7 @@ Sikkerhet og beste praksis
 
 Indeksering
 - `npm run build` kjører automatisk:
-  1. `prebuild`: genererer `public/sitemap.xml`
-  2. `build`: bygger appen
+  1. `prebuild`: genererer `public/sitemap.xml` (inkludert artiklene i `content/artikler`)
+  2. `build`: bygger appen og skriver statisk HTML for artiklene
   3. `postbuild`: pinger Bing sitemap-endepunkt og sender IndexNow hvis `INDEXNOW_KEY` er satt
-- Ved publisering av artikler i admin kalles `trigger-site-rebuild` for å starte ny deploy automatisk, slik at sitemap oppdateres uten manuell push.
+- Nye artikler kommer med i sitemap automatisk når PR-en med artikkelfilen merges og Vercel bygger.
