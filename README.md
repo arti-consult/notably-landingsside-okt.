@@ -14,7 +14,7 @@ Detaljer om delt samtykke, klikkmåling og akseptanse finnes i [docs/conversion-
 
 Miljøvariabler
 - Bruk `.env` lokalt (ikke committed). Se `.env.example` for mal.
-- Vercel: `VITE_SUPABASE_URL` og `VITE_SUPABASE_ANON_KEY` brukes bare av ventelisteskjemaet (`waitlist-signup`). Se `VERCEL_SETUP.md`.
+- Ingen miljøvariabler er påkrevd for å bygge siden. Se `VERCEL_SETUP.md`.
 - For automatisk indekseringsping etter deploy:
   - `SITEMAP_BASE_URL` (f.eks. `https://notably.no`)
   - `INDEXNOW_KEY` (valgfri, men anbefalt)
@@ -26,10 +26,8 @@ Artikler
 - Ved bygg skrives ferdig HTML (title, meta, canonical, Open Graph, JSON-LD) for `/artikler` og hver artikkel. Det finnes ingen admin-side og ingen artikkeldatabase.
 - Test: `npm run test:artikler`.
 
-Supabase (gammelt Bolt-prosjekt)
-- Nettsiden leser ikke lenger artikler fra Supabase.
-- `src/components/WaitlistSection.tsx` kaller Edge Function `waitlist-signup` (krever `VITE_SUPABASE_URL` og `VITE_SUPABASE_ANON_KEY`).
-- En del bilder (logo, favicon, delingsbilde, integrasjonslogoer) hentes fortsatt fra Supabase Storage-bøtta `admin-images`.
+Bilder
+- Logo, favicon, delingsbilde og andre bilder ligger i `public/media/` (flyttet fra det gamle Bolt-prosjektet, som nettsiden ikke lenger bruker).
 
 Sikkerhet og beste praksis
 - Ikke commit `.env` (ignorert i `.gitignore`).

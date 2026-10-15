@@ -375,7 +375,7 @@ const TemplateVisual = ({ active }: { active: boolean }) => {
 /* Kort 3 – AI-koblinger                                                */
 /* ------------------------------------------------------------------ */
 
-const LOGO_BASE = 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images';
+const LOGO_BASE = '/media';
 
 const AiLogo = ({ src }: { src: string }) => (
   <img src={src} alt="" width={24} height={24} className="h-6 w-6 object-contain" />

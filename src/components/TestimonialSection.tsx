@@ -2,12 +2,9 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, type Variants } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
-const STORAGE = 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images';
+const STORAGE = '/media';
 
-/**
- * Bildet og logoen hentes direkte i stedet for via artikkelen i databasen – da
- * vises kortet likt overalt, også der Supabase ikke er satt opp.
- */
+/** Bildet og logoen ligger i public/media (samme filer som i Pharma Nordic-artikkelen). */
 const PHOTO_URL = `${STORAGE}/1762616775767.webp`;
 const LOGO_URL = `${STORAGE}/1771237686841.svg`;
 const CASE_URL = '/artikler/pharma-nordic-notably-frigjor-tid-fra-forste-mote';

@@ -46,7 +46,7 @@ test('alle tre publiserte artikler leses fra content/artikler', () => {
     assert.ok(article.image && existsSync(join(root, 'public', article.image.src)), `${article.slug} har lokalt forsidebilde`);
     assert.ok(article.toc.length > 0, `${article.slug} har innholdsfortegnelse`);
     for (const item of article.toc) assert.ok(article.html.includes(`id="${item.id}"`));
-    assert.doesNotMatch(article.html, /supabase\.co/, `${article.slug} peker ikke på Bolt-lagring`);
+    assert.doesNotMatch(article.html, /qelklrrxciwomrwunzjo/, `${article.slug} peker ikke på Bolt-lagring`);
   }
 });
 
@@ -85,7 +85,7 @@ test('sitemap-generatoren leser artiklene fra filer', () => {
   const out = join(mkdtempSync(join(tmpdir(), 'artikler-sitemap-')), 'sitemap.xml');
   execFileSync(process.execPath, ['scripts/generate-sitemap.mjs'], {
     cwd: root,
-    env: { ...process.env, SITEMAP_OUT: out, VITE_SUPABASE_URL: '', VITE_SUPABASE_ANON_KEY: '', SITEMAP_BASE_URL: 'https://notably.no' },
+    env: { ...process.env, SITEMAP_OUT: out, SITEMAP_BASE_URL: 'https://notably.no' },
     stdio: 'pipe',
   });
   const xml = readFileSync(out, 'utf8');
@@ -110,25 +110,25 @@ test('markdown-artikler bygges, og ugyldige filer stoppes', () => {
 
 function walk(dir) {
   return readdirSync(dir).flatMap((name) => {
-    if (['node_modules', 'dist', '.git', 'supabase'].includes(name)) return [];
+    if (['node_modules', 'dist', '.git'].includes(name)) return [];
     const path = join(dir, name);
     return statSync(path).isDirectory() ? walk(path) : [path];
   });
 }
 
-test('ingen kode leser artikler fra Supabase, og admin-sidene er borte', () => {
-  const files = ['index.html', 'vite.config.ts', ...walk(join(root, 'src')), ...walk(join(root, 'scripts'))]
+test('ingen tilknytning til Bolt-prosjektet, og admin-sidene er borte', () => {
+  const files = ['index.html', 'vite.config.ts', 'vercel.json', 'package.json', ...walk(join(root, 'src')), ...walk(join(root, 'scripts')), ...walk(join(root, 'public'))]
     .map((f) => (f.startsWith('/') ? f : join(root, f)))
-    .filter((f) => /\.(m?[jt]sx?|html)$/.test(f));
+    .filter((f) => /\.(m?[jt]sx?|html|json|txt|md|xml|css)$/.test(f));
   for (const file of files) {
     const text = readFileSync(file, 'utf8');
     assert.doesNotMatch(text, /rest\/v1\/articles/, `${file} kaller /rest/v1/articles`);
     assert.doesNotMatch(text, /from\(['"](articles|article_[a-z_]+|admin_users|media_library)['"]\)/, `${file} leser artikkeltabeller`);
-    assert.doesNotMatch(text, /@supabase\/supabase-js/, `${file} bruker supabase-js`);
+    assert.doesNotMatch(text, /qelklrrxciwomrwunzjo|@supabase\/supabase-js|VITE_SUPABASE/, `${file} er knyttet til Bolt-prosjektet`);
   }
   const main = readFileSync(join(root, 'src/main.tsx'), 'utf8');
   assert.doesNotMatch(main, /\/admin/);
-  for (const gone of ['src/pages/AdminLogin.tsx', 'src/pages/AdminDashboard.tsx', 'src/pages/ArticleManagement.tsx', 'src/components/ArticleEditor.tsx']) {
+  for (const gone of ['supabase', '.bolt', 'src/components/WaitlistSection.tsx', 'src/pages/AdminLogin.tsx', 'src/pages/AdminDashboard.tsx', 'src/pages/ArticleManagement.tsx', 'src/components/ArticleEditor.tsx']) {
     assert.ok(!existsSync(join(root, gone)), `${gone} er fjernet`);
   }
 });
