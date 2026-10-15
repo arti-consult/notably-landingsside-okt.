@@ -3,19 +3,19 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 const integrations = [
   {
     name: 'Microsoft Teams',
-    src: 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1762605154714.svg',
+    src: '/media/1762605154714.svg',
   },
   {
     name: 'Outlook Calendar',
-    src: 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1762605170864.svg',
+    src: '/media/1762605170864.svg',
   },
   {
     name: 'Google Meet',
-    src: 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1762605184963.svg',
+    src: '/media/1762605184963.svg',
   },
   {
     name: 'Google Calendar',
-    src: 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1762605201664.svg',
+    src: '/media/1762605201664.svg',
   },
 ];
 

@@ -57,7 +57,7 @@ export default function Navigation({ pricingTarget }: NavigationProps = {}) {
               className="flex items-center cursor-pointer"
             >
               <img
-                src="https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1760975960292.png"
+                src="/media/1760975960292.png"
                 alt="Notably"
                 width={168}
                 height={32}

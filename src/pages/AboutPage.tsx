@@ -14,7 +14,7 @@ const customerExamples = [
   'Selvaag Bolig',
 ];
 
-const HERO_IMAGE_URL = 'https://qelklrrxciwomrwunzjo.supabase.co/storage/v1/object/public/admin-images/1772011939789.svg';
+const HERO_IMAGE_URL = '/media/1772011939789.svg';
 
 export default function AboutPage() {
   return (
