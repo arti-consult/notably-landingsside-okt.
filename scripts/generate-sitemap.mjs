@@ -1,5 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { loadArticles } from './articles-lib.mjs';
 
 const ENV_FILES = ['.env', '.env.local', '.env.production', '.env.production.local'];
 
@@ -82,39 +83,8 @@ function toUrl(loc, lastmod) {
   return parts.join('\n');
 }
 
-async function fetchArticleSlugs(supabaseUrl, supabaseKey) {
-  if (!supabaseUrl || !supabaseKey) {
-    console.warn('[sitemap] Missing Supabase env vars. Generating sitemap with static URLs only.');
-    return [];
-  }
-
-  try {
-    const nowIso = new Date().toISOString();
-    const url = new URL('/rest/v1/articles', supabaseUrl);
-    url.searchParams.set('select', 'slug,updated_at,published_at');
-    url.searchParams.set('status', 'eq.published');
-    url.searchParams.set('published_at', `lte.${nowIso}`);
-    url.searchParams.set('order', 'published_at.desc');
-
-    const response = await fetch(url.toString(), {
-      headers: {
-        apikey: supabaseKey,
-        Authorization: `Bearer ${supabaseKey}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Supabase REST failed: ${response.status}`);
-    }
-
-    const rows = await response.json();
-    return rows
-      .filter(row => row.slug)
-      .map(row => ({ slug: row.slug, lastmod: row.updated_at || row.published_at || null }));
-  } catch (error) {
-    console.warn('[sitemap] Could not fetch articles:', error.message);
-    return [];
-  }
+function articleEntriesFromFiles() {
+  return loadArticles().map(article => ({ slug: article.slug, lastmod: article.updated || article.published }));
 }
 
 async function generate() {
@@ -128,13 +98,6 @@ async function generate() {
       localEnv.SITE_URL ||
       'https://notably.no'
   );
-
-  const supabaseUrl = process.env.VITE_SUPABASE_URL || localEnv.VITE_SUPABASE_URL;
-  const supabaseKey =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    process.env.VITE_SUPABASE_ANON_KEY ||
-    localEnv.SUPABASE_SERVICE_ROLE_KEY ||
-    localEnv.VITE_SUPABASE_ANON_KEY;
 
   const buildDate = new Date().toISOString();
   const staticPaths = [
@@ -160,7 +123,7 @@ async function generate() {
     lastmod: buildDate,
   }));
 
-  const articleEntries = (await fetchArticleSlugs(supabaseUrl, supabaseKey)).map(article => ({
+  const articleEntries = articleEntriesFromFiles().map(article => ({
     loc: buildAbsoluteUrl(baseUrl, `/artikler/${article.slug}`),
     lastmod: article.lastmod,
   }));
@@ -181,7 +144,8 @@ async function generate() {
     '',
   ].join('\n');
 
-  await writeFile('public/sitemap.xml', body, 'utf8');
+  const outFile = process.env.SITEMAP_OUT || 'public/sitemap.xml';
+  await writeFile(outFile, body, 'utf8');
   console.log(`[sitemap] Wrote sitemap.xml with ${allEntries.length} URLs`);
 }
 

@@ -1,134 +1,36 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { supabase } from '../lib/supabase';
+import { articles, loadArticleBody, type ArticleBody } from 'virtual:articles';
 import { Clock, Calendar, Tag, ChevronRight, Home, Share2, Linkedin, Facebook, Link2 } from 'lucide-react';
 import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL, SITE_NAME, SITE_URL } from '../lib/seo';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
+import NotFound from './NotFound';
 
-interface Article {
-  id: string;
-  title: string;
-  slug: string;
-  content: string;
-  excerpt: string | null;
-  tldr: string | null;
-  faq_json: Array<{ question: string; answer: string }> | null;
-  published_at: string;
-  updated_at: string | null;
-  reading_time_minutes: number;
-  view_count: number;
-  author_name: string | null;
-  author_profile_picture_url: string | null;
-  article_categories: { name: string; slug: string } | null;
-  article_tags: Array<{ tag: string }>;
-  article_seo_metadata: {
-    meta_title: string | null;
-    meta_description: string | null;
-    og_title: string | null;
-    og_description: string | null;
-    og_image: string | null;
-    schema_json: any;
-  } | null;
-  article_table_of_contents: {
-    toc_json: Array<{ id: string; text: string; level: number }>;
-  } | null;
-  media_library: {
-    public_url: string;
-    alt_text: string;
-  } | null;
-}
+const absolute = (src: string) => (/^https?:\/\//.test(src) ? src : `${SITE_URL}${src}`);
 
 export default function ArticlePage() {
   const { slug } = useParams<{ slug: string }>();
-  const [article, setArticle] = useState<Article | null>(null);
-  const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+  const article = articles.find((a) => a.slug === slug) ?? null;
+  const [body, setBody] = useState<ArticleBody | null>(null);
   const [activeHeading, setActiveHeading] = useState('');
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'error'>('idle');
 
   useEffect(() => {
+    let cancelled = false;
+    setBody(null);
     if (slug) {
-      loadArticle();
-      trackView();
+      loadArticleBody(slug).then((loaded) => {
+        if (!cancelled) setBody(loaded);
+      });
     }
+    return () => {
+      cancelled = true;
+    };
   }, [slug]);
 
-  const loadArticle = async () => {
-    const { data } = await supabase
-      .from('articles')
-      .select(`
-        *,
-        article_categories (name, slug),
-        article_tags (tag),
-        article_seo_metadata (*),
-        article_table_of_contents (*),
-        media_library (public_url, alt_text)
-      `)
-      .eq('slug', slug)
-      .eq('status', 'published')
-      .single();
-
-    if (data) {
-      setArticle(data as Article);
-      loadRelatedArticles(data.article_categories?.name);
-    }
-
-    setLoading(false);
-  };
-
-  const loadRelatedArticles = async (categoryName?: string) => {
-    if (!categoryName) return;
-
-    const { data } = await supabase
-      .from('articles')
-      .select(`
-        *,
-        article_categories (name, slug),
-        media_library (public_url, alt_text)
-      `)
-      .eq('status', 'published')
-      .neq('slug', slug)
-      .limit(3);
-
-    if (data) {
-      setRelatedArticles(data as Article[]);
-    }
-  };
-
-  const trackView = async () => {
-    const { data: article } = await supabase
-      .from('articles')
-      .select('id, view_count')
-      .eq('slug', slug)
-      .single();
-
-    if (article) {
-      await supabase
-        .from('articles')
-        .update({ view_count: article.view_count + 1 })
-        .eq('id', article.id);
-    }
-  };
-
-  const processContentWithIds = (content: string) => {
-    if (!article?.article_table_of_contents?.toc_json) return content;
-
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(content, 'text/html');
-    const headings = doc.querySelectorAll('h2, h3');
-
-    article.article_table_of_contents.toc_json.forEach((tocItem) => {
-      headings.forEach((heading) => {
-        if (heading.textContent?.trim() === tocItem.text.trim()) {
-          heading.setAttribute('id', tocItem.id);
-        }
-      });
-    });
-
-    return doc.body.innerHTML;
-  };
+  const relatedArticles = article?.category ? articles.filter((a) => a.slug !== article.slug).slice(0, 3) : [];
 
   const scrollToHeading = (id: string) => {
     const element = document.getElementById(id);
@@ -154,25 +56,16 @@ export default function ArticlePage() {
     headings.forEach((heading) => observer.observe(heading));
 
     return () => observer.disconnect();
-  }, [article]);
+  }, [body]);
 
-  if (loading) {
+  if (!article) {
+    return <NotFound />;
+  }
+
+  if (!body) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-gray-600">Laster artikkel...</div>
-      </div>
-    );
-  }
-
-  if (!article) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Artikkel ikke funnet</h1>
-          <Link to="/artikler" className="text-blue-600 hover:underline">
-            Tilbake til artikler
-          </Link>
-        </div>
       </div>
     );
   }
@@ -187,20 +80,20 @@ export default function ArticlePage() {
   };
 
   const canonicalUrl = `${SITE_URL}/artikler/${article.slug}`;
-  const metaTitle = article.article_seo_metadata?.meta_title || article.title;
-  const metaDescription = article.article_seo_metadata?.meta_description || article.excerpt || 'Les artikkelen på Notably.';
-  const ogTitle = article.article_seo_metadata?.og_title || metaTitle;
-  const ogDescription = article.article_seo_metadata?.og_description || metaDescription;
-  const ogImage = article.article_seo_metadata?.og_image || article.media_library?.public_url || DEFAULT_SOCIAL_IMAGE_URL;
-  const ogImageAlt = article.media_library?.alt_text || DEFAULT_SOCIAL_IMAGE_ALT;
-  const authorName = article.author_name?.trim() || 'Notably Team';
+  const metaTitle = article.seoTitle;
+  const metaDescription = article.description;
+  const ogTitle = metaTitle;
+  const ogDescription = metaDescription;
+  const ogImage = article.image ? absolute(article.image.src) : DEFAULT_SOCIAL_IMAGE_URL;
+  const ogImageAlt = article.image?.alt || DEFAULT_SOCIAL_IMAGE_ALT;
+  const authorName = article.author.name;
   const authorInitial = authorName.charAt(0).toUpperCase();
-  const publishedTime = new Date(article.published_at).toISOString();
-  const modifiedTime = article.updated_at ? new Date(article.updated_at).toISOString() : publishedTime;
+  const publishedTime = new Date(article.published).toISOString();
+  const modifiedTime = new Date(article.updated).toISOString();
   const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(canonicalUrl)}`;
   const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonicalUrl)}`;
 
-  const articleSchema = article.article_seo_metadata?.schema_json || {
+  const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: article.title,
@@ -221,6 +114,9 @@ export default function ArticlePage() {
       },
     },
     mainEntityOfPage: canonicalUrl,
+    inLanguage: 'nb',
+    ...(article.category ? { articleSection: article.category.name } : {}),
+    ...(article.tags.length ? { keywords: article.tags.join(', ') } : {}),
   };
 
   const handleCopyLink = async () => {
@@ -262,11 +158,11 @@ export default function ArticlePage() {
         <meta property="article:published_time" content={publishedTime} />
         <meta property="article:modified_time" content={modifiedTime} />
         <meta property="article:author" content={authorName} />
-        {article.article_categories?.name && (
-          <meta property="article:section" content={article.article_categories.name} />
+        {article.category?.name && (
+          <meta property="article:section" content={article.category.name} />
         )}
-        {article.article_tags?.map((tagObj, idx) => (
-          <meta key={`article-tag-${idx}`} property="article:tag" content={tagObj.tag} />
+        {article.tags.map((tag, idx) => (
+          <meta key={`article-tag-${idx}`} property="article:tag" content={tag} />
         ))}
 
         <meta name="twitter:card" content="summary_large_image" />
@@ -293,14 +189,14 @@ export default function ArticlePage() {
               <Link to="/artikler" className="hover:text-gray-900">
                 Artikler
               </Link>
-              {article.article_categories && (
+              {article.category && (
                 <>
                   <ChevronRight className="w-4 h-4" />
                   <Link
-                    to={`/artikler/category/${article.article_categories.slug}`}
+                    to="/artikler"
                     className="hover:text-gray-900"
                   >
-                    {article.article_categories.name}
+                    {article.category.name}
                   </Link>
                 </>
               )}
@@ -312,12 +208,12 @@ export default function ArticlePage() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
             <div className="lg:col-span-3">
               <header className="mb-8">
-                {article.article_categories && (
+                {article.category && (
                   <Link
-                    to={`/artikler/category/${article.article_categories.slug}`}
+                    to="/artikler"
                     className="inline-block mb-4 text-sm font-medium text-blue-600 hover:text-blue-700"
                   >
-                    {article.article_categories.name}
+                    {article.category.name}
                   </Link>
                 )}
 
@@ -327,9 +223,9 @@ export default function ArticlePage() {
 
                 <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600">
                   <div className="flex items-center gap-3">
-                    {article.author_profile_picture_url ? (
+                    {article.author.image ? (
                       <img
-                        src={article.author_profile_picture_url}
+                        src={article.author.image}
                         alt={authorName}
                         className="w-10 h-10 rounded-full object-cover border border-gray-200"
                       />
@@ -345,22 +241,22 @@ export default function ArticlePage() {
                   </div>
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
-                    <time dateTime={article.published_at}>
-                      {formatDate(article.published_at)}
+                    <time dateTime={article.published}>
+                      {formatDate(article.published)}
                     </time>
                   </div>
                   <div className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
-                    <span>{article.reading_time_minutes} min lesing</span>
+                    <span>{article.readingTime} min lesing</span>
                   </div>
                 </div>
               </header>
 
-              {article.media_library && (
+              {article.image && (
                 <div className="flex justify-center mb-8">
                   <img
-                    src={article.media_library.public_url}
-                    alt={article.media_library.alt_text || article.title}
+                    src={article.image.src}
+                    alt={article.image.alt || article.title}
                     className="max-w-3xl w-full h-auto rounded-xl shadow-lg"
                   />
                 </div>
@@ -375,14 +271,14 @@ export default function ArticlePage() {
 
               <div
                 className="article-content"
-                dangerouslySetInnerHTML={{ __html: processContentWithIds(article.content) }}
+                dangerouslySetInnerHTML={{ __html: body.html }}
               />
 
-              {article.faq_json && article.faq_json.length > 0 && (
+              {body.faq.length > 0 && (
                 <div className="mt-16 pt-8 border-t border-gray-200">
                   <h2 className="text-3xl font-bold text-gray-900 mb-8">Ofte stilte spørsmål</h2>
                   <div className="space-y-6">
-                    {article.faq_json.map((faqItem, idx) => (
+                    {body.faq.map((faqItem, idx) => (
                       <div key={idx} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
                         <h3 className="text-xl font-semibold text-gray-900 mb-3">
                           {faqItem.question}
@@ -396,16 +292,16 @@ export default function ArticlePage() {
                 </div>
               )}
 
-              {article.article_tags && article.article_tags.length > 0 && (
+              {article.tags.length > 0 && (
                 <div className="mt-12 pt-8 border-t border-gray-200">
                   <div className="flex items-center gap-2 flex-wrap">
                     <Tag className="w-5 h-5 text-gray-400" />
-                    {article.article_tags.map((tagObj, idx) => (
+                    {article.tags.map((tag, idx) => (
                       <span
                         key={idx}
                         className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200"
                       >
-                        {tagObj.tag}
+                        {tag}
                       </span>
                     ))}
                   </div>
@@ -455,12 +351,12 @@ export default function ArticlePage() {
 
             <aside className="lg:col-span-1">
               <div className="sticky top-24 space-y-8">
-                {article.article_table_of_contents && article.article_table_of_contents.toc_json.length > 0 && (
+                {body.toc.length > 0 && (
                   <div className="bg-gray-50 rounded-lg p-6">
                     <h3 className="text-sm font-bold text-gray-900 uppercase mb-4">Innholdsfortegnelse</h3>
                     <nav>
                       <ul className="space-y-2">
-                        {article.article_table_of_contents.toc_json.map((item) => (
+                        {body.toc.map((item) => (
                           <li key={item.id} style={{ marginLeft: `${(item.level - 2) * 16}px` }}>
                             <button
                               onClick={() => scrollToHeading(item.id)}
@@ -486,14 +382,14 @@ export default function ArticlePage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {relatedArticles.map((related) => (
                   <Link
-                    key={related.id}
+                    key={related.slug}
                     to={`/artikler/${related.slug}`}
                     className="group"
                   >
-                    {related.media_library && (
+                    {related.image && (
                       <img
-                        src={related.media_library.public_url}
-                        alt={related.media_library.alt_text || related.title}
+                        src={related.image.src}
+                        alt={related.image.alt || related.title}
                         className="w-full h-48 object-cover rounded-lg mb-4 group-hover:opacity-90 transition-opacity"
                       />
                     )}

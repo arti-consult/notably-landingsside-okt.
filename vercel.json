@@ -26,6 +26,8 @@
     }
   ],
   "rewrites": [
+    { "source": "/artikler", "destination": "/artikler/index.html" },
+    { "source": "/artikler/:slug", "destination": "/artikler/:slug/index.html" },
     {
       "source": "/((?!assets/).*)",
       "destination": "/index.html"
