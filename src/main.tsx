@@ -16,6 +16,7 @@ const RegnskapPage = lazy(() => import('./pages/RegnskapPage.tsx'));
 const ByggPage = lazy(() => import('./pages/ByggPage.tsx'));
 const NotFound = lazy(() => import('./pages/NotFound.tsx'));
 const ConsentManager = lazy(() => import('./components/ConsentManager.tsx'));
+const DemoBookingModal = lazy(() => import('./components/DemoBookingModal.tsx'));
 
 function BlogSlugRedirect() {
   const { slug = '' } = useParams<{ slug: string }>();
@@ -67,6 +68,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="*" element={<NotFound />} />
           </Routes>
           <ConsentManager />
+          <DemoBookingModal />
         </Suspense>
       </BrowserRouter>
     </HelmetProvider>
