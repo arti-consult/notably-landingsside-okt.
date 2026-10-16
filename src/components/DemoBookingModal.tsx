@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CalendarCheck2, ExternalLink, X } from 'lucide-react';
+import { ExternalLink, X } from 'lucide-react';
 import { lockScroll, readBookingMessage, startDemoModalLinks, trapFocus } from '../lib/demo-modal.ts';
 
 /** Etter så lang tid uten «ready» fra bookingsiden vises «Åpne i ny fane» (iframe blokkert, treg linje, nettverksfeil). */
@@ -91,10 +91,9 @@ export default function DemoBookingModal() {
             transition={{ duration: 0.22, ease: 'easeOut' }}
             className="relative flex h-full w-full flex-col overflow-hidden bg-white shadow-2xl sm:h-[min(760px,calc(100dvh-48px))] sm:max-w-[1040px] sm:rounded-2xl"
           >
-            <div className="flex items-center justify-between gap-4 border-b border-slate-200 px-4 py-3 sm:px-6">
+            <div className="flex items-center justify-between gap-4 border-b border-slate-200 px-4 py-2.5 sm:px-6 sm:py-3">
               <div className="min-w-0">
-                <h2 id="demo-modal-title" className="text-base font-semibold text-slate-900 sm:text-lg">Book en demo</h2>
-                <p className="hidden text-sm text-slate-500 sm:block">Velg en tid som passer – du får invitasjon med lenke på e-post.</p>
+                <h2 id="demo-modal-title" className="text-base font-semibold tracking-tight text-slate-900 sm:text-lg">Book en demo</h2>
               </div>
               <div className="flex shrink-0 items-center gap-2">
                 <a href={open.href} target="_blank" rel="noopener noreferrer" onClick={close}
@@ -108,11 +107,11 @@ export default function DemoBookingModal() {
               </div>
             </div>
 
+            {/* Bekreftelsen vises i iframen (Møtet er booket + detaljer) – her bare kunngjort for skjermlesere, ingen dobbel banner. */}
             {booked && (
-              <div role="status" className="flex items-start gap-3 border-b border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-900 sm:px-6" data-demo-booked>
-                <CalendarCheck2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
-                <p><span className="font-semibold">Demoen er booket{booked.start ? ` – ${fmtStart(booked.start)}` : ''}.</span> Invitasjonen er på vei til e-posten din.</p>
-              </div>
+              <p role="status" className="sr-only" data-demo-booked>
+                Demoen er booket{booked.start ? ` – ${fmtStart(booked.start)}` : ''}. Invitasjonen er på vei til e-posten din.
+              </p>
             )}
 
             <div className="relative min-h-0 flex-1 bg-white">
