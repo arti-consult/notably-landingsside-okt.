@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, X } from 'lucide-react';
+import { usePricingUsage } from '../lib/use-pricing-usage';
+import { recordUsageEvent } from '../lib/usage-events';
 
 interface PricingPlan {
   name: string;
@@ -14,6 +16,7 @@ interface PricingPlan {
 
 const PricingSection = () => {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const pricingRef = usePricingUsage('home');
 
   useEffect(() => {
     if (!isContactModalOpen) {
@@ -68,7 +71,7 @@ const PricingSection = () => {
 
   return (
     <>
-      <section id="pricing" className="py-20 page-container bg-gray-50 scroll-mt-24 md:scroll-mt-28">
+      <section ref={pricingRef} id="pricing" className="py-20 page-container bg-gray-50 scroll-mt-24 md:scroll-mt-28">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-slate-950 mb-4">
@@ -144,7 +147,7 @@ const PricingSection = () => {
                   {!isSelfServePlan ? (
                     <button
                       type="button"
-                      onClick={() => setIsContactModalOpen(true)}
+                      onClick={() => { setIsContactModalOpen(true); recordUsageEvent('sales.clicked', 'home'); }}
                       className={`w-full py-3 rounded-full font-medium transition-all duration-300 mt-auto block text-center ${ctaClass}`}
                     >
                       {plan.cta}

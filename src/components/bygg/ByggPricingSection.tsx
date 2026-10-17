@@ -1,4 +1,6 @@
 import { Check } from 'lucide-react';
+import { usePricingUsage } from '../../lib/use-pricing-usage';
+import { recordUsageEvent } from '../../lib/usage-events';
 import { CONTACT_EMAIL, DEMO_URL, Eyebrow, SIGNUP_URL, SectionHeading } from '../advokat/shared';
 
 const soloFeatures = [
@@ -37,8 +39,9 @@ const FeatureList = ({ items }: { items: string[] }) => (
 );
 
 export default function ByggPricingSection() {
+  const pricingRef = usePricingUsage('bygg-og-anlegg');
   return (
-    <section id="pris" className="page-container scroll-mt-24 bg-white py-20 sm:py-24">
+    <section ref={pricingRef} id="pris" className="page-container scroll-mt-24 bg-white py-20 sm:py-24">
       <div className="mx-auto max-w-5xl">
         <div className="mx-auto max-w-3xl text-center">
           <Eyebrow>Pris</Eyebrow>
@@ -85,6 +88,7 @@ export default function ByggPricingSection() {
             <div className="mt-8 grid gap-2.5">
               <a
                 href={DEMO_URL}
+                onClick={() => { recordUsageEvent('sales.clicked', 'bygg-og-anlegg'); }}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block rounded-full bg-slate-900 py-3 text-center font-medium text-white transition-colors hover:bg-black"
@@ -93,6 +97,7 @@ export default function ByggPricingSection() {
               </a>
               <a
                 href={`mailto:${CONTACT_EMAIL}?subject=Notably%20for%20bygg%20og%20anlegg`}
+                onClick={() => { recordUsageEvent('sales.clicked', 'bygg-og-anlegg'); }}
                 className="block py-1.5 text-center text-sm font-medium text-slate-600 hover:text-slate-900"
               >
                 eller skriv til {CONTACT_EMAIL}
