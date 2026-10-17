@@ -2,7 +2,8 @@ import { useId, type ReactNode } from 'react';
 import { ArrowRight } from 'lucide-react';
 
 export const SIGNUP_URL = 'https://app.notably.no/no/sign-up';
-export const DEMO_URL = 'https://calendly.com/arti-jorgen/notably-demo';
+// Samme adresse som DEMO_BOOKING_URL i lib/marketing-policy.ts (literal her for fast refresh).
+export const DEMO_URL = 'https://os.notably.no/book/demo';
 export const CONTACT_EMAIL = 'jorgen@notably.no';
 
 export const ease = [0.22, 1, 0.36, 1] as const;
