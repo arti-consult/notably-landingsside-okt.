@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ExternalLink, X } from 'lucide-react';
 import { lockScroll, readBookingMessage, startDemoModalLinks, trapFocus } from '../lib/demo-modal.ts';
+import { startDemoTracking } from '../lib/demo-tracking.ts';
 
 /** Etter så lang tid uten «ready» fra bookingsiden vises «Åpne i ny fane» (iframe blokkert, treg linje, nettverksfeil). */
 export const FALLBACK_MS = 8000;
@@ -20,7 +21,7 @@ const fmtStart = (iso: string | null) => {
  * ESC, klikk utenfor og lukkeknappen lukker; fokusfelle og scroll-lås; fullskjerm på mobil (≤640px).
  */
 export default function DemoBookingModal() {
-  const [open, setOpen] = useState<{ src: string; href: string } | null>(null);
+  const [open, setOpen] = useState<{ src: string; href: string; track: ReturnType<typeof startDemoTracking> } | null>(null);
   const [ready, setReady] = useState(false);
   const [slow, setSlow] = useState(false);
   const [booked, setBooked] = useState<{ start: string | null } | null>(null);
@@ -30,10 +31,10 @@ export default function DemoBookingModal() {
 
   const close = useCallback(() => setOpen(null), []);
 
-  useEffect(() => startDemoModalLinks((src, href) => {
+  useEffect(() => startDemoModalLinks((src, href, anchor, trusted) => {
     opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setReady(false); setSlow(false); setBooked(null);
-    setOpen({ src, href });
+    setOpen({ src, href, track: startDemoTracking(anchor, trusted) });
   }), []);
 
   useEffect(() => {
@@ -47,10 +48,12 @@ export default function DemoBookingModal() {
     // Fokus som forlater modalen (f.eks. Tab ut av iframen) hentes tilbake.
     const onFocus = (e: FocusEvent) => { if (dialog.current && e.target instanceof Node && !dialog.current.contains(e.target)) dialog.current.querySelector<HTMLElement>('[data-close]')?.focus(); };
     const onMessage = (e: MessageEvent) => {
-      const m = readBookingMessage(e, frame.current?.contentWindow ?? undefined);
+      const source = frame.current?.contentWindow;
+      if (!source) return;
+      const m = readBookingMessage(e, source);
       if (!m) return;
       if (m.status === 'ready') { setReady(true); window.clearTimeout(timer); setSlow(false); }
-      else if (m.status === 'booked') setBooked({ start: m.start });
+      else if (m.status === 'booked') { setBooked({ start: m.start }); open.track(m); }
       else close();
     };
     document.addEventListener('keydown', onKey);

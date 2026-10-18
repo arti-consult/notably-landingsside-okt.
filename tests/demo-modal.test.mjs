@@ -68,7 +68,7 @@ test('fokusfelle og scroll-lås', () => {
   assert.equal(doc.body.style.overflow, 'auto');
 });
 
-test('modalen: lastes på alle sider, fallback etter ~8 s, lukk via ESC/bakgrunn/knapp, fullskjerm ≤640px, ingen nye sporingskall', async () => {
+test('modalen: lastes på alle sider, fallback etter ~8 s, lukk via ESC/bakgrunn/knapp, fullskjerm ≤640px, ingen egne SDK-kall', async () => {
   const { readFile } = await import('node:fs/promises');
   const src = await readFile(new URL('../src/components/DemoBookingModal.tsx', import.meta.url), 'utf8');
   const main = await readFile(new URL('../src/main.tsx', import.meta.url), 'utf8');
@@ -79,5 +79,16 @@ test('modalen: lastes på alle sider, fallback etter ~8 s, lukk via ESC/bakgrunn
   assert.match(src, /aria-modal="true"/);
   assert.match(src, /h-full w-full[^"]*sm:h-\[min\(760px/, 'fullskjerm under sm (640px), vindu over');
   assert.match(src, /Åpne i ny fane/);
-  assert.doesNotMatch(src, /fbq|gtag|ttq|dataLayer/, 'ingen nye piksler/hendelser');
+  assert.doesNotMatch(src, /fbq|gtag|ttq|dataLayer/, 'sporingsleverandørene har fortsatt én eier');
+});
+
+test('Åpne i ny fane inside the modal is not intercepted as another modal opening', () => {
+  const doc = browser('<div data-demo-modal><a href="https://os.notably.no/book/demo" target="_blank">Åpne i ny fane</a></div>');
+  let opened = 0;
+  const stop = startDemoModalLinks(() => opened++);
+  const event = new dom.window.MouseEvent('click', { bubbles: true, cancelable: true, button: 0 });
+  doc.querySelector('a').dispatchEvent(event);
+  assert.equal(event.defaultPrevented, false);
+  assert.equal(opened, 0);
+  stop();
 });

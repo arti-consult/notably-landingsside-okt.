@@ -100,6 +100,24 @@ export function trackStartTrialClick(params: { button_id: string; page_path: str
   });
 }
 
+/** Separate reporting events. Never reuse the signup Ads action or the app's StartTrial event. */
+export function trackDemoEvent(event: 'demo_click' | 'demo_booked', params: { button_id: string; page_path: string }, eventId?: string) {
+  if (typeof window === 'undefined' || unloadingWindows.has(window) || (!hasMarketingConsent() && !hasAnalyticsConsent()) || !isSafeProviderPage()) return;
+  // Optional measurement must never prevent the modal from opening or showing its confirmation.
+  try { initMarketingTracking(); } catch { return; }
+  const id = eventId ?? crypto.randomUUID();
+  try {
+    if (hasAnalyticsConsent() && analyticsInitialized) window.gtag?.('event', event, {
+      ...params, event_id: id, send_to: GA_MEASUREMENT_ID,
+      page_location: cleanPageLocation(), page_referrer: cleanReferrer(), transport_type: 'beacon',
+    });
+  } catch { /* A blocked analytics provider must not affect the booking or other provider. */ }
+  try {
+    if (hasMarketingConsent() && marketingInitialized) window.fbq?.('trackSingleCustom', FB_PIXEL_ID,
+      event === 'demo_click' ? 'DemoClick' : 'DemoBooked', params, { eventID: id });
+  } catch { /* Optional browser measurement; no retry or server fallback. */ }
+}
+
 const loadGoogleTag = (tagId: string) => {
   ensureGtag();
   if (googleInitialized) return;

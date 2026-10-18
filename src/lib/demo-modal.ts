@@ -14,28 +14,36 @@ export function demoEmbedSrc(href: string): string | null {
   return url.href;
 }
 
-export type BookingMessage = { status: 'ready' } | { status: 'booked'; start: string | null } | { status: 'close' };
+export type BookingMessage = { status: 'ready' } | { status: 'booked'; start: string | null; confirmation?: { version: 1; id: string } } | { status: 'close' };
 
 /** Bare meldinger fra os.notably.no (og bare fra vår egen iframe når den er oppgitt) med kjent form. */
 export function readBookingMessage(event: Pick<MessageEvent, 'origin' | 'data' | 'source'>, frame?: unknown): BookingMessage | null {
   if (event.origin !== BOOKING_ORIGIN) return null;
   if (frame !== undefined && event.source !== frame) return null;
-  const d = event.data as { type?: unknown; status?: unknown; start?: unknown } | null;
+  const d = event.data as { type?: unknown; status?: unknown; start?: unknown; confirmation?: { version?: unknown; id?: unknown } } | null;
   if (!d || typeof d !== 'object' || d.type !== 'notably:booking') return null;
   if (d.status === 'ready' || d.status === 'close') return { status: d.status };
-  if (d.status === 'booked') return { status: 'booked', start: typeof d.start === 'string' && !Number.isNaN(Date.parse(d.start)) ? d.start : null };
+  if (d.status === 'booked') {
+    const message: BookingMessage = { status: 'booked', start: typeof d.start === 'string' && !Number.isNaN(Date.parse(d.start)) ? d.start : null };
+    const c = d.confirmation;
+    // Legacy messages still update the UI, but cannot create conversion events.
+    if (message.start && c?.version === 1 && typeof c.id === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(c.id)) {
+      message.confirmation = { version: 1, id: c.id.toLowerCase() };
+    }
+    return message;
+  }
   return null;
 }
 
 /** Én delegert klikklytter: vanlig venstreklikk på en demo-lenke → modal i stedet for ny fane. */
-export function startDemoModalLinks(open: (src: string, href: string) => void): () => void {
+export function startDemoModalLinks(open: (src: string, href: string, anchor: HTMLAnchorElement, trusted: boolean) => void): () => void {
   const onClick = (event: MouseEvent) => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const a = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[href]') : null;
     const src = a ? demoEmbedSrc(a.href) : null;
-    if (!a || !src) return;
+    if (!a || !src || a.closest('[data-demo-modal]')) return;
     event.preventDefault();
-    open(src, a.href);
+    open(src, a.href, a, event.isTrusted);
   };
   document.addEventListener('click', onClick);
   return () => document.removeEventListener('click', onClick);
