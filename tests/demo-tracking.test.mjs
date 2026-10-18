@@ -23,7 +23,8 @@ async function browser(permissions = { analytics: true, advertising: true }, url
   await consentClient.refresh().catch(error => { if (error.message !== 'CONSENT_DISABLED') throw error; });
   return { f, anchor: document.querySelector('a') };
 }
-const ga = () => window.dataLayer?.filter(x => x[0] === 'event') ?? [];
+const ga = () => window.dataLayer?.filter(x => x[0] === 'event' && x[2]?.send_to === 'G-NJRML2BKQP') ?? [];
+const ads = () => window.dataLayer?.filter(x => x[0] === 'event' && x[1] === 'conversion') ?? [];
 const meta = () => window.fbq?.queue?.filter(x => x[0] === 'trackSingleCustom') ?? [];
 afterEach(() => {
   if (dom) { revokeMarketingTracking(); dom.window.close(); }
@@ -37,7 +38,14 @@ for (const permissions of [{ analytics: true, advertising: true }, { analytics: 
     startDemoTracking(anchor, true)(message());
     assert.deepEqual(ga().map(x => x[1]), permissions.analytics ? ['demo_click', 'demo_booked'] : []);
     assert.deepEqual(meta().map(x => x[2]), permissions.advertising ? ['DemoClick', 'DemoBooked'] : []);
-    assert.equal(ga().some(x => x[1] === 'conversion'), false, 'no native Google Ads signup action');
+    assert.deepEqual(ads().map(x => x[2].send_to), permissions.advertising ? [
+      'AW-17626822366/go9kCODTlaEdEN7tj9VB', 'AW-17626822366/O_zwCOPTlaEdEN7tj9VB',
+    ] : [], 'only separate secondary demo actions, never the signup destination');
+    if (permissions.advertising) {
+      assert.equal(ads()[0][2].transaction_id, meta()[0][4].eventID);
+      assert.equal(ads()[1][2].transaction_id, `demo_${id}`);
+      assert.equal(ads()[1][2].transaction_id, meta()[1][4].eventID);
+    }
     for (const x of ga()) {
       assert.equal(x[2].send_to, 'G-NJRML2BKQP');
       assert.equal(x[2].button_id, 'navigation');
@@ -63,6 +71,7 @@ test('only versioned confirmed messages from the exact current iframe can be mea
   startDemoTracking(anchor, true)(message());
   assert.equal(ga().filter(x => x[1] === 'demo_booked').length, 1);
   assert.equal(meta().filter(x => x[2] === 'DemoBooked').length, 1);
+  assert.equal(ads().filter(x => x[2].send_to.endsWith('/O_zwCOPTlaEdEN7tj9VB')).length, 1);
 });
 
 test('consent is rechecked on confirmation and unconsented bookings are never replayed', async () => {
@@ -74,6 +83,7 @@ test('consent is rechecked on confirmation and unconsented bookings are never re
   receive(message()); startDemoTracking(anchor, true)(message());
   assert.equal(ga().filter(x => x[1] === 'demo_booked').length, 0);
   assert.equal(meta().filter(x => x[2] === 'DemoBooked').length, 0);
+  assert.equal(ads().filter(x => x[2].send_to.endsWith('/O_zwCOPTlaEdEN7tj9VB')).length, 0);
 });
 
 test('demo measurements share initialized SDKs and preserve the existing signup destinations', async () => {
@@ -84,21 +94,23 @@ test('demo measurements share initialized SDKs and preserve the existing signup 
   assert.equal(window.dataLayer.filter(x => x[0] === 'config').length, configs);
   assert.equal(document.querySelectorAll('#notably-google-script').length, 1);
   assert.equal(document.querySelectorAll('#notably-fb-script').length, 1);
-  const ads = ga().filter(x => x[1] === 'conversion');
-  assert.equal(ads.length, 1); assert.equal(ads[0][2].send_to, 'AW-17626822366/I0M7CK2bwawcEN7tj9VB');
+  assert.equal(ads().length, 3);
+  const signup = ads().filter(x => x[2].send_to === 'AW-17626822366/I0M7CK2bwawcEN7tj9VB');
+  assert.equal(signup.length, 1);
+  assert.equal(signup[0][2].transaction_id, ga().find(x => x[1] === 'start_trial_click')[2].event_id);
   assert.equal(meta().filter(x => x[2] === 'StartTrialClick').length, 1);
   assert.equal(window.fbq.queue.some(x => x.includes('StartTrial')), false);
 });
 
 test('synthetic openings, preview hosts, unsafe URLs and unloading pages do not measure', async () => {
   const { anchor } = await browser();
-  startDemoTracking(anchor, false)(message()); assert.equal(ga().length, 0);
-  suspendTrackingForReload(); startDemoTracking(anchor, true)(message()); assert.equal(ga().length, 0);
+  startDemoTracking(anchor, false)(message()); assert.equal(ga().length, 0); assert.equal(ads().length, 0);
+  suspendTrackingForReload(); startDemoTracking(anchor, true)(message()); assert.equal(ga().length, 0); assert.equal(ads().length, 0);
 });
 for (const url of ['http://localhost:5173/', 'https://test.notably.no/', 'https://www.notably.no/?email=private', 'https://www.notably.no/admin']) {
   test(`no demo events on ${url}`, async () => {
     const { anchor } = await browser(undefined, url); startDemoTracking(anchor, true)(message());
-    assert.equal(ga().length, 0); assert.equal(meta().length, 0);
+    assert.equal(ga().length, 0); assert.equal(meta().length, 0); assert.equal(ads().length, 0);
     assert.equal(document.querySelectorAll('script[src]').length, 0);
   });
 }

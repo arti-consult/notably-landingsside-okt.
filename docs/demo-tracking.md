@@ -2,10 +2,10 @@
 
 This adds two reporting events using the existing SDK owner and current purpose-specific consent. The signup handler, `start_trial_click`, native Google Ads signup action, app `StartTrial`, consent client, attribution forwarding, provider IDs and campaign goals are unchanged.
 
-| Trigger | GA4 (analytics consent) | Meta (advertising consent) |
-| --- | --- | --- |
-| A real pointer/keyboard activation that opens the demo modal | `demo_click` | `DemoClick` |
-| A server-confirmed booking in that modal | `demo_booked` | `DemoBooked` |
+| Trigger | GA4 (analytics consent) | Meta (advertising consent) | Google Ads (advertising consent) |
+| --- | --- | --- | --- |
+| A real pointer/keyboard activation that opens the demo modal | `demo_click` | `DemoClick` | `Book en demo - klikk` |
+| A server-confirmed booking in that modal | `demo_booked` | `DemoBooked` | `Demo - bekreftet møte` |
 
 Only bounded CTA placement (`button_id`), public `page_path` and an event ID are supplied as event parameters. The booking ID is used only for stable event identity (`demo_<UUID>`); no meeting time, customer name, email, company, agenda, join URL or management token is sent to providers. The existing SDK URL sanitization remains in force.
 
@@ -30,7 +30,8 @@ Repeated confirmation messages are consumed once per booking in page memory, acr
 
 - This version measures modal openings and confirmations. Ctrl/Cmd/middle-click and booking in a separate tab are outside this measurement path. The modal's “Åpne i ny fane” escape link remains usable and is not counted as another modal opening.
 - Both the landing change and the companion Notably OS embed change must be deployed for confirmed-booking measurement. They can be deployed in either order; the landing fails closed on older messages. No database migration or app-v2 change is needed.
-- This code sends GA4 events and Meta custom events. It does **not** create Google Ads conversion actions, import GA4 events, create Meta custom conversions, or change bidding/campaign goals. Any later Ads action should use a separate demo destination and be explicitly configured as Secondary; never reuse the signup destination or automatically include it in campaign goals. GA4/Meta reporting delivery still needs verification after deployment.
+- Google Ads now has two dedicated website actions, created and read back as **Secondary** on 2026-10-18, with count **Every** and fixed value **0**. They use the existing Registration category, preserving the existing account-default goal and its one primary server-confirmed trial action across all three campaigns. No custom goals exist or were added. Destinations are `AW-17626822366/go9kCODTlaEdEN7tj9VB` (click) and `AW-17626822366/O_zwCOPTlaEdEN7tj9VB` (booking). The event ID is also the Google transaction ID; repeated booking confirmations are deduplicated before delivery. Never also import these GA4 events as duplicate Google Ads conversions.
+- Report Google results using **All conversions** filtered to each new action. Meta custom conversions may reference the exact `DemoClick` and `DemoBooked` events for reporting columns. Do not select them as campaign/ad-set optimization events. Existing ads, targeting, budgets, bidding and campaign goals must remain unchanged. Provider-attributed totals require eligible consented traffic, are not historical backfill, and can differ from all website events.
 - Obtain the repository's required approving review before merging. After normal deployment, use a genuine consented demo journey to verify receiver delivery and deduplication; do not submit fake meetings to production for a smoke test. Booking without consent must continue to work.
 - Rollback: revert these demo-only commits through the normal release process. Existing signup/trial measurement does not depend on the added demo events.
 
