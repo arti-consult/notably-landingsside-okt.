@@ -10,7 +10,7 @@
 import { hasMarketingConsent, hasAnalyticsConsent } from './consent.ts';
 import { NO_PURPOSES, type PurposeConsent } from './consent-client.ts';
 
-import { FB_PIXEL_ID, GA_MEASUREMENT_ID, GOOGLE_ADS_TAG_ID, GOOGLE_ADS_CTA_DESTINATION, isSafeProviderPage, publicPagePath, CAMPAIGN_KEYS } from './marketing-policy.ts';
+import { FB_PIXEL_ID, GA_MEASUREMENT_ID, GOOGLE_ADS_TAG_ID, GOOGLE_ADS_CTA_DESTINATION, GOOGLE_ADS_DEMO_DESTINATIONS, isSafeProviderPage, publicPagePath, CAMPAIGN_KEYS } from './marketing-policy.ts';
 const TIKTOK_PIXEL_ID = 'D81GS73C77U5V9M1RKG0';
 
 declare global {
@@ -116,6 +116,12 @@ export function trackDemoEvent(event: 'demo_click' | 'demo_booked', params: { bu
     if (hasMarketingConsent() && marketingInitialized) window.fbq?.('trackSingleCustom', FB_PIXEL_ID,
       event === 'demo_click' ? 'DemoClick' : 'DemoBooked', params, { eventID: id });
   } catch { /* Optional browser measurement; no retry or server fallback. */ }
+  try {
+    if (hasMarketingConsent() && marketingInitialized) window.gtag?.('event', 'conversion', {
+      send_to: GOOGLE_ADS_DEMO_DESTINATIONS[event], transaction_id: id,
+      page_location: cleanPageLocation(), page_referrer: cleanReferrer(), transport_type: 'beacon',
+    });
+  } catch { /* The separate reporting action must not affect booking. */ }
 }
 
 const loadGoogleTag = (tagId: string) => {
