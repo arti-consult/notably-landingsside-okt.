@@ -466,7 +466,7 @@ export default function CapabilitiesSection() {
   const animate = inView && !prefersReducedMotion;
 
   return (
-    <section className="py-16 page-container bg-white sm:py-24">
+    <section data-ph-section="features" className="py-16 page-container bg-white sm:py-24">
       <div className="mx-auto max-w-6xl">
         <h2 className="text-balance text-center text-[1.75rem] font-semibold leading-[1.15] tracking-tight text-slate-800 sm:text-4xl md:text-5xl md:leading-[1.1]">
           <span className="block">Passer inn i hverdagen deres.</span>

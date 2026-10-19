@@ -116,7 +116,7 @@ export default function ConsentManager() {
             <p className="text-sm leading-relaxed text-slate-600">
               Vi bruker informasjonskapsler og lignende teknologi for å forstå hvordan nettsiden brukes og hvilke annonser som virker.
               Med ditt samtykke deler vi nettidentifikatorer, besøk og klikk med Google, Meta og TikTok, og prøvestart med Google og Meta.
-              {' '}PostHog måler også bruk av nettsiden og lager klikkart og maskerte opptak av besøk. Skjemainnhold og bookingvinduet tas ikke opp.
+              {' '}PostHog måler også bruk, scrolling, lastetid og tekniske feil på nettsiden og lager klikkart og maskerte opptak av besøk. Skjemainnhold og bookingvinduet tas ikke opp.
             </p>
             <p className="mt-2 text-sm leading-relaxed text-slate-600">
               Valget gjelder nettsiden og webappen. Du kan endre det når som helst i Personvernvalg.
@@ -179,7 +179,7 @@ export default function ConsentManager() {
               </div>
 
               {([
-                ['analytics', 'Analyse', 'Google Analytics og PostHog måler sidebesøk, klikk på «Start gratis» og demo, og bekreftede bookinger. PostHog lager klikkart og maskerte opptak av besøk på nettsiden. Skjemainnhold og bookingvinduet tas ikke opp.'],
+                ['analytics', 'Analyse', 'Google Analytics og PostHog måler sidebesøk, klikk på «Start gratis» og demo, og bekreftede bookinger. PostHog måler også synlige seksjoner, scrolling, bruk av FAQ og kalkulator, kontaktklikk, lastetid og avgrensede tekniske feil, og lager klikkart og maskerte opptak av besøk på nettsiden. Skjemainnhold og bookingvinduet tas ikke opp.'],
                 ['advertising', 'Annonsemåling', 'Måler hvilke annonser som fører til besøk, klikk og prøvestart. Google og Meta mottar klikk og bekreftet prøvestart; TikTok måler besøk.'],
               ] as const).map(([purpose, label, description]) => (
                 <label key={purpose} className="mt-3 block cursor-pointer rounded-xl border border-slate-200 p-4 transition-colors hover:border-blue-300">

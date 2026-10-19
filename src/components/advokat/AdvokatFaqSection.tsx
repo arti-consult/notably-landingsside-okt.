@@ -38,6 +38,7 @@ export default function AdvokatFaqSection({
                     type="button"
                     aria-expanded={isOpen}
                     aria-controls={`faq-${i}`}
+                    data-ph-faq={`question-${i + 1}`}
                     onClick={() => setOpen(isOpen ? null : i)}
                     className="flex w-full items-center justify-between gap-6 py-5 text-left text-[17px] font-semibold text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:text-lg"
                   >

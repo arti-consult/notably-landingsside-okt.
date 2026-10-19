@@ -89,7 +89,7 @@ export default function AIAnswersSection({
   }, [animate, phase, typed, question.length, examples.length]);
 
   return (
-    <section className={`py-20 page-container sm:py-24 ${className}`}>
+    <section data-ph-section="ai_answers" className={`py-20 page-container sm:py-24 ${className}`}>
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-balance text-[1.75rem] font-semibold leading-[1.15] tracking-tight text-slate-800 sm:text-4xl md:text-5xl md:leading-[1.1]">
           {heading}

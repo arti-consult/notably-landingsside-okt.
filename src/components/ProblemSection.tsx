@@ -137,7 +137,7 @@ const ProblemSection = () => {
   });
 
   return (
-    <section className="bg-white px-6 pb-16 pt-24 text-center sm:px-10 sm:pb-20 sm:pt-32">
+    <section data-ph-section="problem" className="bg-white px-6 pb-16 pt-24 text-center sm:px-10 sm:pb-20 sm:pt-32">
       {/* Spørsmålet */}
       <motion.div
         initial="hidden"

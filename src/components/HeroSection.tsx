@@ -133,7 +133,7 @@ export default function HeroSection() {
   const allowParallax = useMediaQuery('(min-width: 1024px)') && !prefersReducedMotion;
 
   return (
-    <section
+    <section data-ph-section="hero"
       ref={sectionRef}
       className="relative overflow-hidden px-6 pb-24 pt-32 sm:px-10 sm:pt-36 md:px-[12%] lg:pb-20 xl:pl-[19%] xl:pr-[12%]"
     >

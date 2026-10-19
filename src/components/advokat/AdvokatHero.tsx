@@ -60,7 +60,7 @@ export default function AdvokatHero() {
   };
 
   return (
-    <section className="relative overflow-hidden px-6 pb-20 pt-32 sm:px-10 sm:pt-36 md:px-[12%] lg:pb-24 xl:pl-[19%] xl:pr-[12%]">
+    <section data-ph-section="hero" className="relative overflow-hidden px-6 pb-20 pt-32 sm:px-10 sm:pt-36 md:px-[12%] lg:pb-24 xl:pl-[19%] xl:pr-[12%]">
       <div
         aria-hidden
         className="pointer-events-none absolute -right-40 -top-48 h-[24rem] w-[24rem] rounded-full bg-sky-300/20 glow scale-[1.86] lg:-top-40 lg:right-[-10%] lg:h-[38rem] lg:w-[38rem] lg:bg-blue-400/20 lg:scale-[1.64]"

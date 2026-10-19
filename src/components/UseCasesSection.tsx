@@ -162,7 +162,7 @@ export default function UseCasesSection() {
   const team = teams[index];
 
   return (
-    <section className="py-20 page-container bg-white sm:py-24">
+    <section data-ph-section="use_cases" className="py-20 page-container bg-white sm:py-24">
       <div className="mx-auto max-w-5xl">
         <h2 className="text-balance text-center text-[1.75rem] font-semibold leading-[1.15] tracking-tight text-slate-800 sm:text-4xl md:text-5xl md:leading-[1.1]">
           Uansett hvilke møter du har.

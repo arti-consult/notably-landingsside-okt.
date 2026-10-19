@@ -56,7 +56,7 @@ export default function TrustSection() {
   }, [prefersReducedMotion]);
 
   return (
-    <section className="relative z-10 bg-white pb-8 pt-2 sm:pb-10">
+    <section data-ph-section="customer_logos" className="relative z-10 bg-white pb-8 pt-2 sm:pb-10">
       <p className="page-container text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 sm:text-sm">
         Brukt av team hos
       </p>
