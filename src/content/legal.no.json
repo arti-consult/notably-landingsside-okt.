@@ -11,7 +11,7 @@
       "description": "Les hvordan Notably AI samler inn, bruker, deler, beskytter og sletter personopplysninger når du bruker Notably-appen og tjenestene."
     },
     "title": "Personvernerklæring",
-    "updated": "13.10.2026",
+    "updated": "19.10.2026",
     "intro": "Denne erklæringen forklarer hvilke personopplysninger Notably samler inn, hvorfor vi bruker dem, hvem som mottar dem, og hvordan du kan bruke rettighetene dine. Den samme erklæringen gjelder notably.no og app.notably.no, mobilappen, møteopptak, AI-funksjoner, støtte, abonnementer, salgskontakt og tilkoblede tjenester.",
     "sections": {
       "controller": {
@@ -21,7 +21,7 @@
       },
       "dataResidency": {
         "title": "Hvor vi lagrer og beskytter dataene dine",
-        "body1": "Hovedsystemene i appen og private møteopptak driftes av Hetzner i Tyskland. Den offentlige nettsiden bruker separate tjenester for drift og offentlig innhold. Leverandørlisten og avsnittet Internasjonale overføringer forklarer hvor annen behandling kan skje.",
+        "body1": "Hovedsystemene i appen, private møteopptak og infrastrukturen for utsending av e-post driftes hos Hetzner i Tyskland. Notably drifter selv e-posttjenesten. Den offentlige nettsiden bruker separate tjenester for drift og offentlig innhold. Leverandørlisten og avsnittet Internasjonale overføringer forklarer hvor annen behandling kan skje.",
         "body2": "Vi bruker kryptering under overføring og tilgangskontroller for å beskytte personopplysninger. Tilgangen begrenses til autoriserte personer og tjenester som trenger den for å levere, støtte eller sikre Notably."
       },
       "personalData": {
@@ -57,7 +57,7 @@
             "description": "Meldinger og vedlegg du sender til kundestøtte, IP-adresser, enhets- og nettleseropplysninger, tjenesteaktivitet og feil- eller sikkerhetsopplysninger."
           }
         },
-        "outro": "Vi mottar opplysningene fra deg, organisasjonen din og arbeidsområdeadministratorer, møtedeltakere og opptak, enhetene dine og tjenester du kobler til. Konto- og betalingsopplysninger er nødvendige for å levere de aktuelle tjenestene. Du velger om du vil koble til en kalender, aktivere varsler, tillate valgfri analyse eller legge inn innhold. Hvis du avslår en valgfri funksjon, kan den være utilgjengelig."
+        "outro": "Vi mottar opplysningene fra deg, organisasjonen din og arbeidsområdeadministratorer, møtedeltakere og opptak, enhetene dine og tjenester du kobler til. Konto- og betalingsopplysninger er nødvendige for å levere de aktuelle tjenestene. Du velger om du vil koble til en kalender, aktivere varsler, tillate valgfri analyse eller legge inn innhold."
       },
       "purposes": {
         "title": "Hvorfor vi bruker dataene og behandlingsgrunnlagene våre",
@@ -126,8 +126,8 @@
             "purpose": "Leverer varsler gjennom Apple Push Notification service og Google Firebase Cloud Messaging. Leveringen omfatter et varslingstoken, meldingsinnhold og møte- eller arbeidsområdereferanser og kan innebære internasjonal behandling."
           },
           "communications": {
-            "name": "Resend (e-post fra appen)",
-            "purpose": "Sender e-post om innlogging, invitasjoner, konto, abonnement, oppsummeringer og kundestøtte. Kunde- og meldingsdata lagres i USA."
+            "name": "E-post fra appen, driftet av Notably (Tyskland)",
+            "purpose": "Sender e-post om innlogging, invitasjoner, konto, abonnement, oppsummeringer og støtte fra vår infrastruktur hos Hetzner i Tyskland. Ved levering mottar mottakerens e-postleverandør meldingene og mottakeropplysningene. Denne leverandørens behandlingssteder og lagringsregler gjelder også."
           },
           "support": {
             "name": "Chatbase (støttechat)",
@@ -156,17 +156,19 @@
         "title": "Lagringstid og sletting",
         "intro": "Lagringstiden avhenger av typen opplysninger, funksjonene du bruker, instruksene dine og eventuelle rettslige plikter:",
         "items": {
-          "account": "Konto- og arbeidsområdeinnhold beholdes mens kontoen eller arbeidsområdet finnes, med mindre en autorisert person sletter det eller en avtalt lagringstid gjelder. Kansellering av abonnement sletter ikke dataene dine.",
-          "deletion": "Sletting av et møte fjerner møtet og tilknyttede transkripsjoner, oppsummeringer, notater, møtechat og søkedata. Opptakskopier slettes separat og kan ta lengre tid. Et delt opptak beholdes mens et annet møte bruker det. Lagrede assistentsamtaler, opplysninger lagret separat i et arbeidsområde og delte eller eksporterte kopier kan kreve en egen sletteforespørsel.",
-          "captureMedia": "De midlertidige opptaksmediene hos Recall.ai er konfigurert til å utløpe 165 timer etter at opptaket er fullført. Dette sletter ikke opptaket som er lagret i Notably. Recall.ai kan beholde andre tjenesteopplysninger etter sine egne lagringsregler.",
-          "backups": "Sletting fra appen fjerner ikke sikkerhetskopier eller driftskopier umiddelbart. Disse kopiene har begrenset tilgang. Lagringstiden avhenger av behov for gjenoppretting, feilsøking og sikkerhet og eventuelle rettslige plikter.",
+          "account": "Opptak, lydfiler, transkripsjoner, oppsummeringer og annet møteinnhold beholdes i kontoen eller arbeidsområdet ditt til en autorisert bruker sletter det, eller vi fjerner det etter en sletteforespørsel. Eventuelle særskilt avtalte lagringstider gjelder også. De samme reglene for lagring og sletting gjelder etter at abonnementet er avsluttet.",
+          "deletion": "Du kan slette enkeltmøter, bruke kontosletting eller kontakte support@notably.no for å be om sletting. Sletting av et møte fjerner møtet og tilknyttede transkripsjoner, oppsummeringer, notater, møtechat og søkedata fra aktive systemer. Opptakskopier fjernes gjennom separat opprydding i bakgrunnen, med nye forsøk ved feil, så sletting kan ta lengre tid. Et delt opptak beholdes mens et annet møte bruker det. Lagrede assistentsamtaler, opplysninger lagret separat i et arbeidsområde og delte eller eksporterte kopier kan kreve en egen sletteforespørsel.",
+          "captureMedia": "De midlertidige opptaksmediene hos Recall.ai er konfigurert til å utløpe 165 timer (i underkant av sju dager) etter at opptaket er fullført. Opptak lagret i Notably og kopier hos andre leverandører følger sine respektive regler for lagring og sletting. Sletting av et møte utløser også opprydding av tilknyttede medier hos Recall.ai når ingen andre møter bruker dem. Recall.ai kan beholde andre tjenesteopplysninger etter sine egne lagringsregler.",
+          "transcription": "ElevenLabs beholder innsendt lyd og transkripsjoner etter sine tjenesteinnstillinger og lagringsvilkår. Kopier hos ElevenLabs kan bestå etter at et møte er slettet i Notably. Kontakt support@notably.no for å be om sletting av disse leverandørkopiene. ElevenLabs opplyser at slettede data kan bestå i sikkerhetskopier av databasen i opptil 30 dager etter sletting. Feilsøkings- og modereringslogger følger egne lagringsregler.",
+          "backups": "Hetzner tar daglige sikkerhetskopier av produksjonsservere i sju roterende plasser. En ny sikkerhetskopi erstatter den eldste, slik at kopiene normalt dekker omtrent én uke når de daglige sikkerhetskopieringene lykkes. Data som er fjernet fra aktive systemer, kan bestå i en eksisterende sikkerhetskopi til kopien erstattes. Sikkerhetskopier av e-postsystemet roteres separat etter hvert som nye kopier opprettes. Sikkerhetskopier har begrenset tilgang og beholdes for gjenoppretting.",
+          "operational": "Driftsopplysninger, blant annet oppgaver i behandlingskøer, opplysninger om e-postlevering og logger, lagres separat for levering, gjenoppretting, feilsøking og sikkerhet. Hver type følger egne regler for lagring og opprydding. Noen opplysninger fjernes eller roteres automatisk, mens andre krever separat opprydding og kan bestå etter at et møte eller en konto er slettet.",
           "records": "Begrensede organisasjons-, kontakt-, abonnements-, betalings-, støtte- og sikkerhetsopplysninger kan bestå etter sletting for kundeadministrasjon, avstemming, rettslige plikter eller rettskrav. Lagringstiden avhenger av formålet med opplysningene og gjeldende lovkrav.",
-          "shared": "Sletting av en medlemskonto sletter ikke innhold som styres av et delt arbeidsområde. Kopier en annen person eller tilkoblet tjeneste allerede har mottatt, følger mottakerens egne lagringsregler."
+          "shared": "Innhold i et delt arbeidsområde forblir under arbeidsområdets kontroll når en medlemskonto slettes. Kopier en annen person eller tilkoblet tjeneste allerede har mottatt, følger mottakerens egne lagringsregler."
         }
       },
       "transfers": {
         "title": "Internasjonale overføringer",
-        "body1": "Kjernesystemene våre og opptakslagringen er i Tyskland. E-postdata hos Resend og støttechatdata hos Chatbase lagres eller behandles i USA. Varsler, innlogging, betaling, valgfri analyse og enkelte leverandøroperasjoner kan også innebære behandling utenfor EØS.",
+        "body1": "Kjernesystemene våre, opptakslagringen og infrastrukturen for utsending av e-post er i Tyskland. Mottakernes e-postleverandører kan behandle leverte meldinger i andre land. Støttechatdata hos Chatbase lagres eller behandles i USA. Varsler, innlogging, betaling, valgfri analyse og enkelte leverandøroperasjoner kan også innebære behandling utenfor EØS.",
         "body2": "Overføringer utenfor EØS krever et lovlig overføringsgrunnlag, som en beslutning om tilstrekkelig beskyttelsesnivå eller EUs standard personvernbestemmelser. En kvalifisert, sertifisert mottaker i USA kan være omfattet av EU–US Data Privacy Framework. Du kan kontakte oss for informasjon om garantiene som gjelder for en leverandør, og en kopi av de relevante garantiene. Tjenester du velger å koble til, kan gjøre overføringer etter sine egne personvernvilkår."
       },
       "rights": {
@@ -207,7 +209,7 @@
           },
           "disconnect": {
             "label": "Frakobling",
-            "description": "Du kan koble fra i Notably og trekke tilbake tilgangen i Google- eller Microsoft-kontoen din. Frakobling stopper synkronisering i Notably og sender en forespørsel om å fjerne tilkoblingen hos leverandøren. Møteinnhold som allerede er lagret, slettes ikke av dette. Det følger reglene for lagringstid og sletting nedenfor."
+            "description": "Du kan koble fra i Notably og trekke tilbake tilgangen i Google- eller Microsoft-kontoen din. Frakobling stopper synkronisering i Notably og sender en forespørsel om å fjerne tilkoblingen hos leverandøren. Møteinnhold som allerede er lagret, følger reglene for lagringstid og sletting nedenfor."
           }
         },
         "outro": "Vår bruk og overføring av informasjon mottatt fra Google API-er følger Google API Services User Data Policy, inkludert kravene til begrenset bruk.",
