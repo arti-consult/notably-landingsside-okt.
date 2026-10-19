@@ -50,7 +50,7 @@ export default function SecuritySection() {
   });
 
   return (
-    <section className="page-container bg-white py-20 sm:py-24">
+    <section data-ph-section="security" className="page-container bg-white py-20 sm:py-24">
       <div className="mx-auto max-w-4xl">
         <div className="text-center">
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500 sm:text-sm">

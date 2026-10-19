@@ -20,7 +20,7 @@ export default function TestimonialSection() {
   });
 
   return (
-    <section className="page-container bg-white py-16 sm:py-24">
+    <section data-ph-section="customer_story" className="page-container bg-white py-16 sm:py-24">
       <motion.figure
         initial="hidden"
         whileInView="visible"

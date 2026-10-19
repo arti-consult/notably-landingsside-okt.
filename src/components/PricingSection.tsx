@@ -68,7 +68,7 @@ const PricingSection = () => {
 
   return (
     <>
-      <section id="pricing" className="py-20 page-container bg-gray-50 scroll-mt-24 md:scroll-mt-28">
+      <section data-ph-section="pricing" id="pricing" className="py-20 page-container bg-gray-50 scroll-mt-24 md:scroll-mt-28">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-slate-950 mb-4">
@@ -144,6 +144,7 @@ const PricingSection = () => {
                   {!isSelfServePlan ? (
                     <button
                       type="button"
+                      data-ph-contact="enterprise_open"
                       onClick={() => setIsContactModalOpen(true)}
                       className={`w-full py-3 rounded-full font-medium transition-all duration-300 mt-auto block text-center ${ctaClass}`}
                     >

@@ -42,7 +42,7 @@ async function scenario(name, permissions, {old=false, mobile=false, blocked=fal
       if(blocked && /assets\/module-/.test(url.pathname))return route.abort();
       let path=resolve(dist, '.'+decodeURIComponent(url.pathname));
       if (!path.startsWith(dist)) return route.abort();
-      try { let body=await readFile(path);if(path.endsWith('.js'))body=Buffer.from(body.toString().replace('capture_pageview:!1,capture_pageleave:!0', 'opt_out_useragent_filter:!0,capture_pageview:!1,capture_pageleave:!0')); return route.fulfill({status:200,body,contentType:mime[extname(path)]||'application/octet-stream'}); }
+      try { let body=await readFile(path);if(path.endsWith('.js'))body=Buffer.from(body.toString().replace('capture_pageview:!1,capture_pageleave:!0', 'opt_out_useragent_filter:!0,capture_pageview:!1,capture_pageleave:!0'));  return route.fulfill({status:200,body,contentType:mime[extname(path)]||'application/octet-stream'}); }
       catch { if(extname(url.pathname)){console.log('missing local',url.pathname);return route.fulfill({status:404,body:''});} return route.fulfill({status:200,body:await readFile(resolve(dist,'index.html')),contentType:'text/html'}); }
     }
     if (url.hostname==='api.notably.no') {
@@ -110,24 +110,48 @@ async function scenario(name, permissions, {old=false, mobile=false, blocked=fal
   await writeFile(resolve(here,`${baseline?'baseline':'current'}-${name}-raw.json`),JSON.stringify({phRequests,tracking,errors,logs},null,2));
   const events=flattened.filter(e=>e.event);
   const decodeNested=value=>{if(typeof value==='string'&&value.startsWith('\x1f\x8b'))return decodeNested(JSON.parse(gunzipSync(Buffer.from(value,'latin1')).toString()));if(Array.isArray(value))return value.map(decodeNested);if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).map(([k,v])=>[k,decodeNested(v)]));return value;};
-  const expected=permissions.analytics&&!old&&!baseline&&!blocked&&!unsafe;
+  const expected=permissions.analytics&&!old&&!blocked&&!unsafe;
   if(expected) {
     assert.equal(events.filter(e=>e.event==='$pageview').length,1,`${name}: exactly one pageview; requests=${JSON.stringify(phRequests.map(r=>({url:r.url,data:r.data}))).slice(0,2500)}`);
     assert.ok(events.some(e=>e.event==='$$heatmap'&&Object.keys(e.properties.$heatmap_data||{}).length),`${name}: heatmap coordinates emitted`);
     assert.equal(events.filter(e=>e.event==='demo_click').length,2,`${name}: demo clicks`);
     assert.equal(events.filter(e=>e.event==='demo_booked').length,1,`${name}: deduped confirmed booking`);
     assert.equal(events.filter(e=>e.event==='start_trial_click').length,1,`${name}: trial intent`);
+    if(!baseline) {
+      assert.ok(events.some(e=>e.event==='$autocapture'&&e.properties.$elements_chain),'native element clickmap receives structural clicks');
+      assert.ok(events.some(e=>e.event==='$web_vitals'&&typeof e.properties.$web_vitals_LCP_value==='number'),'native web vitals receive numeric performance');
+    }
     assert.doesNotMatch(JSON.stringify(decodeNested(phRequests.filter(r=>r.method==='POST'))),/PRIVATE_AD_ID|PRIVATE_BOOKING_DETAILS|private@example|gclid=/,`${name}: privacy`);
   } else assert.equal(events.length,0,`${name}: no captured PostHog events`);
-  if(!permissions.analytics||old||baseline||unsafe)assert.equal(phRequests.length,0,`${name}: no PostHog requests`);
+  if(!permissions.analytics||old||unsafe)assert.equal(phRequests.length,0,`${name}: no PostHog requests`);
   assert.equal(errors.length,0,`${name}: browser exceptions: ${errors.join(', ')}`);
   const ga=tracking.dataLayer.filter(x=>x[0]==='event');
   const meta=tracking.meta.filter(x=>x[0]==='trackSingleCustom');
   const normalize=values=>JSON.parse(JSON.stringify(values).replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi,'UUID'));
   const report={name,ga:normalize(ga),meta:normalize(meta),events:events.map(e=>({event:e.event,properties:e.properties})),posthogRequests:phRequests.map(r=>({url:r.url,method:r.method,undecoded:r.data?.undecoded})),storage:tracking.storage,local:tracking.local,errors,logs};
   if(expected && name==='both') {
-    await page.getByRole('link',{name:'Om oss',exact:true}).first().click(); await page.waitForTimeout(1000);
     const allEvents=()=>phRequests.flatMap(r=>Array.isArray(r.data)?r.data:Array.isArray(r.data?.batch)?r.data.batch:r.data?[r.data]:[]);
+    if(!baseline) {
+      await page.getByRole('link',{name:'Priser',exact:true}).first().click();
+      await page.locator('#pricing').scrollIntoViewIfNeeded();await page.waitForTimeout(5800);
+      assert.equal(allEvents().filter(e=>e.event==='section_viewed'&&e.properties.section_id==='pricing').length,1,'pricing viewed once');
+      assert.equal(allEvents().filter(e=>e.event==='section_engaged'&&e.properties.section_id==='pricing').length,1,'pricing has five seconds of visible attention');
+      await page.getByRole('button',{name:'Snakk med oss',exact:true}).click();
+      await page.getByRole('button',{name:'Lukk',exact:true}).click();
+      assert.equal(allEvents().filter(e=>e.event==='contact_click'&&e.properties.contact_type==='enterprise_open').length,1,'enterprise contact intent');
+      await page.getByRole('link',{name:/Regnskapsførere/i}).first().click();
+      await page.locator('#kalkulator').scrollIntoViewIfNeeded();await page.waitForTimeout(1500);
+      const slider=page.locator('#kalkulator input[type=range]').first();await slider.focus();await slider.press('ArrowRight');await slider.press('ArrowRight');
+      await page.locator('#faq button[aria-expanded]').nth(1).click();
+      await page.locator('#faq button[aria-expanded]').nth(1).click();
+      await page.locator('#faq button[aria-expanded]').nth(1).click();await page.waitForTimeout(1000);
+      assert.equal(allEvents().filter(e=>e.event==='calculator_used').length,1,'calculator use deduplicated and no values');
+      assert.equal(allEvents().filter(e=>e.event==='faq_opened'&&e.properties.question_id==='question-2').length,1,'FAQ opening deduplicated');
+      assert.ok(allEvents().some(e=>e.event==='$pageleave'&&e.properties.$prev_pageview_max_content_percentage>0.5),'native scrollmap has content depth');
+      assert.doesNotMatch(JSON.stringify(decodeNested(phRequests.filter(r=>r.method==='POST'))),/PRIVATE_AD_ID|PRIVATE_BOOKING_DETAILS|private@example|gclid=/,'all engagement payloads remain private');
+      report.engagement={pricingView:true,attention:true,contact:true,calculator:true,faq:true,scrollDepth:true,nativeClickmap:true,webVitals:true};
+    }
+    await page.getByRole('link',{name:'Om oss',exact:true}).first().click(); await page.waitForTimeout(1000);
     assert.ok(allEvents().some(e=>e.event==='$pageleave'&&e.properties.$pathname==='/'), 'route emits leave for previous page');
     assert.equal(allEvents().filter(e=>e.event==='$pageview'&&e.properties.$pathname==='/om-oss').length,1,'route emits one new pageview');
     await page.getByRole('button',{name:'Personvernvalg',exact:true}).click();

@@ -131,8 +131,12 @@ test('recording masks inputs, text and attributes and blocks forms, booking and 
   await browser(); acknowledgePostHogDisclosure(); const sdk = fake();
   controller = createLandingAnalytics(async () => sdk); await controller.sync();
   const c = sdk.config;
-  assert.equal(c.autocapture, false); assert.equal(c.person_profiles, 'never');
-  assert.equal(c.capture_performance, false); assert.equal(c.enable_recording_console_log, false);
+  assert.deepEqual(c.autocapture.dom_event_allowlist, ['click']); assert.equal(c.person_profiles, 'never');
+  assert.equal(c.autocapture.capture_copied_text, false);
+  assert.match(c.autocapture.css_selector_ignorelist.join(','), /data-posthog-private/);
+  assert.equal(c.mask_all_text, true); assert.equal(c.mask_all_element_attributes, true);
+  assert.equal(c.capture_performance.web_vitals, true); assert.equal(c.capture_performance.network_timing, false);
+  assert.equal(c.capture_performance.web_vitals_attribution, false); assert.equal(c.enable_recording_console_log, false);
   assert.equal(c.session_recording.maskAllInputs, true);
   assert.equal(c.session_recording.maskAttributeFn('href', 'https://app.notably.no/?gclid=secret').includes('secret'), false);
   assert.equal(c.session_recording.maskAttributeFn('data-email', 'private@example.test').includes('private'), false);
@@ -145,4 +149,46 @@ test('recording masks inputs, text and attributes and blocks forms, booking and 
   assert.equal(c.session_recording.maskCapturedNetworkRequestFn({ name: window.location.href, isInitial: true }).name, 'https://www.notably.no/');
   assert.equal(c.session_recording.maskNetworkRequestFn({ url: window.location.href }).url, 'https://www.notably.no/');
   assert.equal(c.before_send({ event: '$autocapture', properties: { text: 'private' } }), null);
+});
+
+test('native clickmaps retain only structural element metadata, never labels or destinations', async () => {
+  await browser(); acknowledgePostHogDisclosure(); const sdk = fake();
+  controller = createLandingAnalytics(async () => sdk); await controller.sync();
+  const result = sdk.config.before_send({ event: '$autocapture', properties: {
+    $event_type: 'click', $el_text: 'PRIVATE', $elements_chain: 'PRIVATE',
+    $elements: [{tag_name:'a',nth_child:2,nth_of_type:1,attr__href:'https://app.notably.no/?gclid=PRIVATE', $el_text:'PRIVATE',attr__id:'PRIVATE'},null],
+  } });
+  assert.deepEqual(result.properties.$elements, [{tag_name:'a',nth_child:2,nth_of_type:1},{}]);
+  assert.doesNotMatch(JSON.stringify(result), /PRIVATE|gclid|\$el_text|attr__/);
+  assert.equal(sdk.config.before_send({ event:'$autocapture',properties:{$event_type:'change',$elements:[]} }),null);
+  const chain='a:nth-child="2"nth-of-type="1";div:nth-child="1"nth-of-type="1";body:nth-child="2"nth-of-type="1"';
+  assert.equal(sdk.config.before_send({event:'$autocapture',properties:{$event_type:'click',$elements_chain:chain}}).properties.$elements_chain,chain);
+  assert.equal(sdk.config.before_send({event:'$autocapture',properties:{$event_type:'click',$elements_chain:chain+';a:href="PRIVATE"'}}),null);
+
+});
+
+test('performance reports contain numeric vitals only and do not move to a later SPA route', async () => {
+  await browser(); acknowledgePostHogDisclosure(); const sdk=fake();
+  controller=createLandingAnalytics(async()=>sdk); await controller.sync();
+  const event={event:'$web_vitals',properties:{$web_vitals_LCP_value:1234,$web_vitals_INP_value:NaN,$web_vitals_CLS_value:-1,$web_vitals_LCP_event:{url:'PRIVATE',entries:['PRIVATE']}}};
+  const result=sdk.config.before_send(event);
+  assert.equal(result.properties.$web_vitals_LCP_value,1234);
+  assert.equal(result.properties.$web_vitals_INP_value,undefined);
+  assert.equal(result.properties.$web_vitals_CLS_value,undefined);
+  assert.doesNotMatch(JSON.stringify(result),/PRIVATE/);
+  window.history.pushState({},'', '/advokat');await controller.sync();
+  assert.equal(sdk.config.before_send(event),null);
+});
+
+test('engagement and errors accept only fixed categories, never entered business data',async()=>{
+  await browser();acknowledgePostHogDisclosure();const sdk=fake();
+  controller=createLandingAnalytics(async()=>sdk);await controller.sync();
+  const props={section_id:'pricing',question_id:'question-2',contact_type:'email',visible_seconds:5,error_category:'runtime_error',message:'PRIVATE',stack:'PRIVATE',email:'PRIVATE',slider_value:12345};
+  const result=sdk.config.before_send({event:'section_viewed',properties:props});
+  assert.equal(result.properties.section_id,'pricing');assert.equal(result.properties.question_id,'question-2');
+  assert.doesNotMatch(JSON.stringify(result),/PRIVATE|slider_value/);
+  const bad=sdk.config.before_send({event:'landing_error',properties:{error_category:'PRIVATE',section_id:'PRIVATE',question_id:'PRIVATE'}});
+  assert.equal(bad.properties.error_category,undefined);assert.equal(bad.properties.section_id,undefined);
+  forgetPostHogDisclosure();
+  assert.equal(sdk.config.before_send({event:'section_viewed',properties:props}),null);
 });

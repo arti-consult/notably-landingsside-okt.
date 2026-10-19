@@ -2,6 +2,7 @@ import type { PostHog, PostHogConfig, CaptureResult } from 'posthog-js';
 import { consentClient, hasMarketingConsent } from './consent.ts';
 import { hasPostHogConsent, POSTHOG_DISCLOSURE_EVENT, POSTHOG_DISCLOSURE_KEY } from './posthog-consent.ts';
 import { isSafeProviderPage, publicPagePath } from './marketing-policy.ts';
+import { PRIVATE_SELECTOR, safeSection, startLandingEngagement } from './posthog-engagement.ts';
 
 // Public, write-only project token. No account API key is shipped to the browser.
 export const POSTHOG_PROJECT_TOKEN = 'phc_CiiZAE4mV6T54hecR2gLFRpf8XtNhbN4SWYGoZ5LFtvJ';
@@ -11,7 +12,7 @@ export type LandingEvent = 'start_trial_click' | 'demo_click' | 'demo_booked';
 type Properties = Record<string, unknown>;
 type Client = Pick<PostHog, 'init' | 'capture' | 'set_config' | 'opt_in_capturing' | 'opt_out_capturing' | 'stopSessionRecording'>;
 type Load = () => Promise<Client>;
-const eventNames = new Set(['$pageview', '$pageleave', '$$heatmap', '$snapshot', 'start_trial_click', 'demo_click', 'demo_booked']);
+const eventNames = new Set(['$pageview', '$pageleave', '$$heatmap', '$snapshot', '$autocapture', '$rageclick', '$dead_click', '$web_vitals', 'start_trial_click', 'demo_click', 'demo_booked', 'section_viewed', 'section_engaged', 'faq_opened', 'calculator_used', 'contact_click', 'landing_error']);
 const safeProperties = new Set([
   'token', 'distinct_id', '$device_id', '$session_id', '$window_id', '$pageview_id', '$insert_id',
   '$lib', '$lib_version', '$browser', '$browser_version', '$os', '$os_version', '$device_type',
@@ -20,6 +21,8 @@ const safeProperties = new Set([
   '$prev_pageview_id', '$prev_pageview_duration', '$prev_pageview_max_scroll_percentage',
   '$prev_pageview_max_scroll', '$prev_pageview_last_scroll', '$prev_pageview_last_scroll_percentage',
   '$prev_pageview_max_content_height', '$prev_pageview_last_content_height',
+  '$prev_pageview_max_content_percentage', '$prev_pageview_last_content_percentage',
+  '$prev_pageview_max_scroll_y', '$prev_pageview_last_scroll_y',
 ]);
 const campaignKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_id', 'utm_content'] as const;
 const campaignValue = /^[a-zA-Z0-9_ .|()/-]{1,120}$/;
@@ -46,11 +49,13 @@ export function createLandingAnalytics(load: Load = async () => (await import('p
   let generation = 0;
   let lastPage = '';
   let failed = false;
+  let stopEngagement: (() => void) | null = null;
+  let performancePage = '';
   const allowed = () => !stopped && hasPostHogConsent() && isSafeProviderPage();
 
   function context(): Properties {
     const props: Properties = {
-      site: 'notably.no', measurement_version: 1,
+      site: 'notably.no', measurement_version: 2,
       $current_url: cleanUrl(window.location.href), $pathname: window.location.pathname,
       $host: window.location.hostname, $referrer: referrer ? `https://${referrer}` : '',
       $referring_domain: referrer || '$direct',
@@ -75,6 +80,39 @@ export function createLandingAnalytics(load: Load = async () => (await import('p
       const value = event.properties[key];
       if (typeof value === 'string' && (key === 'button_id' ? /^[a-z0-9_-]{1,64}$/.test(value) : publicPagePath(new URL(value, window.location.origin)))) props[key] = value;
     }
+    if (safeSection(event.properties.section_id)) props.section_id = event.properties.section_id;
+    if (/^question-[1-9][0-9]?$/.test(String(event.properties.question_id ?? ''))) props.question_id = event.properties.question_id;
+    if (event.properties.visible_seconds === 5) props.visible_seconds = 5;
+    if (['enterprise_open', 'email', 'phone'].includes(String(event.properties.contact_type))) props.contact_type = event.properties.contact_type;
+    if (['runtime_error', 'asset_load_failed', 'demo_load_timeout'].includes(String(event.properties.error_category))) props.error_category = event.properties.error_category;
+    // Native clickmaps need element positions, never text, hrefs, values or arbitrary attributes.
+    if (['$autocapture', '$rageclick', '$dead_click'].includes(event.event)) {
+      if (event.properties.$event_type !== 'click') return null;
+      props.$event_type = 'click';
+      if (typeof event.properties.$ce_version === 'number') props.$ce_version = event.properties.$ce_version;
+      const elements = event.properties.$elements;
+      const chain = event.properties.$elements_chain;
+      // Current SDKs serialize the chain before before_send. Accept only tags and sibling positions.
+      if (typeof chain === 'string' && chain.length <= 6000 && chain.split(';').every(part => /^[a-z][a-z0-9-]{0,30}(?::nth-child="[1-9][0-9]{0,5}"nth-of-type="[1-9][0-9]{0,5}")?$/.test(part))) {
+        props.$elements_chain = chain;
+      } else if (Array.isArray(elements)) props.$elements = elements.slice(0,30).map(element => {
+        const clean: Properties = {};
+        if (!element || typeof element !== 'object') return clean;
+        if (typeof element.tag_name === 'string' && /^[a-z][a-z0-9-]{0,30}$/.test(element.tag_name)) clean.tag_name = element.tag_name;
+        for (const key of ['nth_child', 'nth_of_type']) if (Number.isInteger(element[key]) && element[key] > 0) clean[key] = element[key];
+        return clean;
+      });
+      else return null;
+    }
+    if (event.event === '$web_vitals') {
+      // Only initial-navigation vitals. Never attribute a late initial-page measurement to a new SPA route.
+      if (cleanUrl(window.location.href) !== performancePage) return null;
+      for (const metric of ['LCP', 'FCP', 'INP', 'CLS']) {
+        const key = `$web_vitals_${metric}_value`, value = event.properties[key];
+        if (typeof value === 'number' && Number.isFinite(value) && value >= 0) props[key] = value;
+      }
+      // The nested SDK attribution objects may contain DOM nodes, URLs and text; omit them entirely.
+    }
     // Heatmaps key their coordinate arrays by URL. Drop query strings and fragments.
     const heatmaps = event.properties.$heatmap_data;
     if (heatmaps && typeof heatmaps === 'object') {
@@ -94,11 +132,20 @@ export function createLandingAnalytics(load: Load = async () => (await import('p
       persistence: 'sessionStorage', persistence_name: POSTHOG_STORAGE_NAME,
       cross_subdomain_cookie: false, secure_cookie: true,
       opt_out_capturing_by_default: true, opt_out_persistence_by_default: true,
-      person_profiles: 'never', autocapture: false, rageclick: false,
+      person_profiles: 'never',
+      autocapture: {
+        dom_event_allowlist: ['click'], element_allowlist: ['a', 'button'],
+        css_selector_allowlist: ['[data-ph-section]', 'section[id]', 'nav', 'footer', '[data-ph-contact]'],
+        css_selector_ignorelist: [PRIVATE_SELECTOR, '[aria-modal="true"]'], capture_copied_text: false,
+      },
+      mask_all_text: true, mask_all_element_attributes: true,
+      rageclick: { css_selector_ignorelist: [PRIVATE_SELECTOR, '[aria-modal="true"]', '[data-ph-section="calculator"]'], content_ignorelist: true, ignore_text_selection: true },
       capture_pageview: false, capture_pageleave: true,
       save_campaign_params: false, save_referrer: false,
       disable_capture_url_hashes: true,
-      capture_exceptions: false, capture_dead_clicks: false, capture_performance: false,
+      capture_exceptions: false,
+      capture_dead_clicks: { css_selector_ignorelist: [PRIVATE_SELECTOR, '[aria-modal="true"]', 'a[target="_blank"]', 'a[href^="mailto:"]', 'a[href^="tel:"]'], capture_dead_swipes: false },
+      capture_performance: { network_timing: false, web_vitals: true, web_vitals_attribution: false, web_vitals_allowed_metrics: ['LCP', 'FCP', 'INP', 'CLS'] },
       enable_recording_console_log: false, disable_surveys: true,
       advanced_disable_feature_flags: true, remote_config_refresh_interval_ms: 0,
       request_batching: false,
@@ -126,6 +173,7 @@ export function createLandingAnalytics(load: Load = async () => (await import('p
   function deactivate() {
     generation++;
     lastPage = '';
+    stopEngagement?.(); stopEngagement = null;
     if (!active) return;
     active = false; // Guard captures before asking the SDK to stop or clear buffers.
     try { sdk?.opt_out_capturing(); } catch { /* Optional SDK. */ }
@@ -136,11 +184,15 @@ export function createLandingAnalytics(load: Load = async () => (await import('p
   function pageview() {
     const page = cleanUrl(window.location.href);
     if (!active || !allowed() || page === lastPage) return;
+    stopEngagement?.(); stopEngagement = null;
     if (lastPage) {
       try { sdk?.capture('$pageleave'); } catch { /* Optional page-duration measurement. */ }
     }
     lastPage = page;
     try { sdk?.capture('$pageview', context()); } catch { /* Never break rendering. */ }
+    try { stopEngagement = startLandingEngagement((event, properties) => {
+      if (active && allowed()) sdk?.capture(event, properties);
+    }, () => active && allowed()); } catch { /* Older browsers may lack observer support. */ }
   }
 
   function sync(): Promise<void> {
@@ -154,6 +206,7 @@ export function createLandingAnalytics(load: Load = async () => (await import('p
       const first = !sdk;
       sdk = client;
       active = true;
+      performancePage = cleanUrl(window.location.href);
       if (first) sdk.init(POSTHOG_PROJECT_TOKEN, config());
       else sdk.set_config({ ...config(), disable_persistence: false });
       sdk.opt_in_capturing({ captureEventName: false });
