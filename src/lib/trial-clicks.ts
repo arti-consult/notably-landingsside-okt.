@@ -3,6 +3,7 @@ import type { Attribution } from './consent-client.ts';
 import { isProductionPage, normalizeRef, publicPagePath } from './marketing-policy.ts';
 import { hasMarketingConsent, hasAnalyticsConsent } from './consent.ts';
 import { trackStartTrialClick } from './analytics.ts';
+import { captureLandingEvent } from './posthog-landing.ts';
 
 /** One delegated listener covers React, lazy sections, article CTAs and keyboard activation. */
 export function startTrialLinks(getAttribution: () => Attribution | null): () => void {
@@ -34,6 +35,7 @@ export function startTrialLinks(getAttribution: () => Attribution | null): () =>
     const raw = a.dataset.trialCta ?? (a.closest('nav,header') ? 'navigation' : a.closest('footer') ? 'footer' : section ?? 'content');
     const placement = /^[a-z0-9_-]{1,64}$/.test(raw) ? raw : 'content';
     trackStartTrialClick({ button_id: placement, page_path: publicPagePath(new URL(window.location.href))! });
+    captureLandingEvent('start_trial_click', { button_id: placement, page_path: publicPagePath(new URL(window.location.href))! });
     window.dispatchEvent(new Event('notably:capture-attribution'));
   };
   const observer = new MutationObserver(refreshLinks);

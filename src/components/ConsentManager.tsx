@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Cookie, X } from 'lucide-react';
 import { ALL_PURPOSES, NO_PURPOSES } from '../lib/consent-client';
 import { consentClient, onConsentChange, onOpenPrivacyChoices, readConsent, saveConsent, type ConsentValue } from '../lib/consent';
+import { acknowledgePostHogDisclosure, forgetPostHogDisclosure } from '../lib/posthog-consent.ts';
 
 /** Shared server consent; SDK lifecycle and immediate revocation live in marketing-loader. */
 export default function ConsentManager() {
@@ -74,8 +75,10 @@ export default function ConsentManager() {
 
   const apply = useCallback(async (value: ConsentValue) => {
     setSaving(true);
+    if (!value.analytics) forgetPostHogDisclosure();
     try {
       await saveConsent(value);
+      if (value.analytics) acknowledgePostHogDisclosure();
       setChoices({ ...readConsent().permissions });
       if (!readConsent().pendingDenial) setPanelOpen(false);
     } catch {
@@ -113,6 +116,7 @@ export default function ConsentManager() {
             <p className="text-sm leading-relaxed text-slate-600">
               Vi bruker informasjonskapsler og lignende teknologi for å forstå hvordan nettsiden brukes og hvilke annonser som virker.
               Med ditt samtykke deler vi nettidentifikatorer, besøk og klikk med Google, Meta og TikTok, og prøvestart med Google og Meta.
+              {' '}PostHog måler også bruk av nettsiden og lager klikkart og maskerte opptak av besøk. Skjemainnhold og bookingvinduet tas ikke opp.
             </p>
             <p className="mt-2 text-sm leading-relaxed text-slate-600">
               Valget gjelder nettsiden og webappen. Du kan endre det når som helst i Personvernvalg.
@@ -175,7 +179,7 @@ export default function ConsentManager() {
               </div>
 
               {([
-                ['analytics', 'Analyse', 'Hjelper oss å forstå bruk av nettsiden, blant annet sidebesøk og klikk på «Start gratis», med Google Analytics.'],
+                ['analytics', 'Analyse', 'Google Analytics og PostHog måler sidebesøk, klikk på «Start gratis» og demo, og bekreftede bookinger. PostHog lager klikkart og maskerte opptak av besøk på nettsiden. Skjemainnhold og bookingvinduet tas ikke opp.'],
                 ['advertising', 'Annonsemåling', 'Måler hvilke annonser som fører til besøk, klikk og prøvestart. Google og Meta mottar klikk og bekreftet prøvestart; TikTok måler besøk.'],
               ] as const).map(([purpose, label, description]) => (
                 <label key={purpose} className="mt-3 block cursor-pointer rounded-xl border border-slate-200 p-4 transition-colors hover:border-blue-300">

@@ -81,6 +81,7 @@ export default function DemoBookingModal() {
           transition={{ duration: 0.18 }}
           className="fixed inset-0 z-[120] flex items-center justify-center sm:p-6"
           data-demo-modal
+          data-posthog-private
         >
           <button type="button" tabIndex={-1} aria-label="Lukk bookingvindu" onClick={close} className="absolute inset-0 cursor-default bg-slate-900/50 backdrop-blur-sm" data-demo-backdrop />
           <motion.div
