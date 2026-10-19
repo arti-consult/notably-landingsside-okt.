@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate, useParams, useLocation } from '
 import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
 import { startMarketingScriptsLoader } from './lib/marketing-loader.ts';
+import { landingAnalytics } from './lib/posthog-landing.ts';
 
 const HomePage = lazy(() => import('./pages/HomePage.tsx'));
 const BlogListing = lazy(() => import('./pages/BlogListing.tsx'));
@@ -39,11 +40,19 @@ function MarketingScriptsLoader() {
   return null;
 }
 
+/** Independent analytics lifecycle; it never writes to the advertising providers. */
+function LandingAnalyticsLoader() {
+  const location = useLocation();
+  useEffect(() => { void landingAnalytics().sync(); }, [location.pathname, location.search, location.hash]);
+  return null;
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <HelmetProvider>
       <BrowserRouter>
         <MarketingScriptsLoader />
+        <LandingAnalyticsLoader />
         <Suspense fallback={<div className="min-h-screen bg-gray-50" />}>
           <Routes>
             <Route path="/" element={<HomePage />} />

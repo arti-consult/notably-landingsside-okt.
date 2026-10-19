@@ -1,0 +1,78 @@
+{
+  "baseline": "9f22c4c639476fd0c9488353f09042b74ae0badf",
+  "provider_comparisons": [
+    {
+      "scenario": "both",
+      "google_identical": true,
+      "meta_identical": true,
+      "google_event_count": 8,
+      "meta_event_count": 4
+    },
+    {
+      "scenario": "analytics-only",
+      "google_identical": true,
+      "meta_identical": true,
+      "google_event_count": 4,
+      "meta_event_count": 0
+    },
+    {
+      "scenario": "advertising-only",
+      "google_identical": true,
+      "meta_identical": true,
+      "google_event_count": 4,
+      "meta_event_count": 4
+    },
+    {
+      "scenario": "denied",
+      "google_identical": true,
+      "meta_identical": true,
+      "google_event_count": 0,
+      "meta_event_count": 0
+    },
+    {
+      "scenario": "existing-grant",
+      "google_identical": true,
+      "meta_identical": true,
+      "google_event_count": 8,
+      "meta_event_count": 4
+    },
+    {
+      "scenario": "mobile",
+      "google_identical": true,
+      "meta_identical": true,
+      "google_event_count": 8,
+      "meta_event_count": 4
+    },
+    {
+      "scenario": "blocked-sdk",
+      "google_identical": true,
+      "meta_identical": true,
+      "google_event_count": 8,
+      "meta_event_count": 4
+    },
+    {
+      "scenario": "unsafe-url",
+      "google_identical": true,
+      "meta_identical": true,
+      "google_event_count": 0,
+      "meta_event_count": 0
+    }
+  ],
+  "unchanged_file_sha256": {
+    "src/lib/analytics.ts": "a7f66c46d968cbf32501e07aa79e70ea02af2e7972110054b5abde249b078cf3",
+    "src/lib/marketing-loader.ts": "cb27ff2f8761c3f30c0ba948b2919aaef1262f520eca6dd45c6d70238798a249",
+    "src/lib/marketing-policy.ts": "2c1b5ff0ef6d1b635e2429d21b07cf6aa062e44ba19cfb684646dc87c6ecbe9c",
+    "src/lib/marketing-attribution.ts": "350b999c9cc3190441fadf65e9c4fd63e573d71dc31117d0a89b2f53c83d9df7",
+    "src/lib/consent.ts": "031f1e189e556c2ca3c74fe8202c48a38ab0a681fdaa3b90bd1d4ff926b66b07",
+    "src/lib/consent-client.ts": "11d9d5a930026751260f3bcd06466db8f4f189241c388c571ba1ed4d0625d29d"
+  },
+  "route_and_offline_withdrawal": {
+    "offline": true,
+    "stoppedImmediately": true,
+    "reloadStopped": true,
+    "remainingStorage": [
+      "ph_notably_landing_window_id"
+    ]
+  },
+  "all_passed": true
+}
