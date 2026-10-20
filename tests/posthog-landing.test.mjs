@@ -63,6 +63,21 @@ for (const permissions of [{ analytics: true, advertising: true }, { analytics: 
   });
 }
 
+test('native scrollmaps retain only the sanitized public previous pathname', async () => {
+  await browser(); acknowledgePostHogDisclosure(); const sdk = fake();
+  controller = createLandingAnalytics(async () => sdk); await controller.sync();
+  for (const event of ['$pageview', '$pageleave']) {
+    sdk.capture(event, { $prev_pageview_pathname: '/regnskapsforer?email=private@example.test#PRIVATE', $prev_pageview_max_content_percentage: 0.8 });
+    assert.equal(sdk.events.at(-1).properties.$prev_pageview_pathname, '/regnskapsforer');
+    assert.equal(sdk.events.at(-1).properties.$prev_pageview_max_content_percentage, 0.8);
+    assert.doesNotMatch(JSON.stringify(sdk.events.at(-1)), /private@example|PRIVATE/);
+  }
+  for (const path of ['/admin', '//other.example/path', 'https://other.example/', '/\\\\other.example/path', 42]) {
+    sdk.capture('$pageleave', { $prev_pageview_pathname: path });
+    assert.equal(sdk.events.at(-1).properties.$prev_pageview_pathname, undefined);
+  }
+});
+
 test('revocation during a slow SDK load drops queued clicks and never initializes the SDK', async () => {
   await browser(); acknowledgePostHogDisclosure(); const sdk = fake(), load = deferred();
   controller = createLandingAnalytics(() => load.promise);

@@ -148,6 +148,7 @@ async function scenario(name, permissions, {old=false, mobile=false, blocked=fal
       assert.equal(allEvents().filter(e=>e.event==='calculator_used').length,1,'calculator use deduplicated and no values');
       assert.equal(allEvents().filter(e=>e.event==='faq_opened'&&e.properties.question_id==='question-2').length,1,'FAQ opening deduplicated');
       assert.ok(allEvents().some(e=>e.event==='$pageleave'&&e.properties.$prev_pageview_max_content_percentage>0.5),'native scrollmap has content depth');
+      assert.ok(allEvents().some(e=>e.event==='$pageleave'&&e.properties.$prev_pageview_pathname==='/'&&e.properties.$prev_pageview_max_scroll>0),'native scrollmap can associate scroll coordinates with the previous page');
       assert.doesNotMatch(JSON.stringify(decodeNested(phRequests.filter(r=>r.method==='POST'))),/PRIVATE_AD_ID|PRIVATE_BOOKING_DETAILS|private@example|gclid=/,'all engagement payloads remain private');
       report.engagement={pricingView:true,attention:true,contact:true,calculator:true,faq:true,scrollDepth:true,nativeClickmap:true,webVitals:true};
     }
