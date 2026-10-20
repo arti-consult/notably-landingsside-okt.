@@ -75,6 +75,16 @@ Testfiler og rå evidens fra denne utvidelsen ligger i arbeidsområdets `release
 
 ## Publisering og tilbakeføring
 
+### Produksjonskontroll og scrollkart, 20. oktober 2026
+
+PR #15 ble publisert 19. oktober kl. 19.37 (Europe/Oslo), commit `27b2f4e167f3be1edfb146eae6cfc384f56f2edd`. Alle 74 JavaScript-filer på det offentlige domenet samsvarte byte for byte med det testede bygget. Sidevisninger, seksjonsmålinger, ytelsesdata, klikk- og bevegelseskart ble bekreftet mottatt i PostHog. Rulledybdeprosent kom inn, men det native scrollkartet manglet data.
+
+Årsaken var at `before_send` ikke beholdt `$prev_pageview_pathname`. SDK-en sender denne også ved SPA-navigasjon, og PostHog trenger den for å bygge scrollkart. Korrigeringen beholder bare en godkjent offentlig sidesti, uten query/fragment eller fremmed domene. Ingen nye annonsehendelser eller endringer i samtykke inngår.
+
+En isolert inngangstest med fire merkede `$pageleave`-hendelser (`site=notably-release-qa`, `measurement_version=scroll-verification`, egne `__posthog_scroll_qa_20261020`-adresser) bekreftet årsaken: opprinnelig filtrert hendelse ga ingen scrollbøtte; samme hendelse med kun den rensede forrige sidestien ga én korrekt bøtte på 8500 px. Høydeverdier alene var ikke tilstrekkelig. Testene var uten personopplysninger, annonsehendelser eller konverteringer, og faller utenfor Notably-dashboardenes `site=notably.no`-filter.
+
+Korrigeringen har 106 beståtte tester, inkludert egen kontroll av forrige sidesti, private stier, fremmede domener og rensing av parametere. Nettlesertesten krever nå både rulledybde og forrige sidesti fra ekte SDK. Sammenligningen mot publisert PR #15 dokumenteres i `posthog-scrollmap-verification-2026-10-20.json`. Denne korrigeringen publiseres separat etter ordinær PR-godkjenning.
+
 Endringen publiseres gjennom GitHub-PR og ordinær godkjenning. Prosjektnøkkelen i nettleseren er PostHogs offentlige prosjekt-token; ingen administrativ API-nøkkel brukes. Ingen nye miljøvariabler er nødvendig.
 
 Etter merge: kontroller at Vercel publiserer riktig commit, at landingssiden laster, og at nye samtykkende besøk mottas i EU-prosjektet. Eksisterende brukere begynner ikke automatisk å sende PostHog-data. Vent på faktiske besøk før rapportene vurderes; ikke opprett falske trials eller bookinger for å fylle rapportene.

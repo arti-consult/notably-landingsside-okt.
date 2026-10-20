@@ -76,6 +76,18 @@ export function createLandingAnalytics(load: Load = async () => (await import('p
     if (!event || !active || !allowed() || !eventNames.has(event.event)) return null;
     const props: Properties = {};
     for (const [key, value] of Object.entries(event.properties)) if (safeProperties.has(key)) props[key] = value;
+    // Scrollmaps use the previous page path, including on the next SPA pageview.
+    // Keep only an allowlisted public pathname, never query strings or fragments.
+    const previousPath = event.properties.$prev_pageview_pathname;
+    if (typeof previousPath === 'string' && previousPath.startsWith('/') && !previousPath.startsWith('//')) {
+      try {
+        const url = new URL(previousPath, window.location.origin);
+        if (url.origin === window.location.origin) {
+          const path = publicPagePath(url);
+          if (path) props.$prev_pageview_pathname = path;
+        }
+      } catch { /* Invalid previous path is excluded. */ }
+    }
     for (const key of ['button_id', 'page_path']) {
       const value = event.properties[key];
       if (typeof value === 'string' && (key === 'button_id' ? /^[a-z0-9_-]{1,64}$/.test(value) : publicPagePath(new URL(value, window.location.origin)))) props[key] = value;
