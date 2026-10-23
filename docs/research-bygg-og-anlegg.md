@@ -91,7 +91,7 @@ Vinkel: prosjekthotellene har *strukturen* for møtet, men noen må fortsatt skr
 - **Privatkunder** ✅: Datatilsynet krever informasjon og samtykke før opptak av befaring hos boligeier.
 
 ## Sikkerhet: hva siden kan si
-Samme grunnlag som regnskapssiden (se docs/research-regnskapsforere.md): lagring hos Hetzner i Tyskland, tale og AI i EU, TLS, skilte arbeidsområder, databehandleravtaler, sletting, SSO, e-post og support via USA. Bekreftet av Jørgen: aldri AI-trening, databehandleravtale automatisk, slett lyd og behold referat, e-post fra appen og nedlasting.
+Samme grunnlag som regnskapssiden (se docs/research-regnskapsforere.md): lagring hos Hetzner i Tyskland, tale og AI i EU, TLS, skilte arbeidsområder, databehandleravtaler, sletting, SSO, e-post fra Notablys egen server i Tyskland (oppdatert 23.10). Bekreftet av Jørgen: aldri AI-trening, databehandleravtale automatisk, slett lyd og behold referat, e-post fra appen og nedlasting.
 
 **Bekreftet av Jørgen 6.10.2026 for denne siden:** mobilapp for iPhone og Android, prosjektmapper, byggkunder (HTB, Tor Entreprenør, Rett Bygg, Åsane Tekniske Gruppe, Alt installasjon, BV Bygg). Opptak uten dekning skal ikke nevnes.
 

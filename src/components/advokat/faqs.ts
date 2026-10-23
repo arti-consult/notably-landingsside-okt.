@@ -22,7 +22,7 @@ export const advokatFaqs: Faq[] = [
   {
     question: 'Hvor lagres opptakene og notatene?',
     answer:
-      'Opptak, transkripsjoner og notater lagres på Notablys egen drift i EU. Tale-til-tekst går til et EU-endepunkt, og AI-oppsummeringer kjøres i Sverige. Unntakene er e-postvarsler og supportchat, som går via leverandører i USA. Alt står i personvernerklæringen.',
+      'Alt kundeinnhold – møter, opptak, transkripsjoner, referater og e-post fra Notably – lagres og behandles i EU/EØS. Opptak og database ligger hos Hetzner i Tyskland, tale-til-tekst går til et EU-endepunkt, og AI-oppsummeringene kjøres i Sverige og Frankrike. Unntakene gjelder ikke møteinnhold: betaling (Stripe), push-varsler på mobil, innlogging med Google, Microsoft eller Apple hvis du velger det, og AI-verktøy du selv kobler til. Alt står i personvernerklæringen.',
   },
   {
     question: 'Brukes klientsamtalene til å trene AI?',

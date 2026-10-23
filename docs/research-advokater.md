@@ -43,7 +43,7 @@ Databehandleravtale (automatisk på plass for Notably-kunder), lagring i EU/EØS
 - Sletting per møte
 - Underleverandørene er bundet av databehandleravtaler
 - SSO for firmaer
-- E-post og support går via leverandører i USA (dette står åpent på siden)
+- E-post fra appen sendes fra Notablys egen server hos Hetzner i Tyskland. Unntak (ikke møteinnhold): betaling, push-varsler, valgfri innlogging og AI-verktøy kunden kobler til (oppdatert 23.10)
 
 **Ikke påstått:** ISO 27001, SOC 2, kryptering ved lagring, revisjonslogg.
 

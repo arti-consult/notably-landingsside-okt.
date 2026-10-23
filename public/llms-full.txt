@@ -25,7 +25,7 @@ Notably is a Norwegian AI meeting assistant that automates meeting notes, summar
 - Encryption: TLS in transit, plus access controls and workspace separation.
 - No training on customer data.
 - Optional analytics and marketing tags (Google Tag Manager, Google Analytics, Meta Pixel, TikTok Pixel) load only after consent in Personvernvalg.
-- Application email and support chat are processed in the USA under their providers' terms.
+- All customer content (meetings, recordings, transcripts, summaries and email sent from Notably) is stored and processed in the EU/EEA. The exceptions do not concern meeting content: payments (Stripe), mobile push notifications, sign-in with Google, Microsoft or Apple if the user chooses it, and AI tools the customer connects themselves.
 
 ## Pricing snapshot
 - Notably: 399 NOK per user per month.
