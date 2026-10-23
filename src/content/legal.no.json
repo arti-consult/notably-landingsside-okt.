@@ -21,7 +21,7 @@
       },
       "dataResidency": {
         "title": "Hvor vi lagrer og beskytter dataene dine",
-        "body1": "Hovedsystemene i appen, private møteopptak og infrastrukturen for utsending av e-post driftes hos Hetzner i Tyskland. Notably drifter selv e-posttjenesten. Den offentlige nettsiden bruker separate tjenester for drift og offentlig innhold. Leverandørlisten og avsnittet Internasjonale overføringer forklarer hvor annen behandling kan skje.",
+        "body1": "Hovedsystemene i appen, private møteopptak og infrastrukturen for utsending av e-post driftes hos Hetzner i Tyskland. Notably drifter selv e-posttjenesten. Den offentlige nettsiden bruker separate tjenester for drift og offentlig innhold. Leverandørlisten og avsnittet Internasjonale overføringer viser hvor hver leverandør behandler data, og de få unntakene.",
         "body2": "Vi bruker kryptering under overføring og tilgangskontroller for å beskytte personopplysninger. Tilgangen begrenses til autoriserte personer og tjenester som trenger den for å levere, støtte eller sikre Notably."
       },
       "personalData": {
@@ -107,35 +107,35 @@
         "items": {
           "infrastructure": {
             "name": "Hetzner (drift og opptakslagring)",
-            "purpose": "Drifter kjernesystemene våre og lagrer møteopptak i Tyskland."
+            "purpose": "Drifter kjernesystemene våre og lagrer møteopptak i Tyskland. Databehandleravtalen begrenser behandlingen til EU/EØS."
           },
           "calendarCapture": {
             "name": "Recall.ai (kalendere og møteopptak)",
-            "purpose": "Synkroniserer kalendere og tar opp nettmøter gjennom sin region i Tyskland. Drifts- og støttebehandling kan skje andre steder."
+            "purpose": "Lagrer og behandler kalenderdata og opptak av nettmøter i EU (Tyskland). Tekniske driftslogger uten møteinnhold, for eksempel møtelenker og tidspunkter, kan ligge hos Recalls underleverandører i EU eller USA. Det er regulert av databehandleravtale og EUs standardavtaler."
           },
           "speech": {
             "name": "ElevenLabs (transkripsjon)",
-            "purpose": "Gjør lyd om til tekst og skiller mellom talere. Vi bruker tjenesten med datalagring i EU. Støtte eller moderering kan innebære behandling utenfor EU."
+            "purpose": "Lagrer lyd og transkripsjoner i EU gjennom ElevenLabs’ EU-miljø for dataresidens, og gjør lyd om til tekst med taleridentifikasjon. Leverandørens kundestøtte og innholdsmoderering kan behandle data utenfor EU. Det er regulert av databehandleravtale, EU–US Data Privacy Framework og EUs standardavtaler."
           },
           "ai": {
             "name": "Requesty og Microsoft Azure OpenAI (AI-funksjoner)",
-            "purpose": "Requesty støtter AI-funksjonene våre gjennom sin EU-tjeneste. Microsoft Azure OpenAI behandler oppsummeringer, oversettelser, assistentsvar og uthenting av informasjon i Sverige, og søkedata i Frankrike. Enkelte drifts- eller støtteopplysninger kan behandles andre steder."
+            "purpose": "Lagrer og behandler AI-forespørsler i EU. Requestys tjeneste kjører i Tyskland, og Microsoft Azure OpenAI behandler oppsummeringer, oversettelser, assistentsvar og uthenting av informasjon i Sverige, og søkedata i Frankrike. Requesty og Microsoft kan beholde kopier av forespørsler og svar en begrenset tid for drift og misbruksovervåking, i EU. I sjeldne tilfeller kan Microsofts personell utenfor EU få kontrollert fjerntilgang for feilsøking eller sikkerhet, uten varig lagring utenfor EU. Det er regulert av Microsofts databehandleravtale og EUs standardavtaler."
           },
           "notifications": {
             "name": "Expo, Apple og Google (pushvarsler)",
-            "purpose": "Når du aktiverer valgfrie varsler, leverer Expo dem gjennom Apple Push Notification service (APNs) på iOS og Google Firebase Cloud Messaging (FCM) på Android. Leveringen omfatter et push-token, standard varseltekst, varseltype og tekniske enhets- eller møtereferanser. Vi sender ikke møtetitler eller annet møteinnhold i pushvarsler. Leverandørene kan behandle disse opplysningene internasjonalt."
+            "purpose": "Når du aktiverer valgfrie varsler, leverer Expo dem gjennom Apple Push Notification service (APNs) på iOS og Google Firebase Cloud Messaging (FCM) på Android. Leveringen omfatter et varslingstoken, standard varseltekst, varseltype og tekniske enhets- eller møtereferanser. Vi sender ikke møtetitler eller annet møteinnhold i pushvarsler. Leveringen er behandling utenfor EU/EØS, hovedsakelig i USA, med EU–US Data Privacy Framework eller EUs standardavtaler som overføringsgrunnlag."
           },
           "communications": {
             "name": "E-post fra appen, driftet av Notably (Tyskland)",
-            "purpose": "Sender e-post om innlogging, invitasjoner, konto, abonnement, oppsummeringer og støtte fra vår infrastruktur hos Hetzner i Tyskland. Ved levering mottar mottakerens e-postleverandør meldingene og mottakeropplysningene. Denne leverandørens behandlingssteder og lagringsregler gjelder også."
+            "purpose": "Sender e-post om innlogging, invitasjoner, konto, abonnement, oppsummeringer og støtte fra vår infrastruktur hos Hetzner i Tyskland. Vi sender og lagrer e-posten fra EU. Etter levering behandler mottakerens egen e-postleverandør meldingen etter egne vilkår, og den kan ligge utenfor EU/EØS."
           },
           "billingIdentity": {
             "name": "Stripe, Apple App Store og Google Play (betaling)",
-            "purpose": "Behandler betalinger, abonnement og kjøpsbekreftelse. De kan behandle data internasjonalt og opptre selvstendig for enkelte aktiviteter."
+            "purpose": "Behandler betalinger, abonnement og kjøpsbekreftelse. De behandler betalingsopplysninger, ikke møteinnhold, og kan gjøre det utenfor EU/EØS, blant annet i USA, med EU–US Data Privacy Framework eller EUs standardavtaler som overføringsgrunnlag. De kan opptre selvstendig for enkelte aktiviteter."
           },
           "identity": {
             "name": "Google, Apple og Microsoft (innlogging)",
-            "purpose": "Leverer valgfri innlogging og identitetstjenester som organisasjonen styrer. De kan behandle identitetsopplysninger internasjonalt."
+            "purpose": "Leverer valgfri innlogging og identitetstjenester som organisasjonen styrer. De behandler identitetsopplysninger, ikke møteinnhold, og kan gjøre det utenfor EU/EØS etter egne vilkår og overføringsgrunnlag som EU–US Data Privacy Framework eller EUs standardavtaler."
           },
           "analytics": {
             "name": "Google, Meta og TikTok (valgfri analyse og annonsering)",
@@ -169,7 +169,7 @@
       },
       "transfers": {
         "title": "Internasjonale overføringer",
-        "body1": "Kjernesystemene våre, opptakslagringen og infrastrukturen for utsending av e-post er i Tyskland. Mottakernes e-postleverandører kan behandle leverte meldinger i andre land. Varsler, innlogging, betaling, valgfri analyse og enkelte leverandøroperasjoner kan også innebære behandling utenfor EØS.",
+        "body1": "Alt kundeinnhold – møter, opptak, transkripsjoner, referater og e-post fra Notably – lagres i EU/EØS (Tyskland, Sverige og Frankrike) og behandles der. Det eneste forbeholdet er avgrenset støtte-, sikkerhets- og modereringstilgang hos ElevenLabs og Microsoft fra utenfor EU, som er beskrevet i leverandørlisten og regulert av databehandleravtaler og EUs standardavtaler. Behandling utenfor EU/EØS er begrenset til: betaling (Stripe, Apple, Google), pushvarsler (Expo, Apple, Google; de inneholder ikke møtetitler eller annet møteinnhold), valgfri innlogging, valgfri analyse, tekniske driftslogger uten møteinnhold hos Recalls underleverandører, mottakernes egne e-postleverandører og apper du selv kobler til, for eksempel AI-verktøy.",
         "body2": "Overføringer utenfor EØS krever et lovlig overføringsgrunnlag, som en beslutning om tilstrekkelig beskyttelsesnivå eller EUs standard personvernbestemmelser. En kvalifisert, sertifisert mottaker i USA kan være omfattet av EU–US Data Privacy Framework. Du kan kontakte oss for informasjon om garantiene som gjelder for en leverandør, og en kopi av de relevante garantiene. Tjenester du velger å koble til, kan gjøre overføringer etter sine egne personvernvilkår."
       },
       "rights": {
@@ -206,7 +206,7 @@
           },
           "sharing": {
             "label": "Hvem som mottar dem",
-            "description": "Recall.ai leverer kalendersynkronisering og automatiske opptak. Relevante møteopplysninger kan også behandles av transkripsjons- og AI-leverandørene nedenfor for å levere funksjonene du ber om."
+            "description": "Recall.ai leverer kalendersynkronisering og automatiske opptak i EU. Relevante møteopplysninger kan også behandles av transkripsjons- og AI-leverandørene nedenfor for å levere funksjonene du ber om."
           },
           "disconnect": {
             "label": "Frakobling",
@@ -277,7 +277,7 @@
       },
       "dataResidency": {
         "title": "Personvern og datalokasjon",
-        "body1": "Kjernesystemene våre og møteopptakene lagres i Tyskland. Enkelte leverandører behandler opplysninger andre steder som beskrevet i personvernerklæringen.",
+        "body1": "Kjernesystemene våre og møteopptakene lagres i Tyskland, og kundeinnhold lagres og behandles i EU/EØS. Betaling, pushvarsler, valgfri innlogging og apper du selv kobler til er unntakene, som beskrevet i personvernerklæringen.",
         "body2": "Notably behandler personopplysninger etter personvernerklæringen og en eventuell databehandleravtale. Tilkoblede tjenester du godkjenner, kan også behandle data etter sine egne personvernvilkår.",
         "linkPrefix": "Mer informasjon om personvern finner du i vår",
         "linkLabel": "Personvernerklæring",
