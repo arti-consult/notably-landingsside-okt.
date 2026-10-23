@@ -11,7 +11,7 @@
       "description": "Les hvordan Notably AI samler inn, bruker, deler, beskytter og sletter personopplysninger når du bruker Notably-appen og tjenestene."
     },
     "title": "Personvernerklæring",
-    "updated": "19.10.2026",
+    "updated": "23.10.2026",
     "intro": "Denne erklæringen forklarer hvilke personopplysninger Notably samler inn, hvorfor vi bruker dem, hvem som mottar dem, og hvordan du kan bruke rettighetene dine. Den samme erklæringen gjelder notably.no og app.notably.no, mobilappen, møteopptak, AI-funksjoner, støtte, abonnementer, salgskontakt og tilkoblede tjenester.",
     "sections": {
       "controller": {
@@ -50,7 +50,7 @@
           },
           "notifications": {
             "label": "Mobilvarsler",
-            "description": "Hvis du aktiverer varsler, behandler vi en enhetsidentifikator, push-token, enhetsplattform og appversjon. Varsler kan inneholde møtetittel, varseltekst og møte- eller arbeidsområdereferanser."
+            "description": "Hvis du aktiverer varsler, behandler vi en enhetsidentifikator, push-token, enhetsplattform og appversjon. Varslene bruker standardtekst og tekniske enhets- eller møtereferanser. De inneholder ikke møtetitler eller annet møteinnhold."
           },
           "support": {
             "label": "Kundestøtte og tekniske opplysninger",
@@ -123,15 +123,11 @@
           },
           "notifications": {
             "name": "Expo, Apple og Google (pushvarsler)",
-            "purpose": "Leverer varsler gjennom Apple Push Notification service og Google Firebase Cloud Messaging. Leveringen omfatter et varslingstoken, meldingsinnhold og møte- eller arbeidsområdereferanser og kan innebære internasjonal behandling."
+            "purpose": "Når du aktiverer valgfrie varsler, leverer Expo dem gjennom Apple Push Notification service (APNs) på iOS og Google Firebase Cloud Messaging (FCM) på Android. Leveringen omfatter et push-token, standard varseltekst, varseltype og tekniske enhets- eller møtereferanser. Vi sender ikke møtetitler eller annet møteinnhold i pushvarsler. Leverandørene kan behandle disse opplysningene internasjonalt."
           },
           "communications": {
             "name": "E-post fra appen, driftet av Notably (Tyskland)",
             "purpose": "Sender e-post om innlogging, invitasjoner, konto, abonnement, oppsummeringer og støtte fra vår infrastruktur hos Hetzner i Tyskland. Ved levering mottar mottakerens e-postleverandør meldingene og mottakeropplysningene. Denne leverandørens behandlingssteder og lagringsregler gjelder også."
-          },
-          "support": {
-            "name": "Chatbase (støttechat)",
-            "purpose": "Leverer støttechat, primært i USA. Åpning av støttesiden sender grunnleggende tekniske opplysninger til Chatbase. Meldinger du sender, sendes også dit."
           },
           "billingIdentity": {
             "name": "Stripe, Apple App Store og Google Play (betaling)",
@@ -173,7 +169,7 @@
       },
       "transfers": {
         "title": "Internasjonale overføringer",
-        "body1": "Kjernesystemene våre, opptakslagringen og infrastrukturen for utsending av e-post er i Tyskland. Mottakernes e-postleverandører kan behandle leverte meldinger i andre land. Støttechatdata hos Chatbase lagres eller behandles i USA. Varsler, innlogging, betaling, valgfri analyse og enkelte leverandøroperasjoner kan også innebære behandling utenfor EØS.",
+        "body1": "Kjernesystemene våre, opptakslagringen og infrastrukturen for utsending av e-post er i Tyskland. Mottakernes e-postleverandører kan behandle leverte meldinger i andre land. Varsler, innlogging, betaling, valgfri analyse og enkelte leverandøroperasjoner kan også innebære behandling utenfor EØS.",
         "body2": "Overføringer utenfor EØS krever et lovlig overføringsgrunnlag, som en beslutning om tilstrekkelig beskyttelsesnivå eller EUs standard personvernbestemmelser. En kvalifisert, sertifisert mottaker i USA kan være omfattet av EU–US Data Privacy Framework. Du kan kontakte oss for informasjon om garantiene som gjelder for en leverandør, og en kopi av de relevante garantiene. Tjenester du velger å koble til, kan gjøre overføringer etter sine egne personvernvilkår."
       },
       "rights": {
