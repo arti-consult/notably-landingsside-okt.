@@ -30,7 +30,7 @@ export const byggFaqs: Faq[] = [
   {
     question: 'Hvor lagres opptakene og referatene?',
     answer:
-      'Alt kundeinnhold – møter, opptak, transkripsjoner, referater og e-post fra Notably – lagres og behandles i EU/EØS. Opptak og database ligger hos Hetzner i Tyskland, tale-til-tekst går til et EU-endepunkt, og AI-oppsummeringene kjøres i Sverige og Frankrike. Unntakene gjelder ikke møteinnhold: betaling (Stripe), push-varsler på mobil, innlogging med Google, Microsoft eller Apple hvis du velger det, og AI-verktøy du selv kobler til. Alt står i personvernerklæringen.',
+      'Alt kundeinnhold – møter, opptak, transkripsjoner, referater og e-post fra Notably – lagres og behandles i EU/EØS. Opptak og database ligger hos Hetzner i Tyskland, tale-til-tekst går til et EU-endepunkt, og AI-oppsummeringene kjøres i Sverige og Frankrike. Unntakene gjelder ikke møteinnhold: betaling (Stripe), push-varsler på mobil (uten møtetitler), innlogging med Google, Microsoft eller Apple hvis du velger det, og AI-verktøy du selv kobler til. Leverandørenes støtte- og sikkerhetstilgang fra utenfor EU (ElevenLabs, Microsoft) er avgrenset og regulert av DPA og SCC. Alt står i personvernerklæringen.',
   },
   {
     question: 'Brukes møtene til å trene AI?',
