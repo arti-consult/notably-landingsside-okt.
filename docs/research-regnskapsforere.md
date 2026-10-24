@@ -62,11 +62,11 @@ Regnskap Norges eget magasin (10.8.2026) vil ha mer kundedialog «gjennom hele �
 - Underleverandørene er bundet av databehandleravtaler
 - Sletting per møte og per arbeidsområde, eksport
 - SSO (Enterprise)
-- E-post fra appen og supportchat går via leverandører i USA (skal stå åpent)
+- E-post fra appen sendes fra Notablys egen server hos Hetzner i Tyskland. Unntak (ikke møteinnhold): betaling, push-varsler, valgfri innlogging og AI-verktøy kunden kobler til (oppdatert 23.10)
 
 **Bekreftet av Jørgen 6.10.2026 ✅** (brukes som på advokatsiden)
 - «Aldri brukt til AI-trening» og «databehandleravtalen er automatisk på plass». Står ikke i personvernerklæringen eller vilkårene ennå, så de bør tas inn der.
-- Referatet kan sendes på e-post fra Notably og lastes ned som dokument. NB: e-post fra appen går via leverandør i USA, det står i FAQ.
+- Referatet kan sendes på e-post fra Notably og lastes ned som dokument. E-post fra appen sendes fra Notablys egen server i Tyskland.
 - Lydfilen kan slettes mens referatet beholdes.
 - Økonomihuset og Gode tall AS er kunder og kan vises med logo.
 

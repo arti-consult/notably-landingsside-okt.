@@ -20,7 +20,7 @@ export const regnskapFaqs: Faq[] = [
   {
     question: 'Hvor lagres opptakene og referatene?',
     answer:
-      'Opptak, transkripsjoner og referater lagres på Notablys egen drift i EU. Tale-til-tekst går til et EU-endepunkt, og AI-oppsummeringene kjøres i Sverige. Unntakene er e-post og supportchat, som går via leverandører i USA. Alt står i personvernerklæringen.',
+      'Alt kundeinnhold – møter, opptak, transkripsjoner, referater og e-post fra Notably – lagres og behandles i EU/EØS. Opptak og database ligger hos Hetzner i Tyskland, tale-til-tekst går til et EU-endepunkt, og AI-oppsummeringene kjøres i Sverige og Frankrike. Unntakene gjelder ikke møteinnhold: betaling (Stripe), push-varsler på mobil (uten møtetitler), innlogging med Google, Microsoft eller Apple hvis du velger det, og AI-verktøy du selv kobler til. Leverandørenes støtte- og sikkerhetstilgang fra utenfor EU (ElevenLabs, Microsoft) er avgrenset og regulert av DPA og SCC. Alt står i personvernerklæringen.',
   },
   {
     question: 'Brukes kundemøtene til å trene AI?',
@@ -35,7 +35,7 @@ export const regnskapFaqs: Faq[] = [
   {
     question: 'Kan jeg sende referatet til kunden?',
     answer:
-      'Ja. Du kan sende referatet på e-post rett fra Notably, eller laste det ned som dokument og sende det selv. E-post fra Notably går via en leverandør i USA, så vil du unngå det, laster du ned dokumentet og sender det fra din egen e-post. Du velger alltid selv hva som deles. Husk at hvitvaskingsloven § 28 forbyr å fortelle kunden om undersøkelser eller rapportering, så slike notater skal ikke sendes.',
+      'Ja. Du kan sende referatet på e-post rett fra Notably, eller laste det ned som dokument og sende det selv. E-post fra Notably sendes fra Notablys egen server hos Hetzner i Tyskland. Du velger alltid selv hva som deles. Husk at hvitvaskingsloven § 28 forbyr å fortelle kunden om undersøkelser eller rapportering, så slike notater skal ikke sendes.',
   },
   {
     question: 'Kan jeg stole på at referatet er riktig?',
