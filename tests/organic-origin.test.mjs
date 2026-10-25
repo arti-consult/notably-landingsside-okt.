@@ -3,37 +3,50 @@ import { test } from 'node:test';
 import { classifyReferrer, decorateSignup, readOrigin } from '../src/lib/marketing-attribution.ts';
 
 const SIGNUP = 'https://app.notably.no/no/sign-up';
+const o = (source, medium = 'organic') => ({ source, medium });
 
-test('classifyReferrer: search / linkedin / social / ai / other / direct / internal', () => {
-  const c = classifyReferrer;
-  for (const r of ['https://www.google.com/', 'https://www.google.no/', 'https://google.co.uk/', 'https://www.bing.com/', 'https://duckduckgo.com/', 'https://search.brave.com/']) assert.equal(c(r), 'search', r);
-  for (const r of ['https://www.linkedin.com/', 'https://lnkd.in/abc', 'https://no.linkedin.com/feed']) assert.equal(c(r), 'linkedin', r);
-  for (const r of ['https://chatgpt.com/', 'https://www.perplexity.ai/']) assert.equal(c(r), 'ai', r);
-  for (const r of ['https://l.facebook.com/', 'https://t.co/x', 'https://www.youtube.com/']) assert.equal(c(r), 'social', r);
-  assert.equal(c('https://nettavisen.no/artikkel'), 'other');
-  for (const r of ['', null, undefined, 'not a url', 'android-app://com.google.android.gm']) assert.equal(c(r), 'direct', String(r));
-  for (const r of ['https://app.notably.no/no/sign-up', 'https://www.notably.no/']) assert.equal(c(r), 'internal', r);
-  assert.equal(c('https://evilgoogle.com/'), 'other');
-  assert.equal(c('https://google.com.evil.test/'), 'other');
+test('classifyReferrer: search / linkedin / ai / social / referral / direct / own domain', () => {
+  for (const r of ['https://www.google.com/', 'https://www.google.no/', 'https://google.co.uk/']) assert.deepEqual(classifyReferrer(r), o('google'), r);
+  assert.deepEqual(classifyReferrer('https://www.bing.com/'), o('bing'));
+  assert.deepEqual(classifyReferrer('https://duckduckgo.com/'), o('duckduckgo'));
+  for (const r of ['https://www.linkedin.com/', 'https://lnkd.in/abc', 'https://no.linkedin.com/feed']) assert.deepEqual(classifyReferrer(r), o('linkedin'), r);
+  assert.deepEqual(classifyReferrer('https://chatgpt.com/'), o('chatgpt.com'));
+  assert.deepEqual(classifyReferrer('https://l.facebook.com/'), o('facebook'));
+  assert.deepEqual(classifyReferrer('https://gemini.google.com/'), o('gemini'));
+  assert.deepEqual(classifyReferrer('https://nettavisen.no/artikkel'), o('referral'));
+  for (const r of ['', null, undefined, 'not a url', 'android-app://com.google.android.gm']) assert.deepEqual(classifyReferrer(r), o('direct', 'none'), String(r));
+  for (const r of ['https://app.notably.no/no/sign-up', 'https://www.notably.no/']) assert.equal(classifyReferrer(r), null, r);
+  assert.deepEqual(classifyReferrer('https://evilgoogle.com/'), o('referral'));
+  assert.deepEqual(classifyReferrer('https://google.com.evil.test/'), o('referral'));
 });
 
-test('readOrigin: only public landing paths; the referrer URL is never carried, only its class', () => {
-  const o = readOrigin(new URL('https://www.notably.no/regnskapsforer/?x=1#h'), 'https://www.google.com/search?q=secret');
-  assert.deepEqual(o, { landingPath: '/regnskapsforer', referrerClass: 'search' });
+test('readOrigin: public pages only; explicit utm_source/click id in the URL wins; referrer URL is never carried', () => {
+  assert.deepEqual(readOrigin(new URL('https://www.notably.no/regnskapsforer/'), 'https://www.google.com/search?q=secret'), o('google'));
+  assert.equal(readOrigin(new URL('https://www.notably.no/regnskapsforer?utm_source=linkedin'), 'https://www.google.com/'), null);
+  assert.equal(readOrigin(new URL('https://www.notably.no/?gclid=abc'), 'https://www.google.com/'), null);
   assert.equal(readOrigin(new URL('https://www.notably.no/hemmelig'), 'https://www.google.com/'), null);
   assert.equal(readOrigin(new URL('https://evil.test/'), 'https://www.google.com/'), null);
+  assert.equal(readOrigin(new URL('https://www.notably.no/'), 'https://app.notably.no/'), null);
 });
 
-test('decorateSignup: landing_path/referrer_class only with an origin; inbound copies are stripped; utm/ref keep working', () => {
+test('decorateSignup: standard utm_* only (the app rejects unknown sign-up params); never overrides explicit tagging', () => {
   assert.equal(decorateSignup(SIGNUP, null, null), SIGNUP);
-  const withOrigin = new URL(decorateSignup(`${SIGNUP}?referrer_class=search&landing_path=/x`, null, 'partner-1', { landingPath: '/', referrerClass: 'linkedin' }));
-  assert.equal(withOrigin.searchParams.get('landing_path'), '/');
-  assert.equal(withOrigin.searchParams.get('referrer_class'), 'linkedin');
-  assert.equal(withOrigin.searchParams.get('ref'), 'partner-1');
-  const spoof = new URL(decorateSignup(`${SIGNUP}?referrer_class=search&landing_path=/x`, null, null));
-  assert.equal(spoof.search, '');
-  const both = new URL(decorateSignup(SIGNUP, { sourceUrl: 'https://www.notably.no/', identifiers: {}, utm: { utm_source: 'linkedin', utm_medium: 'organic' } }, null, { landingPath: '/advokat', referrerClass: 'linkedin' }));
-  assert.equal(both.searchParams.get('utm_source'), 'linkedin');
-  assert.equal(both.searchParams.get('utm_medium'), 'organic');
-  assert.equal(both.searchParams.get('landing_path'), '/advokat');
+  const g = new URL(decorateSignup(SIGNUP, null, 'partner-1', o('google')));
+  assert.equal(g.searchParams.get('utm_source'), 'google');
+  assert.equal(g.searchParams.get('utm_medium'), 'organic');
+  assert.equal(g.searchParams.get('ref'), 'partner-1');
+  assert.deepEqual([...g.searchParams.keys()].sort(), ['ref', 'utm_medium', 'utm_source']);
+  const d = new URL(decorateSignup(SIGNUP, null, null, o('direct', 'none')));
+  assert.equal(d.search, '?utm_source=direct&utm_medium=none');
+  // explicit UTM wins over the derived origin
+  const tagged = new URL(decorateSignup(SIGNUP, { sourceUrl: 'https://www.notably.no/', identifiers: {}, utm: { utm_source: 'linkedin', utm_medium: 'organic', utm_campaign: 'regnskapsforer' } }, null, o('google')));
+  assert.equal(tagged.searchParams.get('utm_source'), 'linkedin');
+  assert.equal(tagged.searchParams.get('utm_campaign'), 'regnskapsforer');
+  // a click id means paid: no organic label next to it
+  const paid = new URL(decorateSignup(SIGNUP, { sourceUrl: 'https://www.notably.no/', identifiers: { gclid: 'abc123' } }, null, o('google')));
+  assert.equal(paid.searchParams.get('gclid'), 'abc123');
+  assert.equal(paid.searchParams.has('utm_source'), false);
+  // stale inbound copies are replaced
+  assert.equal(decorateSignup(`${SIGNUP}?utm_source=stale`, null, null), SIGNUP);
+  assert.equal(decorateSignup('https://app.notably.no.evil.test/no/sign-up', null, null, o('google')), 'https://app.notably.no.evil.test/no/sign-up');
 });

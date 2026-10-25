@@ -15,7 +15,7 @@ export function startMarketingScriptsLoader(): () => void {
   let reloadScheduled = false;
   let needsReload = false;
   const updateLinks = () => window.dispatchEvent(new Event('notably:refresh-trial-links'));
-  // First page view of this visit (landing path + referrer class). Memory only; used for signup links under advertising consent.
+  // Organic origin of this visit (referrer reduced to a source label, e.g. google / organic). Memory only; added to signup links under advertising consent.
   const origin = readOrigin(new URL(window.location.href), document.referrer);
   const stopLinks = startTrialLinks(() => remembered, () => origin);
 
