@@ -41,11 +41,38 @@ export function signupDestination(href: string): URL | null {
   } catch { return null; }
 }
 
-export function decorateSignup(href: string, input: Attribution | null, salesRef: string | null): string {
+/** Coarse traffic class of the first page view. Only a class and a public landing path leave the browser, never the referrer URL. */
+export const REFERRER_CLASSES = ['search', 'linkedin', 'social', 'ai', 'other', 'direct', 'internal'] as const;
+export type ReferrerClass = (typeof REFERRER_CLASSES)[number];
+export type Origin = { landingPath: string; referrerClass: ReferrerClass };
+const host = (h: string, ...names: string[]) => names.some(n => h === n || h.endsWith(`.${n}`));
+
+/** No/empty referrer = direct. Own domains = internal (e.g. back from the app). Click ids and UTM still win downstream (paid is decided by the app/OS). */
+export function classifyReferrer(referrer: string | null | undefined): ReferrerClass {
+  if (!referrer) return 'direct';
+  let h: string;
+  try { const u = new URL(referrer); if (!/^https?:$/.test(u.protocol)) return 'direct'; h = u.hostname.toLowerCase(); } catch { return 'direct'; }
+  if (host(h, 'notably.no')) return 'internal';
+  if (/^(www\.)?google\.[a-z.]{2,6}$/.test(h) || host(h, 'bing.com', 'duckduckgo.com', 'ecosia.org', 'startpage.com', 'search.brave.com', 'yahoo.com', 'kagi.com')) return 'search';
+  if (host(h, 'linkedin.com', 'lnkd.in')) return 'linkedin';
+  if (host(h, 'chatgpt.com', 'chat.openai.com', 'perplexity.ai', 'claude.ai', 'gemini.google.com', 'copilot.microsoft.com')) return 'ai';
+  if (host(h, 'facebook.com', 'instagram.com', 'l.facebook.com', 't.co', 'x.com', 'twitter.com', 'threads.net', 'youtube.com', 'reddit.com', 'tiktok.com')) return 'social';
+  return 'other';
+}
+
+/** First page view of the visit: public landing path + referrer class. Call once, at load, with document.referrer. Memory only. */
+export function readOrigin(url: URL, referrer: string | null | undefined): Origin | null {
+  const landingPath = isProductionPage(url) ? publicPagePath(url) : null;
+  return landingPath ? { landingPath, referrerClass: classifyReferrer(referrer) } : null;
+}
+
+export function decorateSignup(href: string, input: Attribution | null, salesRef: string | null, origin: Origin | null = null): string {
   const url = signupDestination(href);
   if (!url) return href;
   // Query forwarding is a consented fallback, not a transfer of the consent capability.
-  for (const key of CAMPAIGN_KEYS) url.searchParams.delete(key);
+  for (const key of [...CAMPAIGN_KEYS, 'landing_path', 'referrer_class']) url.searchParams.delete(key);
+  // Organic origin travels with the same (advertising) consent as UTM/click ids: the caller passes null without it.
+  if (origin) { url.searchParams.set('landing_path', origin.landingPath); url.searchParams.set('referrer_class', origin.referrerClass); }
   if (input) {
     for (const key of ['gclid', 'gbraid', 'wbraid', 'fbclid'] as const) {
       const value = input.identifiers[key];
