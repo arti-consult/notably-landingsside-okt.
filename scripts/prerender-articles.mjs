@@ -19,6 +19,15 @@ const ROBOTS = 'index,follow,max-snippet:-1,max-image-preview:large,max-video-pr
 const LIST_TITLE = 'Artikler - Notably';
 const LIST_DESCRIPTION = 'Les artikler om møtereferat, AI-transkripsjon, produktivitet og mer fra Notably.';
 
+// Holdes lik Helmet-taggene i src/pages/BackePage.tsx.
+const BACKE = {
+  title: 'Kom i gang med Notably | Backe',
+  heading: 'Kom i gang med Notably',
+  description: 'Slik logger du inn i Notably med Backe-brukeren din og kobler til kalenderen.',
+  image: '/media/backe/backe-deling.jpg',
+  imageAlt: 'Notably og Backe: Kom i gang med Notably',
+};
+
 // Tagger i index.html som erstattes per side.
 const REPLACED_HEAD_TAGS = [
   /\s*<title>[\s\S]*?<\/title>/g,
@@ -35,11 +44,11 @@ function tag(name, attrs) {
   return `<${name} data-rh="true" ${parts.join(' ')} />`;
 }
 
-function headTags({ title, description, canonical, type, image, imageAlt, extraMeta = [], jsonLd }) {
+function headTags({ title, description, canonical, type, image, imageAlt, extraMeta = [], jsonLd, robots = ROBOTS }) {
   const lines = [
     `<title>${escapeHtml(title)}</title>`,
     tag('meta', { name: 'description', content: description }),
-    tag('meta', { name: 'robots', content: ROBOTS }),
+    tag('meta', { name: 'robots', content: robots }),
     tag('link', { rel: 'canonical', href: canonical }),
     tag('meta', { property: 'og:type', content: type }),
     tag('meta', { property: 'og:site_name', content: 'Notably' }),
@@ -186,6 +195,24 @@ export function prerenderArticles({ root = process.cwd(), outDir = 'dist', now =
       })
     );
   }
+  // /backe: kundeside for Backe. Ikke indeksert, men Teams, Slack og LinkedIn kjører ikke
+  // JavaScript, så delingsbildet og tittelen må stå i den statiske HTML-en.
+  write(
+    'backe',
+    renderPage(template, {
+      head: headTags({
+        title: BACKE.title,
+        description: BACKE.description,
+        canonical: `${SITE_URL}/backe`,
+        type: 'website',
+        image: `${SITE_URL}${BACKE.image}`,
+        imageAlt: BACKE.imageAlt,
+        robots: 'noindex,nofollow',
+      }),
+      body: `<main class="min-h-screen bg-[#f5f6f8] pt-32"><div class="page-container"><h1 class="text-4xl font-semibold">${escapeHtml(BACKE.heading)}</h1><p class="mt-5 text-lg text-slate-600">${escapeHtml(BACKE.description)}</p></div></main>`,
+    })
+  );
+
   return written;
 }
 

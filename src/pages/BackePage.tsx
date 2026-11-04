@@ -176,6 +176,19 @@ export default function BackePage() {
         <meta name="description" content="Slik logger du inn i Notably med Backe-brukeren din og kobler til kalenderen." />
         <meta name="robots" content="noindex,nofollow" />
         <link rel="canonical" href="https://notably.no/backe" />
+        {/* Holdes lik BACKE i scripts/prerender-articles.mjs, som skriver den statiske versjonen for Teams, Slack og LinkedIn. */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Notably" />
+        <meta property="og:locale" content="nb_NO" />
+        <meta property="og:url" content="https://notably.no/backe" />
+        <meta property="og:title" content="Kom i gang med Notably | Backe" />
+        <meta property="og:description" content="Slik logger du inn i Notably med Backe-brukeren din og kobler til kalenderen." />
+        <meta property="og:image" content="https://notably.no/media/backe/backe-deling.jpg" />
+        <meta property="og:image:alt" content="Notably og Backe: Kom i gang med Notably" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Kom i gang med Notably | Backe" />
+        <meta name="twitter:description" content="Slik logger du inn i Notably med Backe-brukeren din og kobler til kalenderen." />
+        <meta name="twitter:image" content="https://notably.no/media/backe/backe-deling.jpg" />
       </Helmet>
 
       <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white">
