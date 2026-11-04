@@ -184,7 +184,7 @@ export function articleUrl(slug) {
 }
 
 export const DEFAULT_SOCIAL_IMAGE_URL =
-  'https://notably.no/media/1771692827041.png';
+  'https://notably.no/media/notably-deling.jpg';
 
 export function articleJsonLd(article) {
   const image = absoluteUrl(article.image?.src) || DEFAULT_SOCIAL_IMAGE_URL;

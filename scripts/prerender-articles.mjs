@@ -156,7 +156,7 @@ export function prerenderArticles({ root = process.cwd(), outDir = 'dist', now =
         canonical: `${SITE_URL}/artikler`,
         type: 'website',
         image: DEFAULT_SOCIAL_IMAGE_URL,
-        imageAlt: 'Notably logo',
+        imageAlt: 'Notably: Møtereferatet skriver seg selv',
         jsonLd: {
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
@@ -181,7 +181,7 @@ export function prerenderArticles({ root = process.cwd(), outDir = 'dist', now =
           canonical,
           type: 'article',
           image: absoluteUrl(article.image?.src) || DEFAULT_SOCIAL_IMAGE_URL,
-          imageAlt: article.image?.alt || 'Notably logo',
+          imageAlt: article.image?.alt || 'Notably: Møtereferatet skriver seg selv',
           extraMeta: [
             tag('meta', { property: 'article:published_time', content: article.published }),
             tag('meta', { property: 'article:modified_time', content: article.updated }),
