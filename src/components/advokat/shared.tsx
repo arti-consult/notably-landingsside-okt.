@@ -66,12 +66,16 @@ export const SecondaryCta = ({
   children = 'Book en demo',
   dark = false,
   className = '',
+  demoPlacement,
 }: {
   children?: ReactNode;
   dark?: boolean;
   className?: string;
+  /** Plassering i demo_click-målingen (data-demo-cta). Uten den brukes seksjonens id. */
+  demoPlacement?: string;
 }) => (
   <a
+    data-demo-cta={demoPlacement}
     href={DEMO_URL}
     target="_blank"
     rel="noopener noreferrer"

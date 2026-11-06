@@ -4,20 +4,17 @@ import Navigation from '../components/Navigation';
 import DeferredRender from '../components/DeferredRender';
 import ByggHero from '../components/bygg/ByggHero';
 import ByggCustomers from '../components/bygg/ByggCustomers';
-import ByggPainSection from '../components/bygg/ByggPainSection';
+import ByggDaySection from '../components/bygg/ByggDaySection';
+import ByggStickyCta from '../components/bygg/ByggStickyCta';
 import { byggFaqs } from '../components/bygg/faqs';
 import { PrimaryCta, SecondaryCta } from '../components/advokat/shared';
-import type { AIAnswerExample } from '../components/AIAnswersSection';
 import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL, SITE_URL } from '../lib/seo';
 
-const ByggMeetingTypesSection = lazy(() => import('../components/bygg/ByggMeetingTypesSection'));
-const ByggChangeSection = lazy(() => import('../components/bygg/ByggChangeSection'));
-const ByggShareSection = lazy(() => import('../components/bygg/ByggShareSection'));
-const ByggChannelsSection = lazy(() => import('../components/bygg/ByggChannelsSection'));
-const ByggSecuritySection = lazy(() => import('../components/bygg/ByggSecuritySection'));
-const AIAnswersSection = lazy(() => import('../components/AIAnswersSection'));
+const ByggStepsSection = lazy(() => import('../components/bygg/ByggStepsSection'));
+const ByggProofSection = lazy(() => import('../components/bygg/ByggProofSection'));
+const ByggProjectSection = lazy(() => import('../components/bygg/ByggProjectSection'));
 const ByggRoiSection = lazy(() => import('../components/bygg/ByggRoiSection'));
-const ByggObjectionsSection = lazy(() => import('../components/bygg/ByggObjectionsSection'));
+const ByggTrustSection = lazy(() => import('../components/bygg/ByggTrustSection'));
 const ByggPricingSection = lazy(() => import('../components/bygg/ByggPricingSection'));
 const FaqSection = lazy(() => import('../components/advokat/AdvokatFaqSection'));
 const Footer = lazy(() => import('../components/Footer'));
@@ -25,29 +22,7 @@ const Footer = lazy(() => import('../components/Footer'));
 const PAGE_URL = `${SITE_URL}/bygg-og-anlegg`;
 const TITLE = 'Notably for bygg og anlegg: AI-referat fra byggemøter og befaringer';
 const DESCRIPTION =
-  'Notably skriver referatet fra byggemøtet mens dere snakker, med navn på hvem som sa hva: beslutninger, beskjeder fra byggherren og hvem som gjør hva innen når. Lagret i EU.';
-
-/** Fortsetter prosjektene fra resten av siden: Fjordparken fra heroen, Kroken fra befaringen. */
-const constructionExamples: AIAnswerExample[] = [
-  {
-    question: 'Når ba byggherren om å flytte sjakt S3?',
-    answer:
-      'På byggemøte nr. 14. Hilde Aas fra byggherren ba om at sjakten flyttes 40 cm mot øst. Marius skulle sende varsel om endring innen onsdag, og ARK skulle levere nye tegninger innen fredag.',
-    source: 'Byggemøte nr. 14 · Fjordparken B2 · 27. oktober',
-  },
-  {
-    question: 'Hva er fortsatt åpent fra befaringen på Kroken?',
-    answer:
-      'Fukt i bunnsvill langs nordveggen og manglende branntetting i teknisk rom. Tømreren skulle måle fukt innen tirsdag, og byggherren vil se målingene før veggen lukkes.',
-    source: 'Befaring · Kroken barnehage · 5. november',
-  },
-  {
-    question: 'Hva ble avtalt om balkongrekkverket?',
-    answer:
-      'Byggherren endret fra glass til spiler på alle 48 leilighetene. Entreprenøren varslet krav om tillegg, og pris skal sendes innen 15. november.',
-    source: 'Endringsmøte · Fjordparken B2 · 29. oktober',
-  },
-];
+  'Legg telefonen på bordet i brakka. Notably skriver referatet fra byggemøtet med hvem som sa hva, hvem som gjør hva og innen når. Klart til å sendes når møtet er over. Lagret i EU.';
 
 export default function ByggPage() {
   const structuredData = {
@@ -110,24 +85,17 @@ export default function ByggPage() {
         <ByggHero />
       </div>
       <ByggCustomers />
-      <ByggPainSection />
+      <ByggDaySection />
       <DeferredRender>
-        <ByggMeetingTypesSection />
-        <ByggChangeSection />
-        <ByggShareSection />
-        <ByggChannelsSection />
-        <ByggSecuritySection />
-        <AIAnswersSection
-          examples={constructionExamples}
-          heading="Hva sa byggherren om sjakten?"
-          intro="Spør på tvers av alle møtene i prosjektmappen, og få svaret med kilde. Også når det var en kollega som satt i møtet."
-        />
+        <ByggStepsSection />
+        <ByggProofSection />
+        <ByggProjectSection />
         <ByggRoiSection />
-        <ByggObjectionsSection />
+        <ByggTrustSection />
         <ByggPricingSection />
-        <FaqSection faqs={byggFaqs} muted="før første byggemøte." background="bg-gray-50" />
+        <FaqSection faqs={byggFaqs} muted="før første byggemøte." background="bg-white" />
 
-        <section className="page-container bg-white pb-24 pt-20 sm:pb-28 sm:pt-24">
+        <section data-hide-sticky-cta className="page-container bg-white pb-24 pt-8 sm:pb-28 sm:pt-12">
           <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-indigo-700 px-6 py-16 text-center sm:px-12 sm:py-20">
             <div
               aria-hidden
@@ -137,18 +105,18 @@ export default function ByggPage() {
               Neste byggemøte er skrevet før du går ut av brakka.
             </h2>
             <p className="relative mx-auto mt-5 max-w-lg text-balance text-lg leading-relaxed text-blue-100">
-              Prøv Notably gratis i 14 dager. Last ned appen på iPhone eller Android, og send referatet til alle
-              parter samme dag.
+              Prøv gratis i 14 dager. Last ned appen, trykk opptak, og send referatet til alle parter samme dag.
             </p>
             <div className="relative mt-9 flex flex-col justify-center gap-3 sm:flex-row">
               <PrimaryCta light placement="bottom">Start gratis</PrimaryCta>
-              <SecondaryCta dark>Book demo for firmaet</SecondaryCta>
+              <SecondaryCta dark demoPlacement="bottom">Book demo for firmaet</SecondaryCta>
             </div>
           </div>
         </section>
 
         <Footer />
       </DeferredRender>
+      <ByggStickyCta />
     </div>
   );
 }
