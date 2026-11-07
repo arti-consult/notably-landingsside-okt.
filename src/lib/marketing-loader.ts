@@ -1,7 +1,7 @@
 import { initMarketingTracking, isMarketingTrackingActive, activeTrackingPurposes, revokeMarketingTracking, suspendTrackingForReload } from './analytics.ts';
 import { consentClient, hasMarketingConsent, hasAnalyticsConsent } from './consent.ts';
 import { NO_PURPOSES, type Attribution } from './consent-client.ts';
-import { readAttribution, canCaptureSource } from './marketing-attribution.ts';
+import { readAttribution, readOrigin, canCaptureSource } from './marketing-attribution.ts';
 import { isProductionPage } from './marketing-policy.ts';
 import { startTrialLinks } from './trial-clicks.ts';
 
@@ -15,7 +15,9 @@ export function startMarketingScriptsLoader(): () => void {
   let reloadScheduled = false;
   let needsReload = false;
   const updateLinks = () => window.dispatchEvent(new Event('notably:refresh-trial-links'));
-  const stopLinks = startTrialLinks(() => remembered);
+  // Organic origin of this visit (referrer reduced to a source label, e.g. google / organic). Memory only; added to signup links under advertising consent.
+  const origin = readOrigin(new URL(window.location.href), document.referrer);
+  const stopLinks = startTrialLinks(() => remembered, () => origin);
 
   function stopTracking() {
     remembered = null;

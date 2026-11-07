@@ -41,7 +41,36 @@ export function signupDestination(href: string): URL | null {
   } catch { return null; }
 }
 
-export function decorateSignup(href: string, input: Attribution | null, salesRef: string | null): string {
+/** Organic origin of the visit in the standard GA convention: `google / organic`, `linkedin / organic`, `direct / none`. Only this label leaves the browser, never the referrer URL. */
+export type Origin = { source: string; medium: 'organic' | 'none' };
+const host = (h: string, ...names: string[]) => names.some(n => h === n || h.endsWith(`.${n}`));
+const SOURCES: ReadonlyArray<readonly [string, readonly string[]]> = [
+  ['bing', ['bing.com']], ['duckduckgo', ['duckduckgo.com']], ['ecosia', ['ecosia.org']], ['startpage', ['startpage.com']], ['brave', ['search.brave.com']], ['yahoo', ['yahoo.com']], ['kagi', ['kagi.com']],
+  ['linkedin', ['linkedin.com', 'lnkd.in']],
+  ['chatgpt.com', ['chatgpt.com', 'chat.openai.com']], ['perplexity', ['perplexity.ai']], ['claude', ['claude.ai']], ['gemini', ['gemini.google.com']], ['copilot', ['copilot.microsoft.com']],
+  ['facebook', ['facebook.com']], ['instagram', ['instagram.com']], ['x', ['x.com', 't.co', 'twitter.com']], ['threads', ['threads.net']], ['reddit', ['reddit.com']], ['tiktok', ['tiktok.com']],
+];
+
+/** null = own domains (e.g. back from the app): not a new source. No referrer = direct. Search engines/LinkedIn/AI/social get a short source name; other sites = `referral`. */
+export function classifyReferrer(referrer: string | null | undefined): Origin | null {
+  const direct: Origin = { source: 'direct', medium: 'none' };
+  if (!referrer) return direct;
+  let h: string;
+  try { const u = new URL(referrer); if (!/^https?:$/.test(u.protocol)) return direct; h = u.hostname.toLowerCase(); } catch { return direct; }
+  if (host(h, 'notably.no')) return null;
+  if (/^(www\.)?google\.[a-z.]{2,6}$/.test(h)) return { source: 'google', medium: 'organic' };
+  for (const [source, hosts] of SOURCES) if (host(h, ...hosts)) return { source, medium: 'organic' };
+  return { source: 'referral', medium: 'organic' };
+}
+
+/** First page view of the visit, read once at load (memory only). Explicit tagging (utm_source or a click id in the URL) always wins, so no origin is derived then. */
+export function readOrigin(url: URL, referrer: string | null | undefined): Origin | null {
+  if (!isProductionPage(url)) return null;
+  if (['utm_source', 'gclid', 'gbraid', 'wbraid', 'fbclid'].some(k => url.searchParams.has(k))) return null;
+  return classifyReferrer(referrer);
+}
+
+export function decorateSignup(href: string, input: Attribution | null, salesRef: string | null, origin: Origin | null = null): string {
   const url = signupDestination(href);
   if (!url) return href;
   // Query forwarding is a consented fallback, not a transfer of the consent capability.
@@ -52,6 +81,10 @@ export function decorateSignup(href: string, input: Attribution | null, salesRef
       if (value && CLICK_ID.test(value)) url.searchParams.set(key, value);
     }
     for (const [key, value] of Object.entries(input.utm ?? {})) if ((CAMPAIGN_KEYS as readonly string[]).includes(key) && key.startsWith('utm_') && value && validCampaignValue(key, value)) url.searchParams.set(key, value);
+  }
+  // Organic fallback with the same (advertising) consent as UTM/click ids (the caller passes null without it). Only standard utm_* keys: the app rejects unknown sign-up params.
+  if (origin && !url.searchParams.has('utm_source') && !['gclid', 'gbraid', 'wbraid', 'fbclid'].some(k => url.searchParams.has(k))) {
+    url.searchParams.set('utm_source', origin.source); url.searchParams.set('utm_medium', origin.medium);
   }
   const ref = normalizeRef(salesRef);
   if (!url.searchParams.has('ref') && ref) url.searchParams.set('ref', ref);
