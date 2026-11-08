@@ -16,6 +16,7 @@ const AdvokatPage = lazy(() => import('./pages/AdvokatPage.tsx'));
 const RegnskapPage = lazy(() => import('./pages/RegnskapPage.tsx'));
 const ByggPage = lazy(() => import('./pages/ByggPage.tsx'));
 const BackePage = lazy(() => import('./pages/BackePage.tsx'));
+const NyForsidePage = lazy(() => import('./pages/NyForsidePage.tsx'));
 const NotFound = lazy(() => import('./pages/NotFound.tsx'));
 const ConsentManager = lazy(() => import('./components/ConsentManager.tsx'));
 const DemoBookingModal = lazy(() => import('./components/DemoBookingModal.tsx'));
@@ -70,6 +71,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/entreprenor" element={<PublicRedirect to="/bygg-og-anlegg" />} />
             <Route path="/byggebransjen" element={<PublicRedirect to="/bygg-og-anlegg" />} />
             <Route path="/backe" element={<BackePage />} />
+            <Route path="/ny-forside" element={<NyForsidePage />} />
             <Route path="/artikler" element={<BlogListing />} />
             <Route path="/artikler/:slug" element={<ArticlePage />} />
             <Route path="/blog" element={<PublicRedirect to="/artikler" />} />
