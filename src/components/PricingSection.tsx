@@ -126,27 +126,12 @@ const PricingSection = () => {
                     )}
                   </div>
 
-                  <div className="flex-grow">
-                    <div className="space-y-3 mb-7">
-                      {plan.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-start gap-2.5">
-                          <div className="w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <Check className="w-2.5 h-2.5 text-blue-600" />
-                          </div>
-                          <span className="text-gray-700 text-sm leading-relaxed">
-                            {feature}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
                   {!isSelfServePlan ? (
                     <button
                       type="button"
                       data-ph-contact="enterprise_open"
                       onClick={() => setIsContactModalOpen(true)}
-                      className={`w-full py-3 rounded-full font-medium transition-all duration-300 mt-auto block text-center ${ctaClass}`}
+                      className={`w-full py-3 rounded-full font-medium transition-all duration-300 block text-center ${ctaClass}`}
                     >
                       {plan.cta}
                     </button>
@@ -156,11 +141,24 @@ const PricingSection = () => {
                       href="https://app.notably.no/no/sign-up"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`w-full py-3 rounded-full font-medium transition-all duration-300 mt-auto block text-center ${ctaClass}`}
+                      className={`w-full py-3 rounded-full font-medium transition-all duration-300 block text-center ${ctaClass}`}
                     >
                       {plan.cta}
                     </a>
                   )}
+
+                  <div className="mt-6 border-t border-gray-200 pt-6 space-y-3">
+                    {plan.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-start gap-2.5">
+                        <div className="w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Check className="w-2.5 h-2.5 text-blue-600" />
+                        </div>
+                        <span className="text-gray-700 text-sm leading-relaxed">
+                          {feature}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               );
             })}

@@ -58,18 +58,18 @@ export default function AdvokatPricingSection() {
               <span className="text-[2.55rem] font-bold tracking-tight text-slate-900">399,-</span>
             </p>
             <p className="text-slate-600">per bruker / mnd eks. mva.</p>
-            <div className="mt-7 flex-grow">
-              <FeatureList items={soloFeatures} />
-            </div>
             <a
               data-trial-cta="pricing"
               href={SIGNUP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-8 block rounded-full bg-blue-600 py-3 text-center font-medium text-white transition-colors hover:bg-blue-700"
+              className="mt-7 block rounded-full bg-blue-600 py-3 text-center font-medium text-white transition-colors hover:bg-blue-700"
             >
               Start 14 dager gratis
             </a>
+            <div className="mt-7 border-t border-slate-200 pt-7">
+              <FeatureList items={soloFeatures} />
+            </div>
           </div>
 
           <div className="flex flex-col rounded-3xl bg-white p-7 shadow-lg sm:p-8">
@@ -77,10 +77,7 @@ export default function AdvokatPricingSection() {
             <p className="mt-2 text-slate-600">For firmaer med krav til innkjøp, sikkerhet og felles rutiner.</p>
             <p className="mt-6 text-3xl font-bold tracking-tight text-slate-900">Tilbud etter behov</p>
             <p className="mt-2 text-slate-600">Pris etter antall brukere og oppsett.</p>
-            <div className="mt-7 flex-grow">
-              <FeatureList items={firmFeatures} />
-            </div>
-            <div className="mt-8 grid gap-2.5">
+            <div className="mt-7 grid gap-2.5">
               <a
                 href={DEMO_URL}
                 target="_blank"
@@ -95,6 +92,9 @@ export default function AdvokatPricingSection() {
               >
                 eller skriv til {CONTACT_EMAIL}
               </a>
+            </div>
+            <div className="mt-7 border-t border-slate-200 pt-7">
+              <FeatureList items={firmFeatures} />
             </div>
           </div>
         </div>
