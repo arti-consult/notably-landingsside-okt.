@@ -65,7 +65,6 @@ export default function ByggPricingSection() {
               Start 14 dager gratis
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" aria-hidden />
             </a>
-            <p className="mt-3 text-center text-sm text-slate-500">De andre i møtet trenger ikke Notably.</p>
             <div className="mt-7 border-t border-slate-200 pt-7">
               <FeatureList items={soloFeatures} />
             </div>
