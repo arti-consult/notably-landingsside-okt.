@@ -27,6 +27,31 @@ const EXPECTED = {
     title: 'Notably: Norsk AI-løsning for møtereferat og transkripsjon',
     description: 'Oppdag hvordan Notably skiller seg ut i AI-møtereferat med norsk språkstøtte og lokal tilpasning mot internasjonale konkurrenter. Les mer nå!',
   },
+  'trale-vs-notably-for-motereferater-en-sammenligning': {
+    h1: 'Trale vs Notably for møtereferater: En sammenligning',
+    title: 'Trale vs Notably: To norske AI-møteassistenter sammenlignet',
+    description: 'Trale og Notably er begge norske AI-møteassistenter. Se forskjellene i målgruppe, fysiske møter, mobilapp, personvern og pris før du velger.',
+  },
+  'dara-vs-notably-for-motereferater-en-sammenligning': {
+    h1: 'Dara vs Notably for møtereferater: En sammenligning',
+    title: 'Dara vs Notably: To norske AI-møteassistenter sammenlignet',
+    description: 'Dara og Notably lager begge møtereferater på norsk. Se forskjellene i bot eller ikke bot, fysiske møter, mobilapp, personvern og pris.',
+  },
+  'otter-ai-vs-notably-for-motereferater-en-sammenligning': {
+    h1: 'Otter.ai vs Notably for møtereferater: En sammenligning',
+    title: 'Otter.ai vs Notably: Hvilken passer norske virksomheter?',
+    description: 'Otter.ai er en av de største AI-notatskriverne i verden, men støtter ikke norsk. Se hvordan Otter og Notably skiller seg på språk, personvern og pris.',
+  },
+  'fireflies-ai-vs-notably-for-motereferater-en-sammenligning': {
+    h1: 'Fireflies.ai vs Notably for møtereferater: En sammenligning',
+    title: 'Fireflies.ai vs Notably: Hvilken passer norske virksomheter?',
+    description: 'Fireflies.ai har mange funksjoner og integrasjoner, men lagrer data i USA. Se hvordan Fireflies og Notably skiller seg på norsk, personvern og pris.',
+  },
+  'granola-vs-notably-for-motereferater-en-sammenligning': {
+    h1: 'Granola vs Notably for møtereferater: En sammenligning',
+    title: 'Granola vs Notably: Hvilken passer norske virksomheter?',
+    description: 'Granola er en populær AI-notatblokk uten bot. Se hvordan Granola og Notably skiller seg på norsk språk, fysiske møter, personvern og pris.',
+  },
 };
 
 const attr = (value) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -38,7 +63,7 @@ function buildInto() {
   return { out, written };
 }
 
-test('alle tre publiserte artikler leses fra content/artikler', () => {
+test('alle publiserte artikler leses fra content/artikler', () => {
   const articles = loadArticles({ root });
   assert.deepEqual(articles.map((a) => a.slug).sort(), Object.keys(EXPECTED).sort());
   for (const article of articles) {
