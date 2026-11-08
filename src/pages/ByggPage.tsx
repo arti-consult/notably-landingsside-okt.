@@ -7,6 +7,13 @@ import ByggCustomers from '../components/bygg/ByggCustomers';
 import ByggDaySection from '../components/bygg/ByggDaySection';
 import ByggStickyCta from '../components/bygg/ByggStickyCta';
 import { byggFaqs } from '../components/bygg/faqs';
+import {
+  BYGG_DESCRIPTION,
+  BYGG_PATH,
+  BYGG_SOCIAL_TITLE,
+  BYGG_TITLE,
+  byggStructuredData,
+} from '../components/bygg/seo';
 import { PrimaryCta, SecondaryCta } from '../components/advokat/shared';
 import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL, SITE_URL } from '../lib/seo';
 
@@ -19,64 +26,31 @@ const ByggPricingSection = lazy(() => import('../components/bygg/ByggPricingSect
 const FaqSection = lazy(() => import('../components/advokat/AdvokatFaqSection'));
 const Footer = lazy(() => import('../components/Footer'));
 
-const PAGE_URL = `${SITE_URL}/bygg-og-anlegg`;
-const TITLE = 'Notably for bygg og anlegg: AI-referat fra byggemøter og befaringer';
-const DESCRIPTION =
-  'Legg telefonen på bordet i brakka. Notably skriver referatet fra byggemøtet med hvem som sa hva, hvem som gjør hva og innen når. Klart til å sendes når møtet er over. Lagret i EU.';
+const PAGE_URL = `${SITE_URL}${BYGG_PATH}`;
 
 export default function ByggPage() {
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'WebPage',
-        '@id': PAGE_URL,
-        url: PAGE_URL,
-        name: TITLE,
-        description: DESCRIPTION,
-        inLanguage: 'nb',
-        audience: { '@type': 'BusinessAudience', name: 'Entreprenører, byggherrer og rådgivere i bygg og anlegg' },
-        isPartOf: { '@type': 'WebSite', name: 'Notably', url: `${SITE_URL}/` },
-      },
-      {
-        '@type': 'SoftwareApplication',
-        name: 'Notably',
-        applicationCategory: 'BusinessApplication',
-        operatingSystem: 'Web, iOS, Android',
-        inLanguage: 'nb',
-        url: PAGE_URL,
-        offers: { '@type': 'Offer', price: '399', priceCurrency: 'NOK' },
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: byggFaqs.map(({ question, answer }) => ({
-          '@type': 'Question',
-          name: question,
-          acceptedAnswer: { '@type': 'Answer', text: answer },
-        })),
-      },
-    ],
-  };
+  const structuredData = byggStructuredData(SITE_URL);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Helmet>
-        <title>{TITLE}</title>
-        <meta name="description" content={DESCRIPTION} />
+        <title>{BYGG_TITLE}</title>
+        <meta name="description" content={BYGG_DESCRIPTION} />
         <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Notably" />
         <meta property="og:locale" content="nb_NO" />
         <meta property="og:url" content={PAGE_URL} />
-        <meta property="og:title" content={TITLE} />
-        <meta property="og:description" content={DESCRIPTION} />
+        <meta property="og:title" content={BYGG_SOCIAL_TITLE} />
+        <meta property="og:description" content={BYGG_DESCRIPTION} />
         <meta property="og:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
         <meta property="og:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={TITLE} />
-        <meta name="twitter:description" content={DESCRIPTION} />
+        <meta name="twitter:title" content={BYGG_SOCIAL_TITLE} />
+        <meta name="twitter:description" content={BYGG_DESCRIPTION} />
         <meta name="twitter:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
+        <meta name="twitter:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
 

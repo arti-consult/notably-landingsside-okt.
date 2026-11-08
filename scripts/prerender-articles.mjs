@@ -14,6 +14,17 @@ import {
   escapeHtml,
   loadArticles,
 } from './articles-lib.mjs';
+import {
+  BYGG_DESCRIPTION,
+  BYGG_H1,
+  BYGG_INTRO,
+  BYGG_PATH,
+  BYGG_SOCIAL_TITLE,
+  BYGG_TITLE,
+  byggOutline,
+  byggStructuredData,
+} from '../src/components/bygg/seo.ts';
+import { byggFaqs } from '../src/components/bygg/faqs.ts';
 
 const ROBOTS = 'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
 const LIST_TITLE = 'Artikler - Notably';
@@ -44,7 +55,7 @@ function tag(name, attrs) {
   return `<${name} data-rh="true" ${parts.join(' ')} />`;
 }
 
-function headTags({ title, description, canonical, type, image, imageAlt, extraMeta = [], jsonLd, robots = ROBOTS }) {
+function headTags({ title, socialTitle = title, description, canonical, type, image, imageAlt, extraMeta = [], jsonLd, robots = ROBOTS }) {
   const lines = [
     `<title>${escapeHtml(title)}</title>`,
     tag('meta', { name: 'description', content: description }),
@@ -53,7 +64,7 @@ function headTags({ title, description, canonical, type, image, imageAlt, extraM
     tag('meta', { property: 'og:type', content: type }),
     tag('meta', { property: 'og:site_name', content: 'Notably' }),
     tag('meta', { property: 'og:locale', content: 'nb_NO' }),
-    tag('meta', { property: 'og:title', content: title }),
+    tag('meta', { property: 'og:title', content: socialTitle }),
     tag('meta', { property: 'og:description', content: description }),
     tag('meta', { property: 'og:url', content: canonical }),
     tag('meta', { property: 'og:image', content: image }),
@@ -61,7 +72,7 @@ function headTags({ title, description, canonical, type, image, imageAlt, extraM
     ...extraMeta,
     tag('meta', { name: 'twitter:card', content: 'summary_large_image' }),
     tag('meta', { name: 'twitter:url', content: canonical }),
-    tag('meta', { name: 'twitter:title', content: title }),
+    tag('meta', { name: 'twitter:title', content: socialTitle }),
     tag('meta', { name: 'twitter:description', content: description }),
     tag('meta', { name: 'twitter:image', content: image }),
     tag('meta', { name: 'twitter:image:alt', content: imageAlt }),
@@ -213,7 +224,49 @@ export function prerenderArticles({ root = process.cwd(), outDir = 'dist', now =
     })
   );
 
+  // /bygg-og-anlegg: bransjeside som skal rangere. Uten denne får crawlere som ikke kjører
+  // JavaScript forsidens tittel og canonical. Innholdet kommer fra src/components/bygg/seo.ts.
+  const byggUrl = `${SITE_URL}${BYGG_PATH}`;
+  write(
+    BYGG_PATH.slice(1),
+    renderPage(template, {
+      head: headTags({
+        title: BYGG_TITLE,
+        socialTitle: BYGG_SOCIAL_TITLE,
+        description: BYGG_DESCRIPTION,
+        canonical: byggUrl,
+        type: 'website',
+        image: DEFAULT_SOCIAL_IMAGE_URL,
+        imageAlt: 'Notably: Møtereferatet skriver seg selv',
+        jsonLd: byggStructuredData(SITE_URL),
+      }),
+      body: byggBody(),
+    })
+  );
+
   return written;
+}
+
+const SIGNUP_URL = 'https://app.notably.no/no/sign-up';
+const DEMO_URL = 'https://os.notably.no/book/demo';
+
+export function byggBody() {
+  const sections = byggOutline
+    .map(({ heading, text }) => `<section class="mt-14"><h2 class="text-3xl font-semibold text-slate-800">${escapeHtml(heading)}</h2><p class="mt-4 text-lg text-slate-600">${escapeHtml(text)}</p></section>`)
+    .join('');
+  const faq = byggFaqs
+    .map(({ question, answer }) => `<div class="mt-6"><h3 class="text-xl font-semibold text-slate-900">${escapeHtml(question)}</h3><p class="mt-2 text-slate-600">${escapeHtml(answer)}</p></div>`)
+    .join('');
+  return [
+    '<main class="min-h-screen bg-white pt-32" data-prerendered="bygg-og-anlegg"><div class="page-container">',
+    `<h1 class="text-5xl font-semibold text-slate-800">${escapeHtml(BYGG_H1)}</h1>`,
+    `<p class="mt-6 max-w-md text-xl text-slate-600">${escapeHtml(BYGG_INTRO)}</p>`,
+    `<p class="mt-8"><a href="${SIGNUP_URL}">Prøv gratis i 14 dager</a> · <a href="${DEMO_URL}">Book demo for firmaet</a></p>`,
+    sections,
+    `<section class="mt-14"><h2 class="text-3xl font-semibold text-slate-800">Ofte stilte spørsmål</h2>${faq}</section>`,
+    '<p class="mt-14"><a href="/">Notably</a> · <a href="/advokat">For advokater</a> · <a href="/regnskapsforer">For regnskapsførere</a> · <a href="/personvern">Personvern</a></p>',
+    '</div></main>',
+  ].join('');
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
