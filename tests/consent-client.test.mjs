@@ -100,11 +100,11 @@ test('expired, malformed, unknown-policy and personalization-enabled grants all 
   const f=fixture();f.intercept(({json})=>json({status:'success'}));const c=createConsentClient(f.options);await assert.rejects(c.refresh(),/INVALID/);assert.equal(c.view().granted,false);
 });
 
-test('a freshly saved grant stays selected immediately with 60 ms server clock skew', async () => {
+test('a freshly saved grant stays selected when the device clock is behind the server', async () => {
   const now = Date.now(), f = fixture();
   const fetch = async (url, options) => {
     const result = await f.fetch(url, options), body = await result.json();
-    if (body.consent?.state === 'granted') body.consent.decidedAt = new Date(now + 60).toISOString();
+    if (body.consent?.state === 'granted') body.consent.decidedAt = new Date(now + 2_000).toISOString();
     return new Response(JSON.stringify(body), { status: result.status });
   };
   const c = createConsentClient({ ...f.options, fetch, now: () => now });
@@ -115,15 +115,15 @@ test('a freshly saved grant stays selected immediately with 60 ms server clock s
   assert.deepEqual(c.view().permissions, { analytics: true, advertising: true });
 });
 
-for (const [offset, granted] of [[1000, true], [1001, false]]) {
-  test(`decision-time clock tolerance is bounded: ${offset} ms ahead`, () => {
+for (const offset of [1_000, 2_000, 60_000]) {
+  test(`server-confirmed consent accepts a device clock ${offset} ms behind`, () => {
     const now = Date.now(), response = fixture('granted').response();
     response.consent.decidedAt = new Date(now + offset).toISOString();
-    assert.deepEqual(effectivePermissions(response, now), { analytics: granted, advertising: granted });
+    assert.deepEqual(effectivePermissions(response, now), { analytics: true, advertising: true });
   });
 }
 
-test('decision-time tolerance never extends consent expiry', () => {
+test('device clock differences never extends consent expiry', () => {
   const now = Date.now(), response = fixture('granted').response();
   response.consent.decidedAt = new Date(now + 60).toISOString();
   for (const offset of [0, -1]) {
@@ -132,7 +132,7 @@ test('decision-time tolerance never extends consent expiry', () => {
   }
 });
 
-test('decision-time tolerance never overrides withdrawal or rejection', () => {
+test('device clock differences never overrides withdrawal or rejection', () => {
   const now = Date.now(), response = fixture('granted').response();
   response.consent.decidedAt = new Date(now + 60).toISOString();
   for (const state of ['withdrawn', 'rejected', 'expired']) {
