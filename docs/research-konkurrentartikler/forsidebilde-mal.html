@@ -1,0 +1,32 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  html,body{margin:0;width:1600px;height:900px;overflow:hidden}
+  body{
+    background:
+      radial-gradient(ellipse 760px 620px at 640px 440px, #102b5c 0%, #0a1f47 38%, #08142c 68%, #0b0e15 100%);
+    font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;position:relative}
+  .noise{position:absolute;inset:0;opacity:.22;mix-blend-mode:overlay}
+  .box{position:absolute;top:307px;width:313px;height:285px;border-radius:38px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .n{left:395px;background:#2463eb}
+  .n svg{width:247px;height:auto;margin-left:-4px;margin-top:6px}
+  .k{left:891px}
+  .k img{width:var(--maxw,68%);height:var(--maxh,68%);object-fit:contain}
+  .vs{position:absolute;left:0;width:1600px;top:438px;text-align:center;color:#fff;font-weight:700;font-size:50px;letter-spacing:.5px}
+</style></head>
+<body>
+<svg class="noise" width="1600" height="900"><filter id="f"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#f)"/></svg>
+<div class="box n">
+  <svg viewBox="0 0 432.22 378.3"><g fill="#fff"><rect x="125.25" y="145.54" width="181.71" height="52.67"/><rect x="125.25" y="234.86" width="181.71" height="52.67"/><rect x="125.25" y="325.64" width="100.19" height="52.67"/><rect y="79.84" width="79.84" height="298.47"/><path d="M257.32,0H79.84v79.84h177.48c52.42,0,95.07,42.65,95.07,95.07v203.4h79.84v-203.4C432.22,78.46,353.76,0,257.32,0Z"/></g></svg>
+</div>
+<div class="vs">VS</div>
+<div class="box k" id="k"><img id="logo" alt=""></div>
+<script>
+  const q=new URLSearchParams(location.search);
+  document.getElementById('logo').src=q.get('logo')||'';
+  const k=document.getElementById('k');
+  k.style.background=q.get('bg')||'#f7f8fa';
+  if(q.get('size')){k.style.setProperty('--maxw',q.get('size'));k.style.setProperty('--maxh',q.get('size'));}
+  if(q.get('fill')==='1'){const i=document.getElementById('logo');i.style.width='100%';i.style.height='100%';i.style.maxWidth='none';i.style.maxHeight='none';i.style.objectFit='cover';}
+</script>
+</body></html>
