@@ -25,6 +25,28 @@ import {
   byggStructuredData,
 } from '../src/components/bygg/seo.ts';
 import { byggFaqs } from '../src/components/bygg/faqs.ts';
+import {
+  ADVOKAT_DESCRIPTION,
+  ADVOKAT_H1,
+  ADVOKAT_INTRO,
+  ADVOKAT_PATH,
+  ADVOKAT_SOCIAL_TITLE,
+  ADVOKAT_TITLE,
+  advokatOutline,
+  advokatStructuredData,
+} from '../src/components/advokat/seo.ts';
+import { advokatFaqs } from '../src/components/advokat/faqs.ts';
+import {
+  REGNSKAP_DESCRIPTION,
+  REGNSKAP_H1,
+  REGNSKAP_INTRO,
+  REGNSKAP_PATH,
+  REGNSKAP_SOCIAL_TITLE,
+  REGNSKAP_TITLE,
+  regnskapOutline,
+  regnskapStructuredData,
+} from '../src/components/regnskap/seo.ts';
+import { regnskapFaqs } from '../src/components/regnskap/faqs.ts';
 
 const ROBOTS = 'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
 const LIST_TITLE = 'Artikler - Notably';
@@ -224,25 +246,27 @@ export function prerenderArticles({ root = process.cwd(), outDir = 'dist', now =
     })
   );
 
-  // /bygg-og-anlegg: bransjeside som skal rangere. Uten denne får crawlere som ikke kjører
-  // JavaScript forsidens tittel og canonical. Innholdet kommer fra src/components/bygg/seo.ts.
-  const byggUrl = `${SITE_URL}${BYGG_PATH}`;
-  write(
-    BYGG_PATH.slice(1),
-    renderPage(template, {
-      head: headTags({
-        title: BYGG_TITLE,
-        socialTitle: BYGG_SOCIAL_TITLE,
-        description: BYGG_DESCRIPTION,
-        canonical: byggUrl,
-        type: 'website',
-        image: DEFAULT_SOCIAL_IMAGE_URL,
-        imageAlt: 'Notably: Møtereferatet skriver seg selv',
-        jsonLd: byggStructuredData(SITE_URL),
-      }),
-      body: byggBody(),
-    })
-  );
+  // Bransjesidene /bygg-og-anlegg, /advokat og /regnskapsforer skal rangere. Uten statisk HTML
+  // får crawlere som ikke kjører JavaScript forsidens tittel og canonical. Innholdet kommer fra
+  // seo.ts i hver bransjes komponentmappe.
+  for (const page of INDUSTRY_PAGES) {
+    write(
+      page.path.slice(1),
+      renderPage(template, {
+        head: headTags({
+          title: page.title,
+          socialTitle: page.socialTitle,
+          description: page.description,
+          canonical: `${SITE_URL}${page.path}`,
+          type: 'website',
+          image: DEFAULT_SOCIAL_IMAGE_URL,
+          imageAlt: 'Notably: Møtereferatet skriver seg selv',
+          jsonLd: page.structuredData(SITE_URL),
+        }),
+        body: industryBody(page),
+      })
+    );
+  }
 
   return written;
 }
@@ -250,21 +274,71 @@ export function prerenderArticles({ root = process.cwd(), outDir = 'dist', now =
 const SIGNUP_URL = 'https://app.notably.no/no/sign-up';
 const DEMO_URL = 'https://os.notably.no/book/demo';
 
-export function byggBody() {
-  const sections = byggOutline
+export const INDUSTRY_PAGES = [
+  {
+    path: BYGG_PATH,
+    title: BYGG_TITLE,
+    socialTitle: BYGG_SOCIAL_TITLE,
+    description: BYGG_DESCRIPTION,
+    h1: BYGG_H1,
+    intro: BYGG_INTRO,
+    demoLabel: 'Book demo for firmaet',
+    outline: byggOutline,
+    faqs: byggFaqs,
+    structuredData: byggStructuredData,
+  },
+  {
+    path: ADVOKAT_PATH,
+    title: ADVOKAT_TITLE,
+    socialTitle: ADVOKAT_SOCIAL_TITLE,
+    description: ADVOKAT_DESCRIPTION,
+    h1: ADVOKAT_H1,
+    intro: ADVOKAT_INTRO,
+    demoLabel: 'Book demo for firmaet',
+    outline: advokatOutline,
+    faqs: advokatFaqs,
+    structuredData: advokatStructuredData,
+  },
+  {
+    path: REGNSKAP_PATH,
+    title: REGNSKAP_TITLE,
+    socialTitle: REGNSKAP_SOCIAL_TITLE,
+    description: REGNSKAP_DESCRIPTION,
+    h1: REGNSKAP_H1,
+    intro: REGNSKAP_INTRO,
+    demoLabel: 'Book demo for byrået',
+    outline: regnskapOutline,
+    faqs: regnskapFaqs,
+    structuredData: regnskapStructuredData,
+  },
+];
+
+const INDUSTRY_LINKS = [
+  { path: BYGG_PATH, label: 'For bygg og anlegg' },
+  { path: ADVOKAT_PATH, label: 'For advokater' },
+  { path: REGNSKAP_PATH, label: 'For regnskapsførere' },
+];
+
+export function industryBody({ path, h1, intro, demoLabel, outline, faqs }) {
+  const sections = outline
     .map(({ heading, text }) => `<section class="mt-14"><h2 class="text-3xl font-semibold text-slate-800">${escapeHtml(heading)}</h2><p class="mt-4 text-lg text-slate-600">${escapeHtml(text)}</p></section>`)
     .join('');
-  const faq = byggFaqs
+  const faq = faqs
     .map(({ question, answer }) => `<div class="mt-6"><h3 class="text-xl font-semibold text-slate-900">${escapeHtml(question)}</h3><p class="mt-2 text-slate-600">${escapeHtml(answer)}</p></div>`)
     .join('');
+  const links = [
+    '<a href="/">Notably</a>',
+    ...INDUSTRY_LINKS.filter((link) => link.path !== path).map((link) => `<a href="${link.path}">${escapeHtml(link.label)}</a>`),
+    '<a href="/personvern">Personvern</a>',
+  ].join(' · ');
   return [
-    '<main class="min-h-screen bg-white pt-32" data-prerendered="bygg-og-anlegg"><div class="page-container">',
-    `<h1 class="text-5xl font-semibold text-slate-800">${escapeHtml(BYGG_H1)}</h1>`,
-    `<p class="mt-6 max-w-md text-xl text-slate-600">${escapeHtml(BYGG_INTRO)}</p>`,
-    `<p class="mt-8"><a href="${SIGNUP_URL}">Prøv gratis i 14 dager</a> · <a href="${DEMO_URL}">Book demo for firmaet</a></p>`,
+    `<main class="min-h-screen bg-white pt-32" data-prerendered="${path.slice(1)}"><div class="page-container">`,
+    `<h1 class="text-5xl font-semibold text-slate-800">${escapeHtml(h1)}</h1>`,
+    `<p class="mt-6 max-w-md text-xl text-slate-600">${escapeHtml(intro)}</p>`,
+    `<p class="mt-8"><a href="${SIGNUP_URL}">Prøv gratis i 14 dager</a> · <a href="${DEMO_URL}">${escapeHtml(demoLabel)}</a></p>`,
     sections,
     `<section class="mt-14"><h2 class="text-3xl font-semibold text-slate-800">Ofte stilte spørsmål</h2>${faq}</section>`,
-    '<p class="mt-14"><a href="/">Notably</a> · <a href="/advokat">For advokater</a> · <a href="/regnskapsforer">For regnskapsførere</a> · <a href="/personvern">Personvern</a></p>',
+    `<p class="mt-14">${links}</p>`,
     '</div></main>',
   ].join('');
 }

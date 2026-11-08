@@ -7,7 +7,7 @@ import { mkdtempSync, readFileSync, readdirSync, statSync, writeFileSync, exists
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { loadArticles, parseArticleFile } from '../scripts/articles-lib.mjs';
-import { prerenderArticles } from '../scripts/prerender-articles.mjs';
+import { INDUSTRY_PAGES, prerenderArticles } from '../scripts/prerender-articles.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 
@@ -79,6 +79,38 @@ test('statisk HTML for hver artikkel har riktig title, meta, canonical, OG og JS
   assert.ok(list.includes('<title>Artikler - Notably</title>'));
   assert.ok(list.includes('rel="canonical" href="https://notably.no/artikler"'));
   for (const slug of Object.keys(EXPECTED)) assert.ok(list.includes(`href="/artikler/${slug}"`), `listen lenker til ${slug}`);
+});
+
+test('bransjesidene får statisk HTML med egen title, description, canonical og innhold', () => {
+  const { out, written } = buildInto();
+  const vercel = JSON.parse(readFileSync(join(root, 'vercel.json'), 'utf8'));
+  for (const page of INDUSTRY_PAGES) {
+    assert.ok(written.includes(page.path), `${page.path} skrives`);
+    assert.ok(
+      vercel.rewrites.some((r) => r.source === page.path && r.destination === `${page.path}/index.html`),
+      `rewrite for ${page.path} i vercel.json`
+    );
+    assert.ok(page.title.length < 60, `${page.path}: tittelen er under 60 tegn`);
+    assert.ok(page.description.length < 155, `${page.path}: beskrivelsen er under 155 tegn`);
+    for (const text of [page.title, page.socialTitle, page.description, page.h1, page.intro, ...page.outline.flatMap((s) => [s.heading, s.text])]) {
+      assert.doesNotMatch(text, /[–—]/, `${page.path}: ingen tankestrek i «${text}»`);
+    }
+    const html = readFileSync(join(out, page.path.slice(1), 'index.html'), 'utf8');
+    const url = `https://notably.no${page.path}`;
+    assert.equal((html.match(/<title>/g) || []).length, 1, 'nøyaktig én <title>');
+    assert.ok(html.includes(`<title>${page.title}</title>`), `title for ${page.path}`);
+    assert.equal((html.match(/name="description"/g) || []).length, 1, 'nøyaktig én description');
+    assert.ok(html.includes(`name="description" content="${attr(page.description)}"`), `description for ${page.path}`);
+    assert.equal((html.match(/rel="canonical"/g) || []).length, 1, 'nøyaktig én canonical');
+    assert.ok(html.includes(`<link data-rh="true" rel="canonical" href="${url}" />`), `canonical for ${page.path}`);
+    assert.ok(html.includes(`property="og:title" content="${attr(page.socialTitle)}"`));
+    assert.equal((html.match(/<h1/g) || []).length, 1, 'nøyaktig én H1');
+    assert.ok(html.includes(attr(page.h1)), `H1 for ${page.path}`);
+    const ld = [...html.matchAll(/<script data-rh="true" type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
+    const graph = ld.flatMap((item) => item['@graph'] || []);
+    assert.ok(graph.some((node) => node['@type'] === 'WebPage' && node.url === url), `WebPage for ${page.path}`);
+    assert.equal(graph.find((node) => node['@type'] === 'FAQPage')?.mainEntity.length, page.faqs.length);
+  }
 });
 
 test('sitemap-generatoren leser artiklene fra filer', () => {

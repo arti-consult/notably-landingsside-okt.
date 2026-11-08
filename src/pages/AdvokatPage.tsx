@@ -5,7 +5,13 @@ import TrustSection from '../components/TrustSection';
 import DeferredRender from '../components/DeferredRender';
 import AdvokatHero from '../components/advokat/AdvokatHero';
 import AdvokatPainSection from '../components/advokat/AdvokatPainSection';
-import { advokatFaqs } from '../components/advokat/faqs';
+import {
+  ADVOKAT_DESCRIPTION,
+  ADVOKAT_PATH,
+  ADVOKAT_SOCIAL_TITLE,
+  ADVOKAT_TITLE,
+  advokatStructuredData,
+} from '../components/advokat/seo';
 import { PrimaryCta, SecondaryCta } from '../components/advokat/shared';
 import type { AIAnswerExample } from '../components/AIAnswersSection';
 import { DEFAULT_SOCIAL_IMAGE_ALT, DEFAULT_SOCIAL_IMAGE_URL, SITE_URL } from '../lib/seo';
@@ -19,10 +25,7 @@ const AdvokatPricingSection = lazy(() => import('../components/advokat/AdvokatPr
 const AdvokatFaqSection = lazy(() => import('../components/advokat/AdvokatFaqSection'));
 const Footer = lazy(() => import('../components/Footer'));
 
-const PAGE_URL = `${SITE_URL}/advokat`;
-const TITLE = 'Notably for advokater – AI-notater fra klientmøter, lagret i EU';
-const DESCRIPTION =
-  'Notably skriver notatet fra klientmøter, forhandlinger og saksmøter – med faktum, frister og neste steg. Lagret i EU, aldri brukt til AI-trening.';
+const PAGE_URL = `${SITE_URL}${ADVOKAT_PATH}`;
 
 /** Fortsetter sakene fra resten av siden: Nordvik og Berg fra møtetypene, Hansen fra heroen. */
 const legalExamples: AIAnswerExample[] = [
@@ -47,58 +50,28 @@ const legalExamples: AIAnswerExample[] = [
 ];
 
 export default function AdvokatPage() {
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'WebPage',
-        '@id': PAGE_URL,
-        url: PAGE_URL,
-        name: TITLE,
-        description: DESCRIPTION,
-        inLanguage: 'nb',
-        audience: { '@type': 'BusinessAudience', name: 'Advokater og advokatfirmaer' },
-        isPartOf: { '@type': 'WebSite', name: 'Notably', url: `${SITE_URL}/` },
-      },
-      {
-        '@type': 'SoftwareApplication',
-        name: 'Notably',
-        applicationCategory: 'BusinessApplication',
-        operatingSystem: 'Web, iOS',
-        inLanguage: 'nb',
-        url: PAGE_URL,
-        offers: { '@type': 'Offer', price: '399', priceCurrency: 'NOK' },
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: advokatFaqs.map(({ question, answer }) => ({
-          '@type': 'Question',
-          name: question,
-          acceptedAnswer: { '@type': 'Answer', text: answer },
-        })),
-      },
-    ],
-  };
+  const structuredData = advokatStructuredData(SITE_URL);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Helmet>
-        <title>{TITLE}</title>
-        <meta name="description" content={DESCRIPTION} />
+        <title>{ADVOKAT_TITLE}</title>
+        <meta name="description" content={ADVOKAT_DESCRIPTION} />
         <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Notably" />
         <meta property="og:locale" content="nb_NO" />
         <meta property="og:url" content={PAGE_URL} />
-        <meta property="og:title" content={TITLE} />
-        <meta property="og:description" content={DESCRIPTION} />
+        <meta property="og:title" content={ADVOKAT_SOCIAL_TITLE} />
+        <meta property="og:description" content={ADVOKAT_DESCRIPTION} />
         <meta property="og:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
         <meta property="og:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={TITLE} />
-        <meta name="twitter:description" content={DESCRIPTION} />
+        <meta name="twitter:title" content={ADVOKAT_SOCIAL_TITLE} />
+        <meta name="twitter:description" content={ADVOKAT_DESCRIPTION} />
         <meta name="twitter:image" content={DEFAULT_SOCIAL_IMAGE_URL} />
+        <meta name="twitter:image:alt" content={DEFAULT_SOCIAL_IMAGE_ALT} />
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
 

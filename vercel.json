@@ -33,6 +33,8 @@
     { "source": "/artikler", "destination": "/artikler/index.html" },
     { "source": "/backe", "destination": "/backe/index.html" },
     { "source": "/bygg-og-anlegg", "destination": "/bygg-og-anlegg/index.html" },
+    { "source": "/advokat", "destination": "/advokat/index.html" },
+    { "source": "/regnskapsforer", "destination": "/regnskapsforer/index.html" },
     { "source": "/artikler/:slug", "destination": "/artikler/:slug/index.html" },
     {
       "source": "/((?!assets/).*)",

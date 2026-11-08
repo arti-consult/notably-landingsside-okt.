@@ -106,7 +106,7 @@ export default function AdvokatHero() {
               variants={item}
               className="mt-7 max-w-lg text-lg leading-relaxed text-slate-500 sm:text-xl"
             >
-              Notably dokumenterer klientmøter, forhandlinger og saksmøter – med faktum, frister og neste steg
+              Notably dokumenterer klientmøter, forhandlinger og saksmøter, med faktum, frister og neste steg
               ferdig strukturert når møtet er over. Så du kan bruke tiden på saken, ikke på referatet.
             </motion.p>
 
