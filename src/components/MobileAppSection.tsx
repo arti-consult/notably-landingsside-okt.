@@ -115,27 +115,27 @@ const PhoneMockup = () => (
           <div className="px-[16px] pb-[16px]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[9px] font-medium uppercase tracking-[0.14em] text-slate-400">Onsdag 12. juni</p>
+                <p className="text-[9px] font-medium uppercase tracking-[0.14em] text-slate-500">Onsdag 12. juni</p>
                 <h3 className="text-[19px] font-bold leading-tight tracking-tight text-slate-900">Møter</h3>
               </div>
-              <span className="flex h-[26px] w-[26px] items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-[10px] font-semibold text-white">
+              <span className="flex h-[26px] w-[26px] items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-blue-800 text-[10px] font-semibold text-white">
                 JN
               </span>
             </div>
 
             {/* Opptakskort */}
-            <div className="mt-[12px] overflow-hidden rounded-[16px] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-[13px] shadow-[0_14px_26px_-16px_rgba(37,99,235,0.9)]">
+            <div className="mt-[12px] overflow-hidden rounded-[16px] bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 p-[13px] shadow-[0_14px_26px_-16px_rgba(37,99,235,0.9)]">
               <div className="flex items-center justify-between">
                 <span className="inline-flex items-center gap-[5px] rounded-full bg-white/15 px-[7px] py-[3px] text-[8.5px] font-semibold uppercase tracking-wider text-white">
                   <span className="notably-rec-dot h-[5px] w-[5px] rounded-full bg-red-400" />
                   Spiller inn
                 </span>
-                <span className="font-mono text-[10px] tabular-nums text-white/85">12:04</span>
+                <span className="font-mono text-[10px] tabular-nums text-white">12:04</span>
               </div>
               <p className="mt-[9px] text-[12.5px] font-semibold leading-snug text-white">
                 Produktlansering Q1
               </p>
-              <p className="text-[9.5px] text-blue-100/90">Møterom Fjord · 4 deltakere</p>
+              <p className="text-[9.5px] text-blue-50">Møterom Fjord · 4 deltakere</p>
               <div className="mt-[8px] flex items-end justify-between">
                 <Waveform />
                 <span className="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
@@ -168,7 +168,7 @@ const PhoneMockup = () => (
             </div>
 
             {/* Kommende møter */}
-            <p className="mt-[13px] px-[2px] text-[8.5px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+            <p className="mt-[13px] px-[2px] text-[8.5px] font-semibold uppercase tracking-[0.14em] text-slate-500">
               Kommende
             </p>
             <ul className="mt-[7px] space-y-[7px]">
@@ -179,7 +179,7 @@ const PhoneMockup = () => (
                 >
                   <span className="flex h-[28px] w-[28px] shrink-0 flex-col items-center justify-center rounded-[9px] bg-slate-100">
                     <span className="text-[9px] font-bold leading-none text-slate-900">{meeting.time}</span>
-                    <span className="mt-[2px] text-[6.5px] font-medium uppercase leading-none text-slate-400">
+                    <span className="mt-[2px] text-[6.5px] font-medium uppercase leading-none text-slate-600">
                       {meeting.day}
                     </span>
                   </span>
@@ -207,7 +207,7 @@ const PhoneMockup = () => (
                 <rect x="3" y="4" width="18" height="17" rx="3" strokeLinejoin="round" />
                 <path d="M8 2v4M16 2v4M3 10h18" strokeLinecap="round" />
               </svg>
-              <span className="-mt-[10px] flex h-[32px] w-[32px] items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 shadow-[0_8px_16px_-8px_rgba(37,99,235,1)]">
+              <span className="-mt-[10px] flex h-[32px] w-[32px] items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-blue-800 shadow-[0_8px_16px_-8px_rgba(37,99,235,1)]">
                 <Mic className="h-[15px] w-[15px] text-white" />
               </span>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
@@ -274,7 +274,7 @@ export default function MobileAppSection() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-24 bottom-[-6rem] h-[24rem] w-[24rem] rounded-full bg-indigo-500/20 glow scale-[1.86]"
+            className="pointer-events-none absolute -left-24 bottom-[-6rem] h-[24rem] w-[24rem] rounded-full bg-blue-500/20 glow scale-[1.86]"
           />
 
           <div className="relative grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">

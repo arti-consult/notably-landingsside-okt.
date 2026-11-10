@@ -50,8 +50,8 @@ const buildLineVariants = (reduced: boolean | null): Variants => ({
  * Kontrast mot hvitt: marine ~13:1, blått ~5,2:1.
  */
 const headingLines = [
-  { text: 'Møtereferatet', ink: 'bg-gradient-to-b from-[#334155] to-[#1E293B]' },
-  { text: 'skriver seg selv.', ink: 'bg-gradient-to-b from-[#2563EB] to-[#1D4ED8]' },
+  { text: 'Møtereferatet', ink: 'text-slate-800' },
+  { text: 'skriver seg selv.', ink: 'text-[#2563EB]' },
 ];
 
 const TYPED_LINE = headingLines[1];
@@ -146,7 +146,7 @@ export default function HeroSection() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-48 top-[55%] h-[20rem] w-[20rem] rounded-full bg-indigo-300/15 glow scale-[2.03] lg:-left-[12%] lg:top-16 lg:h-[26rem] lg:w-[26rem] lg:bg-indigo-400/15 lg:scale-[1.87]"
+        className="pointer-events-none absolute -left-48 top-[55%] h-[20rem] w-[20rem] rounded-full bg-blue-300/15 glow scale-[2.03] lg:-left-[12%] lg:top-16 lg:h-[26rem] lg:w-[26rem] lg:bg-blue-400/15 lg:scale-[1.87]"
       />
 
       <div className="relative mx-auto max-w-6xl">
@@ -166,12 +166,10 @@ export default function HeroSection() {
                   nedstreker, ellers klippes «g» i «seg». */}
               <span className="block overflow-hidden pb-[0.14em] -mb-[0.14em]">
                 <motion.span variants={lineVariants} className="block">
-                  {/* Tonal gradient i samme farge – lys som faller på blekk, ikke
-                      kromatisk gradient. I tvungen kontrastmodus overstyres
-                      bakgrunner, så gradienten slås av og teksten får
-                      systemfargen – ellers blir den usynlig. */}
+                  {/* Ren tekstfarge (ingen gradient-klipping), så kontrasten er
+                      den samme overalt og tvungen kontrastmodus virker uten unntak. */}
                   <span
-                    className={`bg-clip-text text-transparent forced-colors:bg-none forced-colors:text-[CanvasText] ${headingLines[0].ink}`}
+                    className={headingLines[0].ink}
                   >
                     {headingLines[0].text}
                   </span>
@@ -184,7 +182,7 @@ export default function HeroSection() {
               {' '}
               <span className="block pb-[0.14em] -mb-[0.14em]">
                 <span
-                  className={`bg-clip-text text-transparent forced-colors:bg-none forced-colors:text-[CanvasText] ${TYPED_LINE.ink}`}
+                  className={TYPED_LINE.ink}
                 >
                   {TYPED_LINE.text.slice(0, typed)}
                 </span>
@@ -234,7 +232,7 @@ export default function HeroSection() {
                 href="https://app.notably.no/no/sign-up"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl border border-transparent bg-blue-500 px-6 py-4 text-lg font-semibold text-white shadow-[0_14px_30px_-16px_rgba(59,130,246,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
+                className="group inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl border border-transparent bg-blue-600 px-6 py-4 text-lg font-semibold text-white shadow-[0_14px_30px_-16px_rgba(37,99,235,0.7)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
               >
                 Start gratis
                 <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5" />

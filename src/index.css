@@ -385,7 +385,7 @@
   border-radius: 0.375rem;
   font-family: 'Courier New', monospace;
   font-size: 0.9375rem;
-  color: #ef4444;
+  color: #1d4ed8;
 }
 
 .article-content pre {
@@ -451,7 +451,7 @@
   margin: 2rem 0;
   border-radius: 1rem;
   border: 1px solid #bfdbfe;
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 55%, #eef2ff 100%);
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 55%, #eff6ff 100%);
   overflow: hidden;
 }
 

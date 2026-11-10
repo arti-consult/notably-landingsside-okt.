@@ -151,10 +151,10 @@ export default function LiveMeeting() {
           </div>
           <span
             className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[11px] font-semibold ring-1 ring-inset ${
-              done ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-rose-50 text-rose-600 ring-rose-200'
+              done ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-blue-50 text-blue-700 ring-blue-200'
             }`}
           >
-            <span className={`h-1.5 w-1.5 rounded-full ${done ? 'bg-emerald-500' : 'notably-rec-dot bg-rose-500'}`} />
+            <span className={`h-1.5 w-1.5 rounded-full ${done ? 'bg-emerald-500' : 'notably-rec-dot bg-red-500'}`} />
             {done ? 'Ferdig' : time}
           </span>
         </div>

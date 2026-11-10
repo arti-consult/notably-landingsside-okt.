@@ -39,7 +39,7 @@ const DecisionsCard = () => {
     >
       <div className="p-5">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
             Bestemt i møtet
           </p>
           <AnimatePresence mode="wait" initial={false}>

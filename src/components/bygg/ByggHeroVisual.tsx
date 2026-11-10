@@ -56,11 +56,11 @@ export default function ByggHeroVisual() {
         <div className="relative flex aspect-[9/18.5] flex-col overflow-hidden rounded-[2.3rem] bg-gradient-to-b from-slate-50 to-white px-5 pb-6 pt-11 sm:rounded-[2.6rem] sm:px-6 sm:pt-12">
           <span className="absolute left-1/2 top-2.5 h-5 w-20 -translate-x-1/2 rounded-full bg-slate-900 sm:top-3 sm:h-6 sm:w-24" />
 
-          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400">Fjordparken B2</p>
+          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">Fjordparken B2</p>
           <div className="mt-0.5 flex items-center justify-between gap-2">
             <p className="text-[17px] font-semibold tracking-tight text-slate-900 sm:text-lg">Byggemøte nr. 14</p>
-            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-rose-50 px-2.5 py-1 text-[11px] font-semibold text-rose-600 ring-1 ring-inset ring-rose-200/70">
-              <span className="notably-rec-dot h-1.5 w-1.5 rounded-full bg-rose-500" />
+            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-blue-700 ring-1 ring-inset ring-blue-200/70">
+              <span className="notably-rec-dot h-1.5 w-1.5 rounded-full bg-red-500" />
               Tar opp
             </span>
           </div>
@@ -104,8 +104,8 @@ export default function ByggHeroVisual() {
           </ul>
 
           <div className="mt-auto flex justify-center pt-4">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-rose-200">
-              <span className="h-4 w-4 rounded-[5px] bg-rose-500" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-blue-200">
+              <span className="h-4 w-4 rounded-[5px] bg-blue-600" />
             </span>
           </div>
         </div>

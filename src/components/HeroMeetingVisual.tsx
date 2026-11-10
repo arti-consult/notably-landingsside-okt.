@@ -31,8 +31,8 @@ export interface MeetingItem {
 
 const defaultSpeakers: MeetingSpeaker[] = [
   { initials: 'JN', color: 'bg-blue-600' },
-  { initials: 'SA', color: 'bg-emerald-600' },
-  { initials: 'MK', color: 'bg-indigo-600' },
+  { initials: 'SA', color: 'bg-emerald-700' },
+  { initials: 'MK', color: 'bg-slate-700' },
 ];
 
 const defaultItems: MeetingItem[] = [
@@ -144,9 +144,9 @@ export default function HeroMeetingVisual({
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.3 }}
-                    className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-rose-50 px-2.5 py-1 text-[11px] font-semibold text-rose-600 ring-1 ring-inset ring-rose-200/70"
+                    className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-blue-700 ring-1 ring-inset ring-blue-200/70"
                   >
-                    <span className="notably-rec-dot h-1.5 w-1.5 rounded-full bg-rose-500" />
+                    <span className="notably-rec-dot h-1.5 w-1.5 rounded-full bg-red-500" />
                     Tar opp
                   </motion.span>
                 )}
@@ -176,7 +176,7 @@ export default function HeroMeetingVisual({
                   <span
                     key={i}
                     className={`w-[3px] rounded-full transition-colors duration-300 ${
-                      activeSpeaker !== null ? 'notably-wave-bar bg-blue-500' : 'bg-slate-200'
+                      activeSpeaker !== null ? 'notably-wave-bar bg-blue-600' : 'bg-slate-200'
                     }`}
                     style={{ height: `${h}px`, animationDelay: `${i * 0.09}s` }}
                   />
@@ -213,7 +213,7 @@ export default function HeroMeetingVisual({
             <div className="my-5 h-px bg-slate-100" />
 
             {/* Referatet som skriver seg selv */}
-            <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+            <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
               Referat
               {writing && (
                 <span className="notably-caret inline-block h-3 w-[2px] rounded-full bg-blue-600" />

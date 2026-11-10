@@ -22,7 +22,7 @@ const External = ({ href, children }: { href: string; children: ReactNode }) => 
 
 const Column = ({ title, children }: { title: string; children: ReactNode }) => (
   <div>
-    <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">{title}</h2>
+    <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{title}</h2>
     <ul className="mt-4 space-y-3">{children}</ul>
   </div>
 );

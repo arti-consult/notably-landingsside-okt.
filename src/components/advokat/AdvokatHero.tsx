@@ -11,7 +11,7 @@ import { PrimaryCta, SecondaryCta, ease } from './shared';
  */
 const speakers: MeetingSpeaker[] = [
   { initials: 'ML', color: 'bg-slate-800' },
-  { initials: 'KH', color: 'bg-emerald-600' },
+  { initials: 'KH', color: 'bg-emerald-700' },
   { initials: 'TS', color: 'bg-blue-600' },
 ];
 
@@ -20,14 +20,14 @@ const items: MeetingItem[] = [
     speaker: 1,
     said: 'Oppsigelsen kom på e-post 12. mars.',
     tag: 'Faktum',
-    tagClass: 'bg-indigo-50 text-indigo-700 ring-indigo-200/70',
+    tagClass: 'bg-slate-100 text-slate-700 ring-slate-200/70',
     text: 'Oppsigelse mottatt 12. mars',
   },
   {
     speaker: 0,
     said: 'Da har vi åtte uker på søksmålet.',
     tag: 'Frist',
-    tagClass: 'bg-rose-50 text-rose-700 ring-rose-200/70',
+    tagClass: 'bg-blue-50 text-blue-700 ring-blue-200/70',
     text: 'Søksmålsfrist · aml. § 17-4',
     due: '7. mai',
   },
@@ -67,7 +67,7 @@ export default function AdvokatHero() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-48 top-[55%] h-[20rem] w-[20rem] rounded-full bg-indigo-300/15 glow scale-[2.03] lg:-left-[12%] lg:top-16 lg:h-[26rem] lg:w-[26rem] lg:bg-indigo-400/15 lg:scale-[1.87]"
+        className="pointer-events-none absolute -left-48 top-[55%] h-[20rem] w-[20rem] rounded-full bg-blue-300/15 glow scale-[2.03] lg:-left-[12%] lg:top-16 lg:h-[26rem] lg:w-[26rem] lg:bg-blue-400/15 lg:scale-[1.87]"
       />
 
       <div className="relative mx-auto max-w-6xl">
@@ -95,7 +95,7 @@ export default function AdvokatHero() {
               <span className="block overflow-hidden pb-[0.14em] -mb-[0.14em]">
                 <motion.span
                   variants={line}
-                  className="block bg-gradient-to-b from-[#2563EB] to-[#1D4ED8] bg-clip-text text-transparent forced-colors:bg-none forced-colors:text-[CanvasText]"
+                  className="block text-[#2563EB]"
                 >
                   Notably tar notatet.
                 </motion.span>

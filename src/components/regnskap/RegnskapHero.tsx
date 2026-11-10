@@ -10,7 +10,7 @@ import { PrimaryCta, SecondaryCta, ease } from '../advokat/shared';
  */
 const speakers: MeetingSpeaker[] = [
   { initials: 'IH', color: 'bg-slate-800' },
-  { initials: 'TN', color: 'bg-emerald-600' },
+  { initials: 'TN', color: 'bg-emerald-700' },
 ];
 
 const items: MeetingItem[] = [
@@ -18,7 +18,7 @@ const items: MeetingItem[] = [
     speaker: 1,
     said: 'Vi kjøpte forresten en varebil i mars.',
     tag: 'Fra kunden',
-    tagClass: 'bg-indigo-50 text-indigo-700 ring-indigo-200/70',
+    tagClass: 'bg-slate-100 text-slate-700 ring-slate-200/70',
     text: 'Varebil kjøpt i mars',
   },
   {
@@ -64,7 +64,7 @@ export default function RegnskapHero() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-48 top-[55%] h-[20rem] w-[20rem] rounded-full bg-indigo-300/15 glow scale-[2.03] lg:-left-[12%] lg:top-16 lg:h-[26rem] lg:w-[26rem] lg:bg-indigo-400/15 lg:scale-[1.87]"
+        className="pointer-events-none absolute -left-48 top-[55%] h-[20rem] w-[20rem] rounded-full bg-blue-300/15 glow scale-[2.03] lg:-left-[12%] lg:top-16 lg:h-[26rem] lg:w-[26rem] lg:bg-blue-400/15 lg:scale-[1.87]"
       />
 
       <div className="relative mx-auto max-w-6xl">
@@ -92,7 +92,7 @@ export default function RegnskapHero() {
               <span className="block overflow-hidden pb-[0.14em] -mb-[0.14em]">
                 <motion.span
                   variants={line}
-                  className="block bg-gradient-to-b from-[#2563EB] to-[#1D4ED8] bg-clip-text text-transparent forced-colors:bg-none forced-colors:text-[CanvasText]"
+                  className="block text-[#2563EB]"
                 >
                   Nå står det skriftlig.
                 </motion.span>

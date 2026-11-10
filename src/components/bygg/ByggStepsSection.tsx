@@ -7,15 +7,15 @@ import { Eyebrow, SectionHeading, ease } from '../advokat/shared';
 
 const RecordMock = () => (
   <div className="flex h-full flex-col items-center justify-center">
-    <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400">Fjordparken B2</p>
+    <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">Fjordparken B2</p>
     <p className="mt-0.5 text-[15px] font-semibold text-slate-900">Byggemøte nr. 14</p>
     <span className="relative mt-5 flex h-[4.5rem] w-[4.5rem] items-center justify-center">
-      <span aria-hidden className="absolute inset-0 animate-ping rounded-full bg-rose-400/30 motion-reduce:animate-none" />
-      <span className="relative flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full bg-rose-500 shadow-[0_14px_30px_-12px_rgba(244,63,94,0.8)]">
+      <span aria-hidden className="absolute inset-0 animate-ping rounded-full bg-blue-400/30 motion-reduce:animate-none" />
+      <span className="relative flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full bg-blue-600 shadow-[0_14px_30px_-12px_rgba(37,99,235,0.8)]">
         <Mic className="h-7 w-7 text-white" aria-hidden />
       </span>
     </span>
-    <p className="mt-4 text-sm font-semibold text-rose-600">Trykk for å ta opp</p>
+    <p className="mt-4 text-sm font-semibold text-blue-700">Trykk for å ta opp</p>
   </div>
 );
 
@@ -38,16 +38,16 @@ const SendMock = () => (
   <div className="flex h-full flex-col">
     <div className="space-y-1 border-b border-slate-100 pb-2.5 text-[12px]">
       <p className="flex gap-2">
-        <span className="w-9 text-slate-400">Til</span>
+        <span className="w-9 text-slate-500">Til</span>
         <span className="font-medium text-slate-800">11 deltakere</span>
       </p>
       <p className="flex gap-2">
-        <span className="w-9 text-slate-400">Emne</span>
+        <span className="w-9 text-slate-500">Emne</span>
         <span className="truncate font-medium text-slate-800">Referat byggemøte nr. 14</span>
       </p>
     </div>
     <div className="mt-3 flex -space-x-2">
-      {['bg-slate-800', 'bg-blue-600', 'bg-amber-500', 'bg-emerald-600', 'bg-indigo-500'].map((c, i) => (
+      {['bg-slate-800', 'bg-blue-600', 'bg-amber-500', 'bg-emerald-600', 'bg-slate-500'].map((c, i) => (
         <span key={c} className={`h-7 w-7 rounded-full ring-2 ring-white ${c}`} style={{ zIndex: 5 - i }} />
       ))}
       <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-[10px] font-semibold text-slate-600 ring-2 ring-white">

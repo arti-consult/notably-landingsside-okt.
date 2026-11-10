@@ -131,7 +131,7 @@ export default function BlogListing() {
                           className="w-10 h-10 rounded-full object-cover border border-gray-200"
                         />
                       ) : (
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center text-white font-semibold">
                           {getAuthorName(featuredArticle).charAt(0).toUpperCase()}
                         </div>
                       )}
@@ -145,7 +145,7 @@ export default function BlogListing() {
               )}
 
               <div className="mb-8">
-                <div className="flex items-center gap-6 border-b border-gray-200">
+                <div className="flex flex-wrap items-center gap-x-6 border-b border-gray-200">
                   <button
                     onClick={() => setSelectedCategory(null)}
                     className={`px-4 py-3 font-medium transition-colors relative ${
@@ -176,7 +176,7 @@ export default function BlogListing() {
                     </button>
                   ))}
 
-                  <div className="ml-auto">
+                  <div className="ml-auto w-full py-2 sm:w-auto sm:py-0">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                       <input
@@ -184,7 +184,7 @@ export default function BlogListing() {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder="Søk i artikler"
-                        className="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        className="w-full sm:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       />
                     </div>
                   </div>
