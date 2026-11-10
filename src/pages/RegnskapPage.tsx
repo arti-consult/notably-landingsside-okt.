@@ -100,7 +100,7 @@ export default function RegnskapPage() {
         <FaqSection faqs={regnskapFaqs} muted="før første kundemøte." background="bg-gray-50" />
 
         <section className="page-container bg-white pb-24 pt-20 sm:pb-28 sm:pt-24">
-          <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-indigo-700 px-6 py-16 text-center sm:px-12 sm:py-20">
+          <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-blue-800 px-6 py-16 text-center sm:px-12 sm:py-20">
             <div
               aria-hidden
               className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/15 glow scale-[1.94]"
@@ -108,7 +108,7 @@ export default function RegnskapPage() {
             <h2 className="relative text-balance text-[2rem] font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl">
               Neste råd du gir, står skriftlig.
             </h2>
-            <p className="relative mx-auto mt-5 max-w-lg text-balance text-lg leading-relaxed text-blue-100">
+            <p className="relative mx-auto mt-5 max-w-lg text-balance text-lg leading-relaxed text-blue-50">
               Prøv Notably gratis i 14 dager. Last ned appen eller koble til kalenderen, og send kunden
               oppsummeringen samme dag.
             </p>

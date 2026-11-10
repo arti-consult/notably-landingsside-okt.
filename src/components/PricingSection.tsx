@@ -86,7 +86,7 @@ const PricingSection = () => {
               const isSelfServePlan = price !== null;
               const ctaClass = plan.highlighted
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
-                : 'bg-gray-900 text-white hover:bg-black';
+                : 'bg-blue-600 text-white hover:bg-blue-700';
 
               return (
                 <div

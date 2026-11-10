@@ -50,7 +50,7 @@ function Notebook({ reduced }: { reduced: boolean | null }) {
       className="relative h-full min-h-[15rem] -rotate-[1.5deg] overflow-hidden rounded-2xl bg-[#FFFDF5] pb-6 pl-12 pr-6 pt-8 shadow-[0_24px_50px_-30px_rgba(15,23,42,0.45)] ring-1 ring-inset ring-amber-900/10"
       style={{
         backgroundImage:
-          'linear-gradient(to right, transparent 2.1rem, rgba(244,63,94,0.35) 2.1rem, rgba(244,63,94,0.35) calc(2.1rem + 1px), transparent calc(2.1rem + 1px)), repeating-linear-gradient(to bottom, transparent 0, transparent calc(2rem - 1px), rgba(59,91,169,0.16) calc(2rem - 1px), rgba(59,91,169,0.16) 2rem)',
+          'linear-gradient(to right, transparent 2.1rem, rgba(37,99,235,0.35) 2.1rem, rgba(37,99,235,0.35) calc(2.1rem + 1px), transparent calc(2.1rem + 1px)), repeating-linear-gradient(to bottom, transparent 0, transparent calc(2rem - 1px), rgba(59,91,169,0.16) calc(2rem - 1px), rgba(59,91,169,0.16) 2rem)',
         backgroundPosition: '0 0, 0 0',
       }}
     >
@@ -156,7 +156,7 @@ export default function ByggDaySection() {
             <div className="flex-1">
               <Notebook reduced={reduced} />
             </div>
-            <p aria-hidden className="mt-5 text-lg font-semibold text-rose-600">
+            <p aria-hidden className="mt-5 text-lg font-semibold text-blue-700">
               Skrives i kveld.
             </p>
           </motion.figure>
@@ -166,7 +166,7 @@ export default function ByggDaySection() {
             <div className="flex-1">
               <Referat />
             </div>
-            <p aria-hidden className="mt-5 text-lg font-semibold text-emerald-600">
+            <p aria-hidden className="mt-5 text-lg font-semibold text-emerald-700">
               Sendt før du går ut døra.
             </p>
           </motion.figure>

@@ -86,7 +86,7 @@ export default function AdvokatSecuritySection() {
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -bottom-40 -left-32 h-[24rem] w-[24rem] rounded-full bg-indigo-500/15 glow scale-[1.94]"
+          className="pointer-events-none absolute -bottom-40 -left-32 h-[24rem] w-[24rem] rounded-full bg-blue-500/15 glow scale-[1.94]"
         />
 
         <div className="relative mx-auto max-w-5xl">
@@ -118,7 +118,7 @@ export default function AdvokatSecuritySection() {
                 mener dagens løsninger ivaretar konfidensialitet godt nok.
               </p>
             </div>
-            <figcaption className="text-xs text-slate-500 sm:col-span-2">
+            <figcaption className="text-xs text-slate-400 sm:col-span-2">
               Kilde:{' '}
               <a
                 href="https://www.karnovgroup.no/fremtidens-jurist-2025"
@@ -186,7 +186,7 @@ export default function AdvokatSecuritySection() {
             className="mt-8 flex justify-center"
           >
             <span className="flex items-center gap-2 rounded-full border border-dashed border-white/20 py-1.5 pl-1.5 pr-3.5">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-rose-500">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-500">
                 <Ban className="h-3 w-3 text-white" strokeWidth={3} aria-hidden />
               </span>
               <span className="text-sm font-medium text-slate-400 line-through decoration-slate-500">

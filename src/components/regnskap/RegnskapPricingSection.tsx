@@ -83,7 +83,7 @@ export default function RegnskapPricingSection() {
                 href={DEMO_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block rounded-full bg-slate-900 py-3 text-center font-medium text-white transition-colors hover:bg-black"
+                className="block rounded-full bg-blue-600 py-3 text-center font-medium text-white transition-colors hover:bg-blue-700"
               >
                 Book demo for byrået
               </a>

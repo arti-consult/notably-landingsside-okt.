@@ -27,7 +27,7 @@ const benefits: { icon: LucideIcon; title: string; text: string }[] = [
 
 const EmailLine = ({ label, value }: { label: string; value: string }) => (
   <p className="flex gap-3 text-sm">
-    <span className="w-12 shrink-0 text-slate-400">{label}</span>
+    <span className="w-12 shrink-0 text-slate-500">{label}</span>
     <span className="min-w-0 truncate font-medium text-slate-800">{value}</span>
   </p>
 );
@@ -54,7 +54,7 @@ export default function RegnskapShareSection() {
   };
 
   return (
-    <section className="page-container bg-white py-20 sm:py-24">
+    <section className="page-container overflow-x-clip bg-white py-20 sm:py-24">
       <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
         <div>
           <Eyebrow>Etter møtet</Eyebrow>

@@ -142,7 +142,7 @@ export default function ByggProofSection() {
               </div>
             </div>
           </div>
-          <p className="relative mt-4 text-center text-xs text-slate-500">Prosjektene er oppdiktet.</p>
+          <p className="relative mt-4 text-center text-xs text-slate-400">Prosjektene er oppdiktet.</p>
         </div>
       </div>
     </section>

@@ -148,11 +148,11 @@ export default function SecuritySection() {
                     hidden: { scale: prefersReducedMotion ? 1 : 0 },
                     visible: { scale: 1, transition: { type: 'spring', stiffness: 400, damping: 18, delay: 1.35 } },
                   }}
-                  className="flex h-5 w-5 items-center justify-center rounded-full bg-rose-500"
+                  className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-500"
                 >
                   <X className="h-3 w-3 text-white" strokeWidth={3} aria-hidden />
                 </motion.span>
-                <span className="text-[13px] font-medium text-slate-400 line-through decoration-slate-300 sm:text-sm">
+                <span className="text-[13px] font-medium text-slate-500 line-through decoration-slate-300 sm:text-sm">
                   <span className="sr-only">Brukes aldri til </span>
                   Modelltrening
                 </span>

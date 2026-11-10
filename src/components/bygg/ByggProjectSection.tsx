@@ -96,7 +96,7 @@ export default function ByggProjectSection() {
                     <p className="text-xs font-medium text-slate-500">{date}</p>
                     <span
                       className={`mt-1 inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-semibold ${
-                        via === 'Mobil' ? 'bg-slate-900 text-white' : 'bg-indigo-50 text-indigo-700'
+                        via === 'Mobil' ? 'bg-slate-900 text-white' : 'bg-blue-50 text-blue-700'
                       }`}
                     >
                       {via === 'Mobil' ? <Smartphone className="h-3 w-3" aria-hidden /> : <Monitor className="h-3 w-3" aria-hidden />}

@@ -122,7 +122,7 @@ const TeamContent = ({ t, still }: { t: Team; still: boolean }) => (
             transition={{ duration: 0.4, delay: 0.25 + row * 0.18, ease }}
             className="flex flex-col gap-1 rounded-xl border border-slate-200/80 bg-slate-50/70 px-3.5 py-2.5 sm:flex-row sm:items-center sm:gap-3"
           >
-            <span className="w-24 shrink-0 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+            <span className="w-24 shrink-0 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
               {label}
             </span>
             <span className="text-[14px] text-slate-800">{text}</span>
@@ -194,7 +194,7 @@ export default function UseCasesSection() {
                 className={`relative flex items-center gap-2 overflow-hidden rounded-full px-3.5 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:px-5 sm:py-2.5 sm:text-[15px] ${
                   isActive
                     ? "text-slate-900"
-                    : "text-slate-500 hover:text-slate-800"
+                    : "text-slate-600 hover:text-slate-800"
                 }`}
               >
                 {isActive && (

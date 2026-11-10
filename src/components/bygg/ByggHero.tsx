@@ -50,7 +50,7 @@ export default function ByggHero() {
               <span className="block overflow-hidden pb-[0.14em] -mb-[0.14em]">
                 <motion.span
                   variants={line}
-                  className="block bg-gradient-to-b from-[#2563EB] to-[#1D4ED8] bg-clip-text text-transparent forced-colors:bg-none forced-colors:text-[CanvasText]"
+                  className="block text-[#2563EB]"
                 >
                   Mer tid på plassen.
                 </motion.span>
