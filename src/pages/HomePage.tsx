@@ -15,6 +15,7 @@ const CapabilitiesSection = lazy(() => import('../components/CapabilitiesSection
 const AIAnswersSection = lazy(() => import('../components/AIAnswersSection'));
 const IntegrationsSection = lazy(() => import('../components/IntegrationsSection'));
 const UseCasesSection = lazy(() => import('../components/UseCasesSection'));
+const ReferencesSection = lazy(() => import('../components/ReferencesSection'));
 const SecuritySection = lazy(() => import('../components/SecuritySection'));
 const PricingSection = lazy(() => import('../components/PricingSection'));
 const Footer = lazy(() => import('../components/Footer'));
@@ -123,6 +124,7 @@ export default function HomePage() {
         <AIAnswersSection />
         <IntegrationsSection />
         <UseCasesSection />
+        <ReferencesSection />
         <PricingSection />
         <Footer />
       </DeferredRender>
