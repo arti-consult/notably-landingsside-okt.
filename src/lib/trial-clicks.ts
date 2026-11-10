@@ -1,4 +1,4 @@
-import { decorateDemo, decorateSignup, demoDestination, signupDestination } from './marketing-attribution.ts';
+import { type Origin, decorateDemo, decorateSignup, demoDestination, signupDestination } from './marketing-attribution.ts';
 import type { Attribution } from './consent-client.ts';
 import { isProductionPage, normalizeRef, publicPagePath } from './marketing-policy.ts';
 import { hasMarketingConsent, hasAnalyticsConsent } from './consent.ts';
@@ -6,7 +6,7 @@ import { trackStartTrialClick } from './analytics.ts';
 import { captureLandingEvent } from './posthog-landing.ts';
 
 /** One delegated listener covers React, lazy sections, article CTAs and keyboard activation. */
-export function startTrialLinks(getAttribution: () => Attribution | null): () => void {
+export function startTrialLinks(getAttribution: () => Attribution | null, getOrigin: () => Origin | null = () => null): () => void {
   let salesRef: string | null = null;
   const originals = new Map<HTMLAnchorElement, string>();
   const refreshLinks = () => {
@@ -20,7 +20,7 @@ export function startTrialLinks(getAttribution: () => Attribution | null): () =>
       const original = originals.get(a) ?? a.href;
       originals.set(a, original);
       const input = hasMarketingConsent() ? getAttribution() : null;
-      const next = signup ? decorateSignup(original, input, salesRef) : decorateDemo(original, input, salesRef);
+      const next = signup ? decorateSignup(original, input, salesRef, hasMarketingConsent() ? getOrigin() : null) : decorateDemo(original, input, salesRef);
       if (a.href !== next) a.href = next;
     }
     for (const a of originals.keys()) if (!a.isConnected) originals.delete(a);
