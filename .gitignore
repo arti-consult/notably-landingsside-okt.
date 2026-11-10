@@ -22,3 +22,7 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Skjermbilder fra konkurrentanalysen holdes lokalt (store filer, andres sider). RAPPORT.md er committet.
+docs/research-forside-konkurrenter/*.png
+docs/research-forside-konkurrenter/*.jpg
